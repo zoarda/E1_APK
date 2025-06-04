@@ -1,0 +1,433 @@
+# C5_S0
+; @saveData scriptName:C5_VB
+@NaniSaveData ScriptName:C5_VB
+@NaniSaveData ScriptName:C5_S0
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0"
+@speedButtonEnable
+@videoControll startLoopTime:225 endLoopTime:234 isLooping:true
+@forcedChoice choiceTime:67
+@waitMovie choiceTime:67
+@speedButtonDisable
+@choiceDLC PackId51 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S0_P1
+@choiceDLC PackId52 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S0_P2
+@choiceDLC PackId53 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S0_P3
+@reBuildChoice
+@clearChoice
+@stop
+
+# C5_S0_P1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0"
+@speedButtonEnable
+@seekTime videoTime:235
+@speedButtonEnable
+@videoControll startLoopTime:264 endLoopTime:270 isLooping:true
+@forcedChoice choiceTime:30
+@waitMovie choiceTime:30
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S2
+@choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
+@reBuildChoice
+@stop
+@clearChoice
+@goto .C5_S1
+
+# C5_S0_P2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@streamingPlay "C5_S0"
+@seekTime videoTime:235
+@speedButtonEnable
+@videoControll startLoopTime:264 endLoopTime:270 isLooping:true
+@forcedChoice choiceTime:30
+@waitMovie choiceTime:30
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton  do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton  goto:.C5_S2
+@choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
+@reBuildChoice
+@stop
+@clearChoice
+@goto .C5_S1
+
+# C5_S0_P3
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0_P3"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S0"
+@speedButtonEnable
+@seekTime videoTime:235
+@speedButtonEnable
+@videoControll startLoopTime:264 endLoopTime:270 isLooping:true
+@forcedChoice choiceTime:30
+@waitMovie choiceTime:30
+@speedButtonDisable
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S2
+@choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
+@reBuildChoice
+@stop
+@clearChoice
+@goto .C5_S1
+
+# C5_S1
+@NaniSaveData ScriptName:C5_S1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S1"
+@speedButtonEnable
+@forcedChoice choiceTime:228
+@waitMovie choiceTime:228
+@videoControll startLoopTime:228 endLoopTime:568 isLooping:true wait:true
+@NaniSaveData ScriptName:C5_S1_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_H_02,sex_I_02,sex_J_02 label:C5_S1_O1,C5_S1_O2,C5_S1_O3 cumLabel:C5_S1_S1_noLoop type:foreplay
+@stop
+# C5_S1_Love
+@stopSfx GameStart fade:0.5
+@forcedChoice choiceTime:228
+@spawn Block
+@streamingPlay "C5_S1"
+@CallChoice
+@speedButtonEnable
+@waitMovie choiceTime:228
+@despawn Block
+@videoControll startLoopTime:228 endLoopTime:568 isLooping:true wait:true
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_H_02,sex_I_02,sex_J_02 label:C5_S1_O1,C5_S1_O2,C5_S1_O3 cumLabel:C5_S1_S1_noLoop type:foreplay
+@stop
+
+# C5_S1_O1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S1_O1"
+@speedButtonDisable
+@videoControll startLoopTime:46.03 endLoopTime:225.29 isLooping:true
+@stop
+
+# C5_S1_O2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S1_O2"
+@speedButtonDisable
+@videoControll startLoopTime:61.24 endLoopTime:243 isLooping:true
+@stop
+
+# C5_S1_O3
+@stopSfx GameStart fade:0.5
+@streamingPlay "C5_S1_O3"
+@speedButtonDisable
+@videoControll startLoopTime:19.15 endLoopTime:112.29 isLooping:true
+@stop
+
+
+# C5_S1_S1_noLoop
+@spawn LovePlayPage
+@NaniSaveData ScriptName:C5_S1_S1_noLoop
+@spawnLovePlayPage poseName:sex_A_02,sex_C_02,sex_F_02,sex_D_02 label:C5_S1_S1,C5_S1_S2,C5_S1_S3,C5_S1_S4 cumLabel:C5_S1_S5_cum type:sex
+@streamingPlay "C5_S1_S1"
+@videoControll startLoopTime:180 endLoopTime:200 isLooping:true
+@setVideoPlayer
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@stop
+
+# C5_S1_S1
+@streamingPlay "C5_S1_S1"
+@speedButtonDisable
+@videoControll startLoopTime:39.16 endLoopTime:204.18 isLooping:true
+@stop
+
+# C5_S1_S2
+@streamingPlay "C5_S1_S2"
+@speedButtonDisable
+@videoControll startLoopTime:28.02 endLoopTime:207.29 isLooping:true
+@stop
+
+
+# C5_S1_S3
+@streamingPlay "C5_S1_S3"
+@speedButtonDisable
+@videoControll startLoopTime:28.02 endLoopTime:207.29 isLooping:true
+@stop
+
+
+# C5_S1_S4
+@streamingPlay C5_S1_S4"
+@speedButtonDisable
+@videoControll startLoopTime:71 endLoopTime:215.03 isLooping:true
+@stop
+
+
+# C5_S1_S5_cum
+@streamingPlay "C5_S1_S5_cum"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .EndGameB
+@stop
+
+# C5_S1_S6
+@streamingPlay "C5_S1_S6"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto .GameOver
+
+# C5_S2
+@stopBgm GameStart
+@NaniSaveData ScriptName:C5_S2
+@streamingPlay "C5_S2"
+@speedButtonEnable
+@forcedChoice choiceTime:58
+@waitMovie choiceTime:58
+@videoControll startLoopTime:138 endLoopTime:176 isLooping:true
+@NaniSaveData ScriptName:C5_S2_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_H_02,sex_M_02,sex_B_02,sex_I_02 label:C5_S2_O1,C5_S2_O2,C5_S2_O4,C5_S2_O3 cumLabel:C5_S2_S1_noLoop type:foreplay
+@stop
+
+# C5_S2_Love
+@stopBgm GameStart
+@forcedChoice choiceTime:138
+@spawn Block
+@streamingPlay "C5_S2"
+@speedButtonEnable
+@CallChoice
+@waitMovie choiceTime:138
+@despawn Block
+@videoControll startLoopTime:138 endLoopTime:176 isLooping:true
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_H_02,sex_M_02,sex_B_02,sex_I_02 label:C5_S2_O1,C5_S2_O2,C5_S2_O4,C5_S2_O3 cumLabel:C5_S2_S1_noLoop type:foreplay
+@stop
+
+# C5_S2_O1
+@streamingPlay "C5_S2_O1"
+@speedButtonDisable
+@videoControll startLoopTime:102.11 endLoopTime:269.28 isLooping:true
+@stop
+
+
+# C5_S2_O2
+@streamingPlay "C5_S2_O2"
+@speedButtonDisable
+@videoControll startLoopTime:63.23 endLoopTime:185.03 isLooping:true
+@stop
+
+
+# C5_S2_O3
+@streamingPlay "C5_S2_O3"
+@speedButtonDisable
+@videoControll startLoopTime:17.23 endLoopTime:216.26 isLooping:true
+@stop
+
+# C5_S2_O4
+@streamingPlay "C5_S2_O4"
+@speedButtonDisable
+@videoControll startLoopTime:8.08 endLoopTime:122.17 isLooping:true
+@stop
+
+
+# C5_S2_S1_noLoop
+@spawn LovePlayPage
+@NaniSaveData ScriptName:C5_S2_S1_noLoop
+@spawnLovePlayPage poseName:sex_D_02,sex_G_02,sex_A_02,sex_C_02,sex_E_02,sex_F_02 label:C5_S2_S1,C5_S2_S2,C5_S2_S3,C5_S2_S4,C5_S2_S5,C5_S2_S6 cumLabel:C5_S2_S6_cum hidenCumLabel:C5_S2_S7_cuminside type:hidesex
+@streamingPlay "C5_S2_S1"
+@speedButtonDisable
+@videoControll startLoopTime:180 endLoopTime:200 isLooping:true
+@stop
+
+# C5_S2_S1
+@streamingPlay "C5_S2_S1"
+@speedButtonDisable
+@videoControll startLoopTime:62.14 endLoopTime:214.21 isLooping:true
+@stop
+
+# C5_S2_S2
+@streamingPlay "C5_S2_S2"
+@speedButtonDisable
+@videoControll startLoopTime:14.21 endLoopTime:163.28 isLooping:true
+@stop
+
+
+# C5_S2_S3
+@streamingPlay "C5_S2_S3"
+@speedButtonDisable
+@videoControll startLoopTime:6.01 endLoopTime:191.29 isLooping:true
+@stop
+
+# C5_S2_S4
+@streamingPlay "C5_S2_S4"
+@speedButtonDisable
+@videoControll startLoopTime:8.04 endLoopTime:167.29 isLooping:true
+@stop
+
+
+# C5_S2_S5
+@streamingPlay "C5_S2_S5"
+@speedButtonDisable
+@videoControll startLoopTime:4.29 endLoopTime:99.13 isLooping:true
+@stop
+
+
+# C5_S2_S6
+@streamingPlay "C5_S2_S6"
+@speedButtonDisable
+@videoControll startLoopTime:11.18 endLoopTime:155.23 isLooping:true
+@stop
+
+
+# C5_S2_S6_cum
+@streamingPlay "C5_S2_S6_cum"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .GameOver
+
+# C5_S2_S7_cuminside
+@streamingPlay "C5_S2_S7_cuminside"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .EndGameA
+
+
+# C5_S3
+@stopBgm GameStart 
+@NaniSaveData ScriptName:C5_S3
+@streamingPlay "C5_S3"
+@speedButtonEnable
+@forcedChoice choiceTime:582
+@waitMovie choiceTime:582
+@videoControll startLoopTime:582 endLoopTime:737 isLooping:true
+@NaniSaveData ScriptName:C5_S3_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_K_02,sex_H_02,sex_I_02 label:C5_S3_O1,C5_S3_O2,C5_S3_O3 cumLabel:C5_S3_S1_noLoop type:foreplay
+@stop
+
+# C5_S3_Love
+@stopBgm GameStart 
+@forcedChoice choiceTime:582
+@spawn Block
+@streamingPlay "C5_S3"
+@speedButtonEnable
+@CallChoice
+@waitMovie choiceTime:582
+@despawn Block
+@videoControll startLoopTime:582 endLoopTime:737 isLooping:true
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_K_02,sex_H_02,sex_I_02 label:C5_S3_O1,C5_S3_O2,C5_S3_O3 cumLabel:C5_S3_S1_noLoop type:foreplay
+@stop
+
+# C5_S3_O1
+@streamingPlay "C5_S3_O1"
+@speedButtonDisable
+@videoControll startLoopTime:40.04 endLoopTime:248.08 isLooping:true
+@stop
+
+
+
+# C5_S3_O2
+@streamingPlay "C5_S3_O2"
+@speedButtonDisable
+@videoControll startLoopTime:79.09 endLoopTime:204.06 isLooping:true
+@stop
+
+
+# C5_S3_O3
+@streamingPlay "C5_S3_O3"
+@speedButtonDisable
+@videoControll startLoopTime:23.27 endLoopTime:207.14 isLooping:true
+@stop
+
+# C5_S3_S1_noLoop
+@spawn LovePlayPage
+@NaniSaveData ScriptName:C5_S3_S1_noLoop
+@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C5_S3_S1,C5_S3_S2,C5_S3_S3,C5_S3_S5 cumLabel:C5_S3_S7_cum hidenCumLabel:C5_S3_S6_cuminside type:hidesex
+@streamingPlay "C5_S3_S1"
+@speedButtonDisable
+@videoControll startLoopTime:560 endLoopTime:600 isLooping:true
+@stop
+
+# C5_S3_S1
+@streamingPlay "C5_S3_S1"
+@speedButtonDisable
+@videoControll startLoopTime:78.11 endLoopTime:303 isLooping:true
+@stop
+
+# C5_S3_S2
+@streamingPlay "C5_S3_S2"
+@speedButtonDisable
+@videoControll startLoopTime:131.13 endLoopTime:200.16 isLooping:true
+@stop
+
+# C5_S3_S3
+@streamingPlay "C5_S3_S3"
+@speedButtonDisable
+@videoControll startLoopTime:43.28 endLoopTime:174 isLooping:true
+@stop
+
+# C5_S3_S5
+@streamingPlay "C5_S3_S5"
+@speedButtonDisable
+@videoControll startLoopTime:8.10 endLoopTime:187.21 isLooping:true
+@stop
+
+
+# C5_S3_S6_cuminside
+@streamingPlay "C5_S3_S6_cuminside"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .EndGameC
+
+# C5_S3_S7_cum
+@streamingPlay "C5_S3_S7_cum"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .GameOver
+
+# EndGameA
+@rmMovie
+@spawn GameClearPage
+@gameClearBack confirmScript:StartGame confirmLabel:null confirmText:PackId95  cancelScript:C1_VB cancelLabel:null cancelText:PackId96  saying:PackId101 name:PackId102 cancel:PackId98 confirm:PackId99 imageTitle:PackId100
+@speedButtonDisable
+@stop
+
+# EndGameB
+@rmMovie
+@spawn GameClearPage
+@gameClearBack confirmScript:StartGame confirmLabel:null confirmText:PackId95  cancelScript:C1_VB cancelLabel:null cancelText:PackId96  saying:PackId103 name:PackId104 cancel:PackId98 confirm:PackId99 imageTitle:PackId100
+@speedButtonDisable
+@stop
+
+# EndGameC
+@rmMovie
+@spawn GameClearPage
+@gameClearBack confirmScript:StartGame confirmLabel:null confirmText:PackId95  cancelScript:C1_VB cancelLabel:null cancelText:PackId96  saying:PackId105 name:PackId106 cancel:PackId98 confirm:PackId99 imageTitle:PackId100
+@speedButtonDisable
+@stop
+
+# GameOver
+@rmMovie
+@spawn GameOverPage
+@gameOverBack confirmScript:StartGame confirmLabel:null confirmText:PackId95  cancelScript:C1_VB cancelLabel:null cancelText:PackId96  saying:PackId110 cancel:PackId98 confirm:PackId99
+@speedButtonDisable
+@stop

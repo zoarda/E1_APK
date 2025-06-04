@@ -1,0 +1,10 @@
+@stopSfx GameStart
+@despawn LovePlayPage
+@streamingPlay "C2_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@sfx GameStart volume:0.3
+@galleryPageOpen
+@goto StartGame

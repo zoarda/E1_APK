@@ -1,0 +1,134 @@
+# C4_S0
+@NaniSaveData ScriptName:C4_VB
+@NaniSaveData ScriptName:C4_S0
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S0"
+@speedButtonEnable
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId43 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C4_S2
+@choiceDLC PackId44 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C4_S3
+@choiceDLC PackId42 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C4_S1
+@reBuildChoice
+@videoControll startLoopTime:114 endLoopTime:123 isLooping:true
+@stop
+@clearChoice
+@goto .C4_S1
+
+# C4_S1
+@NaniSaveData ScriptName:C4_S1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S1"
+@speedButtonEnable
+@videoControll startLoopTime:125 endLoopTime:129 isLooping:true
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId45 goto:.C4_S1_P1
+@choiceDLC PackId46 goto:.C4_S1_P2
+@reBuildChoice
+@stop
+@clearChoice
+
+# C4_S1_P1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S1_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C5_VB
+
+# C4_S1_P2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S1_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C5_VB
+
+# C4_S2
+@NaniSaveData ScriptName:C4_S2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S2"
+@speedButtonEnable
+@videoControll startLoopTime:31 endLoopTime:36 isLooping:true
+@forcedChoice choiceTime:7
+@waitMovie choiceTime:7
+@speedButtonDisable
+@choiceDLC PackId47 goto:.C4_S2_P1 do:"@friendship mode:Set friendship:-1"
+@choiceDLC PackId48 goto:.C4_S2_P2 do:"@friendship mode:Set friendship:1"
+@reBuildChoice
+@stop
+@clearChoice
+
+# C4_S2_P1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S2_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@spawn friendShipDown wait:false
+; @spawn down wait:false
+@forcedChoice choiceTime:7
+@waitMovie choiceTime:7
+; @despawn down
+@despawn friendShipDown
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C5_VB
+
+# C4_S2_P2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S2_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:18
+@waitMovie choiceTime:18
+@spawn friendShipUp wait:false
+; @spawn up wait:false
+@forcedChoice choiceTime:15
+@waitMovie choiceTime:15
+; @despawn up
+@despawn friendShipUp
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto C5_VB
+
+# C4_S3
+@NaniSaveData ScriptName:C4_S3
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S3"
+@speedButtonEnable
+@videoControll startLoopTime:19 endLoopTime:23 isLooping:true
+@forcedChoice choiceTime:7
+@waitMovie choiceTime:7
+@speedButtonDisable
+@choiceDLC PackId47 goto:.C4_S3_P1
+@choiceDLC PackId46 goto:.C4_S3_P2
+@reBuildChoice
+@stop
+@clearChoice
+
+# C4_S3_P1
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S3_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C5_VB
+
+# C4_S3_P2
+@stopSfx GameStart fade:0.5
+@streamingPlay "C4_S3_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto C5_VB
+
+@stop

@@ -1,0 +1,230 @@
+# C2_S0
+; ; @saveData scriptName:C2_VB
+@NaniSaveData ScriptName:C2_VB
+@NaniSaveData ScriptName:C2_S0
+@stopSfx GameStart
+@streamingPlay "C2_S0"
+@speedButtonEnable
+@forcedChoice choiceTime:716
+@waitMovie choiceTime:716
+@speedButtonDisable
+@choiceDLC PackId12 goto:.C2-3P
+@reBuildChoice
+@forcedChoice choiceTime:708
+@waitMovie choiceTime:708
+@clearChoice
+@speedButtonEnable
+@forcedChoice choiceTime:700
+@waitMovie choiceTime:700
+@speedButtonDisable
+@choiceDLC PackId13 goto:.C2-2P
+@reBuildChoice
+@forcedChoice choiceTime:692
+@waitMovie choiceTime:692
+@speedButtonEnable
+@clearChoice
+@forcedChoice choiceTime:688
+@waitMovie choiceTime:688
+@speedButtonDisable
+@choiceDLC PackId14 goto:.C2-1P 
+@reBuildChoice
+@forcedChoice choiceTime:680
+@waitMovie choiceTime:680
+@clearChoice
+@speedButtonEnable
+@forcedChoice choiceTime:672
+@waitMovie choiceTime:672
+@forcedChoice choiceTime:405
+@waitMovie choiceTime:405
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@NaniSaveData ScriptName:C2_S0_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@stop
+
+# C2_S0_P1-choice
+@streamingPlay "C2_S0"
+@speedButtonEnable
+@forcedChoice choiceTime:708
+@CallChoice
+@waitMovie choiceTime:708
+@forcedChoice choiceTime:700
+@waitMovie choiceTime:700
+@speedButtonDisable
+@choiceDLC PackId13 goto:.C2-2P
+@reBuildChoice
+@forcedChoice choiceTime:692
+@waitMovie choiceTime:692
+@speedButtonEnable
+@clearChoice
+@forcedChoice choiceTime:688
+@waitMovie choiceTime:688
+@speedButtonDisable
+@choiceDLC PackId14 goto:.C2-1P 
+@reBuildChoice
+@forcedChoice choiceTime:680
+@waitMovie choiceTime:680
+@clearChoice
+@speedButtonEnable
+@forcedChoice choiceTime:672
+@waitMovie choiceTime:672
+@forcedChoice choiceTime:405
+@waitMovie choiceTime:405
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@NaniSaveData ScriptName:C2_S0_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@stop
+@wait 10
+@clearChoice
+@speedButtonEnable
+
+# C2_S0_P2-choice
+@streamingPlay "C2_S0"
+@speedButtonEnable
+@forcedChoice choiceTime:692
+@CallChoice
+@waitMovie choiceTime:692
+@forcedChoice choiceTime:688
+@waitMovie choiceTime:688
+@speedButtonDisable
+@choiceDLC PackId14 goto:.C2-1P 
+@reBuildChoice
+@forcedChoice choiceTime:680
+@waitMovie choiceTime:680
+@clearChoice
+@speedButtonEnable
+@forcedChoice choiceTime:672
+@waitMovie choiceTime:672
+@forcedChoice choiceTime:405
+@waitMovie choiceTime:405
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@NaniSaveData ScriptName:C2_S0_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@stop
+# C2_S0_P3-choice
+@streamingPlay "C2_S0"
+@forcedChoice choiceTime:680
+@CallChoice
+@waitMovie choiceTime:680
+@clearChoice
+@speedButtonEnable
+@speedButtonEnable
+@forcedChoice choiceTime:672
+@waitMovie choiceTime:672
+@forcedChoice choiceTime:405
+@waitMovie choiceTime:405
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@NaniSaveData ScriptName:C2_S0_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@stop
+#C2_S0_Love
+@stopSfx GameStart
+@forcedChoice choiceTime:10
+@spawn Block
+@streamingPlay "C2_S0"
+@speedButtonEnable
+@videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@CallChoice
+@waitMovie choiceTime:10
+@despawn Block
+@NaniSaveData ScriptName:C2_VB_Love
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@stop
+
+# C2-1P
+@NaniSaveData ScriptName:C2-1P
+@speedButtonEnable
+@streamingPlay "C2-1P"
+@videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto .C2_S0_P3-choice
+
+# C2-2P
+@NaniSaveData ScriptName:C2-2P
+@speedButtonEnable
+@streamingPlay "C2-2P"
+@videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto .C2_S0_P2-choice
+
+# C2-3P
+@NaniSaveData ScriptName:C2-3P
+@speedButtonEnable
+@streamingPlay "C2-3P"
+@videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto .C2_S0_P1-choice
+
+# C2_S0_P1
+@speedButtonDisable
+@streamingPlay "C2_S0_P1"
+@videoControll StartLoopTime:48.24 EndLoopTime:62.10 isLooping:true
+@stop
+
+# C2_S0_P2
+@speedButtonDisable
+@streamingPlay "C2_S0_P2"
+@videoControll StartLoopTime:17.02 EndLoopTime:180 isLooping:true
+@stop
+
+# C2_S1_P1_noLoop
+@streamingPlay "C2_S1_P1"
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C2_S1_P1,C2_S1_P3,C2_S1_P4,C2_S1_P5 cumLabel:C2_S1_P5_cum type:demoForPlay
+@videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
+@stop
+
+# C2_S1_P1
+@speedButtonDisable
+@streamingPlay "C2_S1_P1"
+@videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
+@stop
+
+# C2_S1_P3
+@speedButtonDisable
+@streamingPlay "C2_S1_P3"
+@videoControll StartLoopTime:18.23 EndLoopTime:171.12 isLooping:true
+@stop
+
+# C2_S1_P4
+@speedButtonDisable
+@streamingPlay "C2_S1_P4"
+@videoControll StartLoopTime:28.20 EndLoopTime:181.12 isLooping:true
+@stop
+
+# C2_S1_P5
+@speedButtonDisable
+@streamingPlay "C2_S1_P5"
+@videoControll StartLoopTime:80.10 EndLoopTime:447.19 isLooping:true
+@stop
+# C2_S1_P5_cum
+@speedButtonEnable
+@streamingPlay "C2_S1_P5_cum"
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C3_VB
+@stop

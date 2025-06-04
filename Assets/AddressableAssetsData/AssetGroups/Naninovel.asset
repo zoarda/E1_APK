@@ -1,0 +1,1033 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Naninovel
+  m_EditorClassIdentifier: 
+  m_GroupName: Naninovel
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 68ba43399d5f0f44b9a227d90450f1d4
+  m_SerializeEntries:
+  - m_GUID: 9a47a636da53bb1409b221883df1da8f
+    m_Address: Naninovel/ChoiceHandlers/AvSmallBoxButtonList
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cda3e6d42b2f5d04fa7398ad28d290b2
+    m_Address: Naninovel/ChoiceHandlers/AvBoxButtonList
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 07afbc2bf58e36f479214d83cce41263
+    m_Address: Naninovel/Characters/GameStartUI/StartGame
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0ea13c4c0d7dc7a40be0f155feb76e2e
+    m_Address: Naninovel/Characters/GameEndUI/title_success
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8402ac5785b6e0d4d8fd37a015baaa41
+    m_Address: Naninovel/Audio/GameStart
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa5eb0f75b9c09044bfa8965a011af08
+    m_Address: Naninovel/Audio/Down
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5b3a0875d215d4840a54058d0a98a7a8
+    m_Address: Naninovel/Audio/Up
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8fcd9113fa19d294b9447f0e7dc2c2f1
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4a085b596d797ed4489bd386b9ac031d
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a8688a7c9b2132a47bc935b9d399c524
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2ee8a65e6e593f4b8b40f6424e4b15e
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ff08da24dc8303e4f89e3acca63007e0
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6208216af1f1ef4b99bbc5cf08478d1
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 07b14acb0e362854f9a7242c21307d62
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a8e000a1d1d70c4ab274497ba9ae615
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f7f8431b1ae3d943abaa719d19510cb
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 68f438c79f72715439ee0cedd5bfa49c
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7528454527db294d8928640e1820e3e
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 95719d36e69677c40b2da7e64af1d48a
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb2aac67f59b87449a2b499232362e81
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7627349cdeb23a49b0aa20c0c0220e8
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 57ad8e4ca0c73f04fa696248ff454ead
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bd4a74d34b0578479a94c6cc8484abc
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b14077dc6acf014bb0575fc0a94e9d0
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S7_cum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ed954d2c8b9960746af0b0d0c6d8af00
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S7
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2848e76545fda5746bc7accdd3c7090d
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S6_cuminside
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e5394a29a81491479e23395796fe23e
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7c388340784bbf4bad60f09bae70700
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b150309dc0c184842a28654ffc05c623
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 795093ab2e81a8c43b318acf79a7dec8
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8121b6e502f6d6449af25e692e015389
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 85cc878d22c6b0b4dbc0ddbfa1959036
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dd5c81d9a1f0bfd4f8711c69b665ffb4
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_O3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb84fcf93332d044489ac85e151c5e04
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_O2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 419beb8c3b1406a408b2be73604e45d0
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3_O1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5315da1df75f72645ab5e412fe3b8339
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 460f40e676962c24faef5d7f48ba6172
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S7_cuminside
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f67c95f4a3f8e4c4e83fd8f3f86eea30
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S6_cum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7df4649e8cfb26479e67b8cd4f9ff28
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 64e4f3b278301c947afd455f5e2fe9ac
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5441083f86ab905469495c616bbb2318
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad678171c76e1ef4d8c602bd3672c21f
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb4bf7c0cdb29f34eab05cd054114305
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bc04ac4e03b1ef04cb3c8118b10a41a8
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c8a133431153e342bbb3a4af5f48f32
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_O4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 27b5da85adc9ebe4b858ceb850176452
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_O3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 87a2f910ba142fc4dab6d154850aecce
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_O2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ef7a35e7b5700443853ee5cc7dfcf54
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2_O1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 260cf086d66f84341b35eafb4cd6c676
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cd3739b5dc19a4a498e1a76b734d4ead
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d8220f5dfbaa7945b452bbb2319ba81
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S5_cum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6f6b3c49bdf617a4489f6731d8d8c843
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dab444a278a612d4e8ad4830bba60ecd
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 258e8f377231d6f47b62c557a1dd3933
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89689624d74b5c5488627ccba7a41839
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81a6b271857ee68408c425555e9f0cf2
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4b52e81d960c1bb48aadb1fe1f5440f5
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_O3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d280ecc16d6ad6b43a63e63406501ab0
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_O2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0923d2b92d8765f4dbaf995ceccc2119
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1_O1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eead28ea470b3ca45a5e9a5e2c1a2d57
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5935c6e86e2d22644877742f03c7ca79
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S0_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0fa8928eee641de43a12a32514b4dccc
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S0_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 94d1f2b1609f4ae45aafd91cefa8f212
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S0_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e55e375a99955e342b0a02c10b093815
+    m_Address: Naninovel/Backgrounds/VideoBackground/C5_S0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf9cab46f0b695e48bb8cd8433cbde50
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S3_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 96365e031ac8be94a95e283453e6ed18
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S3_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 256c2cd362c5d914abc4324cbbdde4c3
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 89e02736e6837e446983c18a7873babc
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S2_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c83161f2967589940a0118cba8c7d859
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S2_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 31c557bc13375934da68a2377467332b
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 16fc249c23c5d784f8a65e60df4d9ead
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0d06adc9cda6394394af9a64482c354
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ad2eb7b95d102f547b5f0f4202850960
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5982aef6f5f5db540b968c0c5ae305e1
+    m_Address: Naninovel/Backgrounds/VideoBackground/C4_S0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 197193ccb16734540bf9fbe41fbe1b9c
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c07ebf64c65506e4aa2d97af38d03817
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S5_cum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ca54813b4fdc032438735a49b9bd0768
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 620961c952f65f4429751a53312e52c9
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9ba58b081ac89c54389c5b53e0efb4b3
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7c5630b5c4e7b6d4196f231f0d9fcf63
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c2a46c9ded1e064d87b9dc6717ecaa8
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c7cf6f1ca6c8bee49985c515358d8fba
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-O4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 67046626397e59d4d88dda8b63021e5a
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-O3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b3ee5eae32637064e8f4bacd1701d157
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-O2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2eeb76659cb7c2345aec4480b672ac41
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-O1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 093f267cb1ef3784ab8893c7bce19cd4
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1-1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7ac70179182287a46ad62810b36ac2f3
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bb2de3a420b4aed44af2d4d75b78e0e1
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: eb852f465f8579a429b021bf2e205343
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S3_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a1ab95b0c5a10394684dad0e9af994bb
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S3_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d8406e3c38a9cb24497158236dafb5ee
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2f715de33ea2e2c45a511e5048241830
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S2_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e66bf30f94ea1a94b95449c82cb3a306
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S2_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 90fca34cd8e365b45b8afa4725477e1a
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6a1ba26f7defa2b4197fe334e3ac1f78
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1_P2-1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e455fb6103bcfc248a4793053a18ff3e
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a3690a419ed73f44abcc3f7d98e31a4
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1_P1-2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f63303b91405d9a4cba5ffaaaaef152f
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1_P1-1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f203b2067665baf4685f5db4da43f16a
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 010662c2b0758ce488d99e362c38d8fc
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5a55377d5721a7f49845c38489f9102c
+    m_Address: Naninovel/Backgrounds/VideoBackground/C3_S0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 664355bbfe74c0344b648056361f3ac3
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P5_cum
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 856d7aeb9f526e140a6a14239240d2e8
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fab14e43ae361e749ae2726787862e68
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9dafedfe4bb3a1f468386b176a3a1911
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f195d2cb512bdfb408c411643128c207
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bafb5c445287772498ee3b6e148411e5
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f8be42e9f7c71884280a42fd5c8440c3
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S0_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e41322252fc0d1b4cae068e936e5f033
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S0_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b975298ebe7918d449e6af654fc5c421
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2_S0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 353d8d69880425e4f8a6225f8bc599ad
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2-3P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dafbc4a950f41e14287ca95590693b99
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2-2P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6069a33cedb422741aa914471fddf912
+    m_Address: Naninovel/Backgrounds/VideoBackground/C2-1P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 764d25708792bb34496e0a44a838a406
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S3_P2-2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fcce6bc9237d0bb4d81d92608b60bd8d
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S3_P2-1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8d2f8be4918088a45a28cc6d2c9bbde1
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S3_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 477c6453a6205f44480acd3f30dccd60
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S3_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccfd0220a377e71479533d915203d533
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b34bb88b02e28c648ae933a36550231f
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S2_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e7386a33fa2925146ad57fc71ab5fec0
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S2_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d3bbf4acd0acc6418369f17b5e49b92
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 10886e17a8d67e1418e7fede2fc5ab39
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 09e394d7175ca9c469124025a54799d4
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 73d92d83bc1be1141b7eee8b343ead4e
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b44b7e0ccb39781428e085fab1c87bbc
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S0_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 21ec04849e1604d4585748b31aa9583b
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S0-3P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ac96968aa3e177c499898bdf89601d18
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S0-2P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: de0163102596c6640be85b4b6c07613c
+    m_Address: Naninovel/Backgrounds/VideoBackground/C1_S0
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bff0667917ef3cb4cbebb1db8a4af6e3
+    m_Address: Naninovel/Backgrounds/MainBackground/C1_S2_Change
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 71b706b15f5f1d84a88614f6ae493be4
+    m_Address: Naninovel/Backgrounds/MainBackground/GameOver
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be88095285c24a34fb74fca429405ccf
+    m_Address: Naninovel/Backgrounds/MainBackground/StartGame
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 13016e67f1a1a9b49b207995a2f1b6f6
+    m_Address: Naninovel/Backgrounds/MainBackground/EndGame
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 513867071fda7514fa07fd9c09b331ef
+    m_Address: Naninovel/Scripts/C5_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3732de1afde2de148bd11ee90b62e7ed
+    m_Address: Naninovel/Scripts/C4_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 07e5d9c5b05405e41b4b7898f2c6fe10
+    m_Address: Naninovel/Scripts/C3_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 221a610401f27f6418ad6f2dd151e941
+    m_Address: Naninovel/Scripts/C3_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 381e5b24e27b97a4d87641d8f759f614
+    m_Address: Naninovel/Scripts/C2_P6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: df105638c81da124b8ef19e8f8242661
+    m_Address: Naninovel/Scripts/C2_P5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3c0ab266d826f944cb1b1a5d5d86fe16
+    m_Address: Naninovel/Scripts/C2_P4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 08c92accc7af55c46abb5628056858b5
+    m_Address: Naninovel/Scripts/C2_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d2a9a45e42fd0e344b6491d7042e6bb8
+    m_Address: Naninovel/Scripts/C2_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b5dde61fd5ea23b4ba41697044ea938b
+    m_Address: Naninovel/Scripts/C2_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a4b580bae358f3b419a5449072d6df13
+    m_Address: Naninovel/Scripts/C1_P6
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cb06030ccf93217418e53f7cd689051d
+    m_Address: Naninovel/Scripts/C1_P5
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: aa04fb38bf23e8c49ab24bf7301d2ad8
+    m_Address: Naninovel/Scripts/C1_P4
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 110b1c078d521734fb38aa94253032fd
+    m_Address: Naninovel/Scripts/C1_P3
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5763c1ccd5e3c0445b330df7efdb1d02
+    m_Address: Naninovel/Scripts/C1_P2
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 670ceff3f0b253046a426b8500a3feb8
+    m_Address: Naninovel/Scripts/C1_P1
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6e24352b3942470459c4b8cc4ac921d6
+    m_Address: Naninovel/Scripts/UriVideoPlayerTest
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f80b238b7135b3446a95d17ef185338b
+    m_Address: Naninovel/Scripts/StartGame
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1e1de62d33f33df4a868910ad7f41c62
+    m_Address: Naninovel/Scripts/C5_VB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 707a39774b8376340ae7c3c4780532e6
+    m_Address: Naninovel/Scripts/C4_VB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 173502bbf32cbac4da882898ba57e99a
+    m_Address: Naninovel/Scripts/C3_VB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5846a60bb11f4c4da35909fd94a7eb3
+    m_Address: Naninovel/Scripts/C2_VB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 200fa2e29d15d8e4c9627c8fa7a0be24
+    m_Address: Naninovel/Scripts/C1_VB
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4f817904a1761184b988fbc2a4182eee
+    m_Address: Naninovel/Movies/C1_S0-1P
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8031683d787ec19449107cd7d9e8ca48
+    m_Address: Naninovel/Spawn/Block
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d5bb6144d2114cd4dbcb9639dcc08860
+    m_Address: Naninovel/Spawn/LovePlayPage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6b93ca383bdb89f4f8451a0f17e4db53
+    m_Address: Naninovel/Spawn/Button
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 66ebec884f197244982332ddf9ab634d
+    m_Address: Naninovel/Spawn/UrlVideoPlayer
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e728f266369883349966481a5e5f3b1a
+    m_Address: Naninovel/Spawn/GameOverPage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f1b6084e666627748af4c99c44b8cff6
+    m_Address: Naninovel/Spawn/Descriptionbox
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5ebaaf75493ced04e99b33135cf0eb59
+    m_Address: Naninovel/Spawn/FriendShipDown
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 781e5954a34ac444abb225cedfe08bfa
+    m_Address: Naninovel/Spawn/FriendShipUp
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5506a3a020938674aa2783c72ea19876
+    m_Address: Naninovel/Spawn/GameClearPage
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 466e8e96a5435d649a7f59f544a9b47b
+    m_Address: Naninovel/Spawn/down
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f49410b11c7fd92409e852f6e41a790b
+    m_Address: Naninovel/Spawn/up
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a086f3e9f2f6f1e40922ead02fec6964
+    m_Address: Naninovel/Spawn/SpeedViewMask
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Naninovel
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 95ed954e93d134044821ac9ae792c507, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 325a66500a85fd649ba6c4e271cbf057, type: 2}
+    - {fileID: 11400000, guid: 042e663afbc133b4bac920a024c11a2e, type: 2}

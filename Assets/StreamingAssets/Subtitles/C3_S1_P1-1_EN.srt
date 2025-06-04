@@ -1,0 +1,36 @@
+1
+00:00:01,831 --> 00:00:02,832
+It's getting very late
+
+2
+00:00:02,999 --> 00:00:04,367
+Do you want me to walk you upstairs?
+
+3
+00:00:05,769 --> 00:00:08,605
+It's okay, I'm alright
+
+4
+00:00:09,839 --> 00:00:10,407
+You…..
+
+5
+00:00:10,941 --> 00:00:13,310
+better get home early and get some rest
+
+6
+00:00:14,978 --> 00:00:16,346
+Okay, then
+
+7
+00:00:16,513 --> 00:00:17,080
+good night
+
+8
+00:00:17,647 --> 00:00:18,882
+See you at the warap up party.
+
+9
+00:00:19,015 --> 00:00:20,684
+Good night, I guess I'll see you at the wrap up party.
+

@@ -1,0 +1,289 @@
+# C3_S0
+@NaniSaveData ScriptName:C3_VB
+@NaniSaveData ScriptName:C3_S0
+@stopSfx GameStart fade:0.5
+@streamingPlay "C3_S0"
+@speedButtonEnable
+@forcedChoice choiceTime:12
+@waitMovie choiceTime:12
+@speedButtonDisable
+@choiceDLC PackId92 handler:AvSmallBoxButtonList button:AvSmallBoxChoiceButton goto:.C3_S1
+@choiceDLC PackId93 handler:AvSmallBoxButtonList button:AvSmallBoxChoiceButton goto:.C3_S2
+@choiceDLC PackId94 handler:AvSmallBoxButtonList button:AvSmallBoxChoiceButton goto:.C3_S3
+@choiceDLC PackId95 handler:AvSmallBoxButtonList button:AvSmallBoxChoiceButton goto:.C3_S4
+@reBuildChoice
+@videoControll startLoopTime:21 endLoopTime:28 isLooping:true
+@stop
+@clearChoice
+@goto .C3_S1
+
+# C3_S1
+@NaniSaveData ScriptName:C3_S1
+@streamingPlay "C3_S1"
+@speedButtonEnable
+@videoControll StartLoopTime:109 EndLoopTime:119 isLooping:true
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId32 goto:.C3_S1_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId33 goto:.C3_S1_P2 do:"@friendship mode:Set friendship:1"
+@reBuildChoice
+@stop
+@clearChoice
+
+# C3_S1_P1
+@streamingPlay "C3_S1_P1"
+@speedButtonEnable
+@videoControll StartLoopTime:38 EndLoopTime:42 isLooping:true
+@forcedChoice choiceTime:15 
+@waitMovie choiceTime:15
+@spawn FriendShipUp wait:false
+@waitMovie choiceTime:12
+@despawn FriendShipUp
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId34 goto:.C3_S1_P1-1
+@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1"
+@reBuildChoice
+@stop
+@clearChoice
+
+# C3_S1_P2
+@streamingPlay "C3_S1_P2"
+@speedButtonEnable
+@videoControll StartLoopTime:49 EndLoopTime:53 isLooping:true
+@forcedChoice choiceTime:15 
+@waitMovie choiceTime:15
+@spawn FriendShipUp wait:false
+@waitMovie choiceTime:12
+@despawn FriendShipUp
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId34 goto:.C3_S1_P1-1
+@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1"
+@reBuildChoice
+@stop
+@clearChoice
+
+# C3_S1_P1-1
+@streamingPlay "C3_S1_P1-1"
+@speedButtonEnable
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C4_VB
+
+# C3_S1_P1-2
+@streamingPlay "C3_S1_P1-2"
+@speedButtonEnable
+@forcedChoice choiceTime:5
+@waitMovie choiceTime:5
+@spawn FriendShipUp wait:false
+@waitMovie choiceTime:3
+@despawn FriendShipUp
+@EndMovie
+@goto C4_VB
+
+# C3_S2
+@NaniSaveData ScriptName:C3_S2
+@streamingPlay "C3_S2"
+@speedButtonEnable
+@setVideoPlayer
+@videoControll StartLoopTime:74 EndLoopTime:83 isLooping:true
+@forcedChoice choiceTime:12
+@waitMovie choiceTime:12
+@speedButtonDisable
+@choiceDLC PackId36 goto:.C3_S2_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId37 goto:.C3_S2_P2 do:"@friendship mode:Set friendship:-1"
+@reBuildChoice
+@stop
+@clearChoice
+
+# C3_S2_P1
+@streamingPlay "C3_S2_P1"
+; @speedButtonEnable
+; @videoControll StartLoopTime:92 EndLoopTime:100 isLooping:true
+; @wait 23
+; @spawn FriendShipUp wait:false
+; @wait 2
+; @despawn FriendShipUp
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto C4_VB
+
+# C3_S2_P2
+@streamingPlay "C3_S2_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:34
+@waitMovie choiceTime:34
+; @spawn Rain
+@spawn FriendShipDown wait:false
+@waitMovie choiceTime:31
+; @despawn Rain
+@despawn FriendShipDown
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto C4_VB
+
+# C3_S3
+@NaniSaveData ScriptName:C3_S3
+@streamingPlay "C3_S3"
+@speedButtonEnable
+@videoControll StartLoopTime:68 EndLoopTime:76 isLooping:true
+@forcedChoice choiceTime:12
+@waitMovie choiceTime:12
+@speedButtonDisable
+@choiceDLC PackId38 goto:.C3_S3_P1
+@choiceDLC PackId39 goto:.C3_S3_P2
+@reBuildChoice
+@stop
+@clearChoice
+
+# C3_S3_P1
+@streamingPlay "C3_S3_P1"
+@speedButtonEnable
+@forcedChoice choiceTime:44
+@waitMovie choiceTime:44
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:41
+@waitMovie choiceTime:1
+@EndMovie
+@goto C4_VB
+
+# C3_S3_P2
+@streamingPlay "C3_S3_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto C4_VB
+
+# C3_S4
+@NaniSaveData ScriptName:C3_S4
+@streamingPlay "C3_S4"
+@speedButtonEnable
+@videoControll StartLoopTime:59 EndLoopTime:70 isLooping:true
+@forcedChoice choiceTime:15
+@waitMovie choiceTime:15
+@speedButtonDisable
+@choiceDLC PackId40 goto:.C3_S4_P1
+@choiceDLC PackId41 goto:.C3_S4_P2
+@reBuildChoice
+@stop
+@clearChoice 
+@goto .C3_S4_P1
+
+#C3_S4_P1
+@NaniSaveData ScriptName:C3_S4_P1
+@streamingPlay "C3_S4_P1"
+@speedButtonEnable
+@videoControll startLoopTime:170 endLoopTime:200 isLooping:true
+@forcedChoice choiceTime:170
+@waitMovie choiceTime:170
+@speedButtonDisable
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_L_02,sex_J_02,sex_H_02 label:C3_S4_P1-O1,C3_S4_P1-O2,C3_S4_P1-O3 cumLabel:C3_S4_P1-S1_noLoop type:foreplay
+@stop
+
+#C3_S4_P2
+@streamingPlay "C3_S4_P2"
+@speedButtonEnable
+@forcedChoice choiceTime:2
+@waitMovie choiceTime:2
+@EndMovie
+@goto C4_VB
+
+# C3_S4_P1-O1
+@streamingPlay "C3_S4_P1-O1"
+@speedButtonDisable
+@videoControll startLoopTime:11.23 endLoopTime:77.06 isLooping:true
+@stop
+
+# C3_S4_P1-O2
+@streamingPlay "C3_S4_P1-O2"
+@speedButtonDisable
+@videoControll startLoopTime:59.19 endLoopTime:77.06 isLooping:true
+@stop
+
+# C3_S4_P1-O3
+@streamingPlay "C3_S4_P1-O3"
+@speedButtonDisable
+@videoControll startLoopTime:53.27 endLoopTime:232.21 isLooping:true
+@stop
+
+# C3_S4_P1-O4
+@streamingPlay "C3_S4_P1-O4"
+@speedButtonDisable
+@videoControll startLoopTime:27.07 endLoopTime:148.08 isLooping:true
+@stop
+
+# C3_S4_P1-S1_noLoop
+@spawn LovePlayPage
+@spawnLovePlayPage poseName:sex_D_02,sex_G_02,sex_A_02,sex_C_02,sex_F_02 label:C3_S4_P1-S1,C3_S4_P1-S2,C3_S4_P1-S3,C3_S4_P1-S4,C3_S4_P1-S5 cumLabel:C3_S4_P1-S5_cum type:sex
+@streamingPlay "C3_S4_P1-S1"
+@speedButtonDisable
+@videoControll startLoopTime:59.24 endLoopTime:246.17 isLooping:true
+@stop
+
+# C3_S4_P1-S1
+@streamingPlay "C3_S4_P1-S1"
+@speedButtonDisable
+@videoControll startLoopTime:59.24 endLoopTime:246.17 isLooping:true
+@stop
+
+
+# C3_S4_P1-S2
+@streamingPlay "C3_S4_P1-S2"
+@speedButtonDisable
+@videoControll startLoopTime:13.02 endLoopTime:212.21 isLooping:true
+@stop
+
+
+# C3_S4_P1-S3
+@streamingPlay "C3_S4_P1-S3"
+@speedButtonDisable
+@videoControll startLoopTime:25.20 endLoopTime:198.03 isLooping:true
+@stop
+
+
+# C3_S4_P1-S4
+@streamingPlay "C3_S4_P1-S4"
+@speedButtonDisable
+@videoControll startLoopTime:15.02 endLoopTime:212.21 isLooping:true
+@stop
+
+
+# C3_S4_P1-S5
+@streamingPlay "C3_S4_P1-S5"
+@speedButtonDisable
+@videoControll startLoopTime:17.21 endLoopTime:217.18 isLooping:true
+@stop
+
+# C3_S4_P1-S5_cum
+@streamingPlay "C3_S4_P1-S5_cum"
+@speedButtonEnable
+@waitMovie choiceTime:2
+@EndMovie
+@goto .C3_S4_P1-1
+@stop
+
+# C3_S4_P1-1
+; @waitMovie choiceTime:0.1
+@streamingPlay "C3_S4_P1-1"
+@speedButtonEnable
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto .EndGameD
+@stop
+
+# EndGameD
+@spawn GameClearPage
+@gameClearBack confirmScript:StartGame confirmLabel:null confirmText:PackId95  cancelScript:C1_VB cancelLabel:null cancelText:PackId96  saying:PackId107 name:PackId108 cancel:PackId98 confirm:PackId99 imageTitle:PackId100
+@speedButtonDisable
+@stop

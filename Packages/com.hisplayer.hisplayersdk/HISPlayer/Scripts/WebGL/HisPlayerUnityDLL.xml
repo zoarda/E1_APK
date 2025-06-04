@@ -1,0 +1,1314 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HisPlayerUnityDLL</name>
+    </assembly>
+    <members>
+        <member name="M:HISPlayerAPI.HISPlayerFactory.GetHISPlayerInterface">
+            <summary>
+            Creates an instance of HisPlayerInterface for the currently selected platform. This allows to use one API for all the supported platforms. 
+            It's recommended to use this and not instantiate directly a class that extends HisPlayerInterface.
+            </summary>
+            <returns>A HisPlayerInterface instance.</returns>
+        </member>
+        <member name="T:HISPlayerAPI.AdsProperties">
+            <summary>
+            AdsProperties is only available for WebGL.
+            It is used for managing the ad insertion of WebGL's video content
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.StreamProperties.#ctor(System.Boolean,System.Boolean)">
+            <summary>
+            Alternative constructor to set the loop and the auto transition behaviours 
+            <br/>
+            * isLoopPlaybackEnabled: True - Repeat the current playback when it finishes
+            <br/>
+            * isAutoTransitionEnabled: True - Automatically changes to the next playback in the list if possible. 
+            This action won't have effect when isLoopPlaybackEnabled is true
+            </summary>
+        </member>
+        <member name="P:HISPlayerAPI.StreamProperties.EnableRendering">
+            <summary>
+            Toggle render-nonRender of the stream
+            </summary>
+        </member>
+        <member name="P:HISPlayerAPI.StreamProperties.FlipTextureVertically">
+            <summary>
+            Flip the texture of the stream vertically when it's created
+            Only supported on Android
+            </summary>
+        </member>
+        <member name="P:HISPlayerAPI.StreamProperties.LoopPlayback">
+            <summary>
+            True - Repeat the current playback when it finishes
+            </summary>
+        </member>
+        <member name="P:HISPlayerAPI.StreamProperties.AutoTransition">
+            <summary>
+            True - Automatically changes to the next playback in the list if possible.
+             This action won't have effect when loopPlayback is true
+            </summary>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerManager">
+            <summary>
+            HISPlayerManager_Event, class dedicated to contain all the information
+            and architecture related with the events.
+            These events will get information from the plugin internally and they're
+            going to be received in the customer side
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerManager._HISPlayer">
+            <summary>
+            Reference to the HISPlayerInterface
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerManager.InitHISPlayer">
+            <summary>
+            Initializes HISPlayerInterface, but not the video content
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerManager.CreatePlayerInterface">
+            <summary>
+            Creates the respective platform player
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.coroutineHelper">
+            <summary>
+            Allow tHIS wrapper to use Coroutines from Unity
+            without extends from MonoBehaviour
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._listeningEvents">
+            <summary>
+            Handle the loop of the HandleEvents.
+            Each platform decides when to call HandleEvents coroutine
+            and when finish it with '_listeningEvents = false'
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._listeningErrors">
+            <summary>
+            Handle the loop of the HandleErrors.
+            Each platform decides when to call HandleErrors coroutine
+            and when finish it with '_listeningErrors = false'
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._multiStreamProperties">
+            <summary>
+            MultiView attributes
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._streamTextures2D">
+            <summary>
+            Unity Texture2D
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._previousRenderMode">
+            <summary>
+            Store the previous renderMode
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._recoverPreviousRenderMode">
+            <summary>
+            Determines if a stream needs to recover the previous render mode.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.isXRDevicePresent">
+            <summary>
+            Determines if there is an XR device being used
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._watermark">
+            <summary>
+            The reference to the watermark without the Canvas mode
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._watermarkCanvas">
+            <summary>
+            The reference to the watermark with the canvas mode
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._currUrlIndex">
+            <summary>
+            The current URL index of each stream
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._playbackDurationLimit">
+            <summary>
+            The limit of the playback duration. This value is modified by the license key
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._playbackDurationLimitChrono">
+            <summary>
+            Playback duration limit chrono for each stream.
+            The chrono will determine whenever the current playback
+            has reached the duration limit
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._isPlaying">
+            <summary>
+            Determines if a current stream is playing or not
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._playerIndexesToBeChecked">
+            <summary>
+            Stores the player indexes that need to check the license key with
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._isTryToReconnectRunning">
+            <summary>
+            Determines if the function TryToReconnect is running
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._isNetworkWorking">
+            <summary>
+            Determines if the network is working or not
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._isStreamReconnected">
+            <summary>
+            Determines if a certain stream has been reconnected after losing the Internet
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._sdkVersion">
+            <summary>
+            The SDK version
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._licenseKey">
+            <summary>
+            The license key used to set up the player
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetUpPlayer(System.Collections.Generic.List{HISPlayerAPI.StreamProperties},System.String,System.Int32)">
+            <summary>
+            Initialize the video stream from the data stored
+            in HISPlayerManager.cs
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.Release">
+            <summary>
+            Release everything internally
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.Play(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="streamIndex"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.Pause(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="streamIndex"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.Stop(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="streamIndex"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.Seek(System.Int32,System.Int64)">
+            <summary>
+            
+            </summary>
+            <param name="streamIndex"></param>
+            <param name="miliseconds"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetVolume(System.Int32,System.Single)">
+            <summary>
+            Set the volume of a certain player
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="volume">New volume level</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.AddNewStream(HISPlayerAPI.StreamProperties)">
+            <summary>
+            Add a new stream to the list
+            </summary>
+            <param name="newStream">New stream to be added</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ChangeVideoContent(System.Int32,System.Int32,System.Int32,HISPlayerAPI.AdsProperties)">
+            <summary>
+            Change the current video content of a certain player given a urlIndex
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="urlIndex">Index of the new url-video content</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ChangeVideoContent(System.Int32,System.String,HISPlayerAPI.HISPlayerMimeTypes,System.Int32,HISPlayerAPI.AdsProperties)">
+            <summary>
+            Change the current video content of a certain player given a new url
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="url">String of the new url-video content</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.AddVideoContent(System.Int32,System.String,HISPlayerAPI.HISPlayerMimeTypes)">
+            <summary>
+            Add new content to a certain player given the url.
+            If enableDRM variable is true, a video content with 
+            empty license will be added.
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="url">New url to be added</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RemoveVideoContent(System.Int32,System.Int32)">
+            <summary>
+            Remove a certain url form a certain player's url list 
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="urlIndex">Index of the url-video content</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RemoveStream(System.Int32)">
+            <summary>
+            Remove a certain stream
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetVideoPosition(System.Int32)">
+            <summary>
+            Provide information about the position of the current video
+            of a certain player in milliseconds
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns>The position of the video</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetVideoDuration(System.Int32)">
+            <summary>
+            Provide information about the duration of the current video
+            of a certain player in milliseconds
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns>The duration of the video</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTracks(System.Int32)">
+            <summary>
+            Provide information about all the tracks of a certain stream
+            </summary>
+            <returns>Array with all the tracks</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetMaxBitrate(System.Int32,System.Int32)">
+            <summary>
+            Set a new maximum bitrate (in bits per second) of a specific track.
+            THIS doesn't disable ABR.
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+            <param name="bitrate">The maximum bitrate</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetMinBitrate(System.Int32,System.Int32)">
+            <summary>
+            Set a new minimun bitrate (in bits per second) of a specific track.
+            THIS doesn't disable ABR.
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+            <param name="bitrate">The maximum bitrate</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SelectTrack(System.Int32,System.Int32)">
+            <summary>
+            Select a certain track of a certain stream to be used.
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+            <param name="trackIndex">The index of the selected track</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTrackBitrate(System.Int32,System.Int32)">
+            <summary>
+            Obtain the bitrate of a certain track
+            </summary>
+            <param name="trackIndex">Index of the track</param>
+            <returns>The bitrate</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTrackWidth(System.Int32,System.Int32)">
+            <summary>
+            Obtain the width of a certain track
+            </summary>
+            <param name="trackIndex">Index of the track</param>
+            <returns>The width</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTrackHeight(System.Int32,System.Int32)">
+            <summary>
+            Obtain the height of a certain track
+            </summary>
+            <param name="trackIndex">Index of the track</param>
+            <returns>The height</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTrackID(System.Int32,System.Int32)">
+            <summary>
+            Obtain the ID of a certain track
+            </summary>
+            <param name="trackIndex">Index of the track</param>
+            <returns>The ID</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetTrackCount(System.Int32)">
+            <summary>
+            Obtain the number of tracks
+            </summary>
+            <returns>Number of tracks</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetPlaybackSpeedRate(System.Int32,System.Single)">
+            <summary>
+            Set the speed rate of a certain player.
+            
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <param name="speed">The speed must be greater than 0.0f and less than or equal to 8.0f</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetPlaybackSpeedRate(System.Int32)">
+            <summary>
+            Provide information about the current speed rate of a certain player
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns>The current speed rate</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.IsLive(System.Int32)">
+            <summary>
+            Check if the current playback of a certain player is live
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns>Returns true if the playback is live</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetCaptionsCount(System.Int32)">
+            <summary>
+            Obtain the number of captions from the selected player
+            </summary>
+            <returns>Number of captions</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetCaptionID(System.Int32,System.Int32)">
+            <summary>
+            Obtain the ID of a certain caption of a certain player
+            </summary>
+            <param name="ccTrackIndex">Index of the caption</param>
+            <returns>The language</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetCaptionLanguage(System.Int32,System.Int32)">
+            <summary>
+            Obtain the language of a certain caption of a certain player
+            </summary>
+            <param name="ccTrackIndex">Index of the caption</param>
+            <returns>The language</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SelectCaptionTrack(System.Int32,System.Int32)">
+            <summary>
+            Select a certain caption-track of a certain stream to be used.
+            Before using tHIS functions is recommended to use GetCaptionTrackList
+            in order to know all the information about the captions
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+            <param name="ccTrackIndex">The index of the selected caption</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetVideoWidth(System.Int32)">
+            <summary>
+            Obtain the current track's video with
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetVideoHeight(System.Int32)">
+            <summary>
+            Obtain the current track's video with
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetAudioCount(System.Int32)">
+            <summary>
+            Obtain the number of audio tracks from the selected player
+            </summary>
+            <returns>Number of audio tracks</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:HISPlayerAPI.HISPlayerInterface.GetAudioID(System.Int32,System.Int32)" -->
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetAudioLanguage(System.Int32,System.Int32)">
+            <summary>
+            Obtain the language of a certain audio track of a certain player
+            </summary>
+            <param name="audioTrackIndex">Index of the audio track</param>
+            <returns>The language</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SelectAudioTrack(System.Int32,System.Int32)">
+            <summary>
+            Select a certain audio track of a certain stream to be used.
+            Before using this functions is recommended to use GetAudioTrackList
+            in order to know all the information about the audio tracks
+            </summary>
+            <param name="playerIndex">The index of the selected player </param>
+            <param name="audioTrackIndex">The index of the selected audio track</param>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerInterface._OnEventReceived">
+            <summary>
+            Delegate to be used externally tHIS script. 
+            HISPlayerManager will use tHIS delegate to add and remove
+            events of HISPlayerInterface
+            </summary>
+        </member>
+        <member name="E:HISPlayerAPI.HISPlayerInterface.OnEventReceived">
+            <summary>
+            Event to be used with the delegate
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.AddEventCallback(HISPlayerAPI.HISPlayerInterface._OnEventReceived)">
+            <summary>
+            Add a new callback to the event delegate
+            </summary>
+            <param name="onEventReceived">New callback to be added</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RemoveEventCallback(HISPlayerAPI.HISPlayerInterface._OnEventReceived)">
+            <summary>
+            Remove a callback from the event delegate
+            </summary>
+            <param name="onEventReceived">Callback to be removed</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.CallOnEvent(HISPlayerAPI.HISPlayerEventInfo)">
+            <summary>
+            Use the event delegate internally
+            </summary>
+            <param name="eventInfo">Struct which containt the information of the event</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.HandleEvent">
+            <summary>
+            Handle the event queue of the respective platform
+            Prepared to call it wherever it's needed.
+            In general, it should be called at the end of SetUpPlayer function.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ProcessNextEvent">
+            <summary>
+            Process the next event inside the respective platform
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.isEventInQueue">
+            <summary>
+             Check if the event queue has events
+            </summary>
+            <returns>True - in case there are events in the queue</returns>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerInterface._OnErrorReceived">
+            <summary>
+            Delegate to be used externally this script. 
+            HisPlayerManager will use this delegate to add and remove
+            error-events of HisPlayerInterface
+            </summary>
+        </member>
+        <member name="E:HISPlayerAPI.HISPlayerInterface.OnErrorReceived">
+            <summary>
+            Error to be used with the delegate
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.AddErrorCallback(HISPlayerAPI.HISPlayerInterface._OnErrorReceived)">
+            <summary>
+            Add a new callback to the error-event delegate
+            </summary>
+            <param name="onErrorReceived">New callback to be added</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RemoveErrorCallback(HISPlayerAPI.HISPlayerInterface._OnErrorReceived)">
+            <summary>
+            Remove a callback from the error-event delegate
+            </summary>
+            <param name="onErrorReceived">Callback to be removed</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.CallOnError(HISPlayerAPI.HISPlayerErrorInfo)">
+            <summary>
+            Use the error-event delegate internally
+            </summary>
+            <param name="errorInfo">Struct which containt the information of the error</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.HandleError">
+            <summary>
+            Handle the error-event queue of the respective platform
+            Prepared to call it wherever it's needed.
+            In general, it should be called at the end of SetUpPlayer function.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ProcessNextError">
+            <summary>
+            Process the next event inside the respective platform
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.isErrorInQueue">
+            <summary>
+             Check if the error queue has events
+            </summary>
+            <returns>True - in case there are error-events in the queue</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.CleanTexture(UnityEngine.Color32,System.Int32)">
+            <summary>
+            Clean the texture of the stream element of choice with designated color.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetWatermark">
+            <summary>
+            Display the watermark
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ApplyBlackTexture(System.Int32)">
+            <summary>
+            Applies a black texture to the Texture2D of a certain player
+            </summary>
+            <param name="playerIndex"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RecoverPreviousRenderMode(System.Int32)">
+            <summary>
+            Reset the render mode of a certain player to the previous one store
+            </summary>
+            <param name="playerIndex"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.HandleEndOfContent(System.Int32)">
+            <summary>
+            Handle the loop and auto transition behaviours of a certain stream when the 
+            HISPlayerEvent.HISPLAYER_EVENT_END_OF_PLAYLIST has been triggered.
+            Internal usage only 
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface._enableDecodedFramesBuffer">
+            <summary>
+            Enable keeping a buffer with the decoded frames
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.DecodedFramesBufferSize">
+            <summary>
+            Max size of the Decoded Frames Buffer
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.DecodedFramesBuffer">
+            <summary>
+            Internal dictionary that implements the Decoded Frames Buffer, holding the decoded frames
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.isDecodedFramesBufferBlocked">
+            <summary>
+            Whether the Decoded Frames Buffer can be written or not
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerInterface.frameBufferStreamNumber">
+            <summary>
+            The stream number to take the frameBuffer
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetDecodedFrameAtTimestamp(System.Int32,System.Boolean)">
+            <summary>
+            Retrieves a Texture2D with the decoded frame at a given timestamp
+            </summary>
+            <remarks>
+            If no frame matches the timestamp exactly, it will retrieve the frame immediately before.
+            </remarks>
+            <param name="msec">The offset in milliseconds from the beginning of the media from which the decoded frame should be retrieved.</param>
+            <param name="deletePreviousFrames">Whether to delete older frames from the Decoded Frames buffer. Default: true</param>
+            <returns>The texture 2D of the requested frame, or null if the frame is not available for the given timestamp</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetDecodedFramesBufferRange">
+            <summary>
+            Retrieves the range of the Decoded Frames Buffer in milliseconds
+            </summary>
+            <returns>A Vector2Int with the range in milliseconds (with the start at the X component and the end at the Y component), or <c>Vector2Int.zero</c>
+            if the buffer is empty. </returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.RemoveFramesFromDecodedBufferOlderThan(System.Int32)">
+            <summary>
+            Removes all the frames from the Decoded Frames Buffer that have a timestamp older (smaller) than the given timestamp
+            </summary>
+            <param name="msec"></param>
+            <returns>Number of frames removed</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ClearDecodedFramesBuffer">
+            <summary>
+            Destroys all Texture2D in the Decoder frame buffer and then clears it
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetNetworkBandwidth">
+            <summary>
+            Returns the current network bandwidth.
+            This value is just an estimation in kbps.
+            </summary>
+            <returns> The current network bw in kbps </returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetMinBufferDurationInMs(System.Int32)">
+            <summary>
+            Sets the minimum duration of media that the player will attempt to ensure is
+            buffered at all times, in milliseconds.
+            NOTE: THIS METHOD MUST BE CALLED BEFORE SETTING UP THE PLAYER
+            </summary>
+            <param name="minBufferDurationInMs">The minimum buffer duration in milliseconds </param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetMaxBufferDurationInMs(System.Int32)">
+            <summary>
+            Sets the maximum duration of media that the player will attempt to buffer,
+            in milliseconds.
+            NOTE: THIS METHOD MUST BE CALLED BEFORE SETTING UP THE PLAYER
+            </summary>
+            <param name="maxBufferDurationInMs">The maximum buffer duration in milliseconds </param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.SetPlaybackBufferInMs(System.Int32)">
+            <summary>
+            Sets the duration of media that must be buffered for playback to start or resume
+            following a user action such as a seek, in milliseconds.
+            NOTE: THIS METHOD MUST BE CALLED BEFORE SETTING UP THE PLAYER
+            </summary>
+            <param name="playbackBufferInMs">The initial playback buffer duration in milliseconds </param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.EnableABR(System.Int32)">
+            <summary>
+            Enables the ABR to change automatically between tracks. 
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.DisableABR(System.Int32)">
+            <summary>
+            Disables the ABR to prevent the player from changing tracks regardless of bandwidth.
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetAdDuration(System.Int32)">
+            <summary>
+            Get the duration of a certain advertisement.
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetAdRemainingTime(System.Int32)">
+            <summary>
+            Get the remaining time of a certain advertisement.
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.GetAdCurrentTime(System.Int32)">
+            <summary>
+            Get the current time of a certain advertisement.
+            </summary>
+            <param name="playerIndex">Index of the player</param>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.TryToReconnect(System.Boolean)">
+            <summary>
+            Try to reconnect the network when there is no Internet
+            </summary>
+            <param name="checkLicense">Determines if it's needed to check the license key</param>
+            <returns></returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerInterface.ReconnectPlatform(System.Boolean)">
+            <summary>
+            Reconnec the platform by checking the license key or initializing the videos again
+            if needed after the Internet connection has returned
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.Instance">
+            <summary>
+            HISPlayerMacOSX's singleton
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.GetInstance">
+            <summary>
+            Generate a new HISPlayerMacOSX instance if
+            it was not already created.
+            </summary>
+            <returns>HISPlayerMacOSX's singleton</returns>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.totalScreens">
+            <summary>
+            Number of the screens into the scene
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.isPlayerSetUp">
+            <summary>
+            Determines if the player has been set up
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.isLicenseValid">
+            <summary>
+            Determines if the provided licenseKey is valid
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.width">
+            <summary>
+            Width of the current video that is being played
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.height">
+            <summary>
+            Height of the current video that is being played
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.macosListener">
+            <summary>
+            The delegate that manages the EventListener for iOS
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.isEditor">
+            <summary>
+            Determines if the app is running on the Editor
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.eventQueue">
+            <summary>
+            Queue of the events to be processed
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerMacOSX.errorQueue">
+            <summary>
+            Queue of the errors to be processed
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.SetUpPlayer(System.Collections.Generic.List{HISPlayerAPI.StreamProperties},System.String,System.Int32)">
+            <summary>
+            After the player has been initialized, the user can set up the different streams at any time in runtime.
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.ProcessEvent(System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Get the different event parameters
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.UpdateVideosEveryFrame">
+            <summary>
+            Support function to update the video buffer every frame
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.ResizeTexture(System.Int32)">
+            <summary>
+            In case the stream resolution is updated from the native player, change the resolution of the texture.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:HISPlayerAPI.HISPlayerMacOSX.ConvertLocalPath(System.Int32,System.String)" -->
+        <member name="M:HISPlayerAPI.HISPlayerMacOSX.IsWatermarkNeeded">
+            <summary>
+            Check if it's necessary to create the watermark
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.Instance">
+            <summary>
+            HISPlayerWindows's singleton
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWindows.getInstance">
+            <summary>
+            Generate a new HISPlayerWindows instance if
+            it was not already created.
+            </summary>
+            <returns>HISPlayerWindows's singleton</returns>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerWindows.HRUtils">
+            <summary>
+            Windows HRESULT processor
+            </summary>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerWindows.HRESULT">
+            <summary>
+            Basic HRESULT values. See:
+            <see href="https://docs.microsoft.com/en-us/windows/win32/seccrypto/common-hresult-values">Common HRESULT Values</see>
+            /
+            <see href="https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/705fb797-2175-4a90-b5a3-3918024b10b8">More HRESULT Values</see>
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.S_OK">
+            <summary>
+            Operation successful
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.S_FALSE">
+            <summary>
+            Operation successful but no watermark.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.NS_E_FILE_NOT_FOUND">
+            <summary>
+            The system cannot find the file specified.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.NS_E_INTERNAL">
+            <summary>
+            An unknown error occurred.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.MF_E_UNSUPPORTED_BYTESTREAM_TYPE">
+            <summary>
+            THIS byte stream is not supported.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.NS_E_RESOURCE_GONE">
+            <summary>
+            The Publishing Point or file on the Windows Media Server is no longer available.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.NS_E_BAD_REQUEST">
+            <summary>
+            The request could not be understood by the server.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.HRESULT.E_APPLICATION_TRIAL_LICENSE_EXPIRED">
+            <summary>
+            This app failed to launch because its trial license has expired.
+            </summary>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerWindows.WMP_State">
+            <summary>
+            Different states defined inside the native Windows Media Player
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.captionTrackDictionary">
+            <summary>
+            Dictionary with all the caption tracks received from the native player.
+            </summary>
+            <remarks>
+            Using a dictionary instead of a list to avoid adding duplicates, which is fairly common in windows.
+            </remarks>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.currentMediaDescription">
+            <summary>
+            Variables to handle the texture
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.textureSize">
+            <summary>
+            Stores the size of the texture of each stream
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isStopped">
+            <summary>
+            Stop status is not supported by the native and needs to be handled manually
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isEditor">
+            <summary>
+            Determines if the SDK is running in the Editor
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.appID">
+            <summary>
+            The App ID of the Windows Instance.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isPlayerSetUp">
+            <summary>
+            Determines if the player has been set up
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.totalScreens">
+            <summary>
+            Number of the screens into the scene
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isContentLoaded">
+            <summary>
+            Determines if the content has been loaded
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isContentLoading">
+            <summary>
+            Determines if the content is loading
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.isWatermarkAdded">
+            <summary>
+            Determines if the watermark has been added
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.WindowsInstancePtrs.windowsInstancesByPtrs">
+            <summary>
+            The purpose of tHIS dictionary is accessing member variables and methods from the static callbacks
+            </summary>
+            <remarks>
+            Warning: Changing the callbacks to member methods compiles, but accessing any member variables or methods causes a runtime crash
+            </remarks>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.windowsPtrs">
+            <summary>
+            Instance of each stream and its respective pointer
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWindows.UpdateVideosEveryFrame">
+            <summary>
+            Support function to update the video buffer every frame
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWindows.endOfFrame">
+            <summary>
+            Function to get a rendering event callback function from Unity to plugin
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWindows.SetNativeLogLevel(System.Boolean)">
+            <summary>
+            Enables or disables full logs of the native player
+            </summary>
+            <remarks>
+            Calls <see cref="M:HISPlayerAPI.HISPlayerWindows.SetNativeLogLevel(HISPlayerAPI.HISPlayerWindows.InternalLogLevel)"/> in ternally
+            </remarks>
+            <param name="fullLogsEnabled"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWindows.SetNativeLogLevel(HISPlayerAPI.HISPlayerWindows.InternalLogLevel)">
+            <summary>
+            Sets a specific <see cref="T:HISPlayerAPI.HISPlayerWindows.InternalLogLevel"/> for the native player
+            </summary>
+            <remarks>
+            For debuging. For release, use <see cref="M:HISPlayerAPI.HISPlayerWindows.SetNativeLogLevel(System.Boolean)"/> instead
+            </remarks>
+            <param name="logLevel"></param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWindows.HandleHISPlayerResult(HISPlayerAPI.HISPlayerWindows.HISPlayerResult,System.Boolean,System.Int32,System.String)">
+            <summary>
+            Handle the HISPlayerResult when creating the Windows Media Player and 
+            creating media contents
+            </summary>
+            <param name="result">The result to be handled</param>
+            <param name="isEditor">Determines if is the Editor or not</param>
+            <param name="playerIndex">The index of the player attached to the results</param>
+            <param name="url">URL of the content that is going to be loaded</param>
+            <returns>True if success </returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:HISPlayerAPI.HISPlayerWindows.ConvertLocalPath(System.Int32,System.String)" -->
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.Instance">
+            <summary>
+            HISPlayerAndroid's singleton
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.GetInstance">
+            <summary>
+            Generate a new HISPlayerAndroid instance if
+            it was not already created.
+            </summary>
+            <returns>HISPlayerAndroid's singleton</returns>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.totalScreens">
+            <summary>
+            Number of the screens into the scene
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.isPlayerSetUp">
+            <summary>
+            Determines if the player has been set up
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.isOpenGL3">
+            <summary>
+            Determines if there is the correct version of OpenGL
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.isWatermarkAdded">
+            <summary>
+            Determines if the watermark has been added
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerAndroid.isFirstURL">
+            <summary>
+            Determines if the license key has been checked for the first URL
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.SetUpPlayer(System.Collections.Generic.List{HISPlayerAPI.StreamProperties},System.String,System.Int32)">
+            <summary>
+            After the player has been initialized, the user can set up the different streams at any time in runtime.
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.IsXRDevicePresent">
+            <summary>
+            Detects if there is an XR device being used
+            </summary>
+            <returns>True if there is an XR device</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.ProcessNextEvent">
+            <summary>
+            Get the different event parameters
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.HISPlayerListener(HISPlayerAPI.HISPlayerEventInfo)">
+            <summary>
+            Support function to process the current event received
+            </summary>
+            <param name="eventInfo">Struct which containt the information of the event</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.HISPlayerErrorListener(HISPlayerAPI.HISPlayerErrorInfo)">
+            <summary>
+            Support function to process the current event received
+            </summary>
+            <param name="eventInfo">Struct which containt the information of the event</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.UpdateVideosEveryFrame">
+            <summary>
+            Support function to update the video buffer every frame
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.UpdateNativeTexture(System.Int32)">
+            <summary>
+            Update the native texture creating a new Texture2D to be used in the native side. It also updates
+            the resolution in the case of changing the video track
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.GetValidURLString(System.Int32,System.String)">
+            <summary>
+            Returns a valid URL string for ExoPlayer given an URL.
+            <br>
+            Local Content: Checks if the '/' symbol is included at the beginning of the url 
+                            to combine with Application.persistentDataPath or Application.streamingAssetsPath
+            </br>
+            <br>
+            Streaming Content: Checks if the URL stream begins with 'http' or 'https'. The 
+                              'http' will be replaced by 'https'. ExoPlayer doesn't support
+                              'http' protocol.
+            </br>
+            </summary>
+            <param name="payerIndex">The index of the player in multistream properties</param>
+            <param name="url">The original URL</param>
+            <returns>Returns the valid URL string</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.CheckLicenseKeyWhenFirstURLIsLoaded(System.Int32)">
+            <summary>
+            Check the license key only when the first URL of a stream has been loaded.
+            More license key checking will take place in the native side
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerAndroid.CleanPlayList(System.Int32)">
+            <summary>
+            Clean the entire playlist of a certain stream
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.Instance">
+            <summary>
+            HISPlayeriOS's singleton
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.GetInstance">
+            <summary>
+            Generate a new HISPlayeriOS instance if
+            it was not already created.
+            </summary>
+            <returns>HISPlayeriOS's singleton</returns>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.totalScreens">
+            <summary>
+            Number of the screens into the scene
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.isPlayerSetUp">
+            <summary>
+            Determines if the player has been set up
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.width">
+            <summary>
+            Width of the current video that is being played
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.height">
+            <summary>
+            Height of the current video that is being played
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.iosListener">
+            <summary>
+            The delegate that manages the EventListener for iOS
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.isWatermarkAdded">
+            <summary>
+            Determines if the watermark has been added
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.isPlaybackReady">
+            <summary>
+            Determines if the current playback of a certain stream is ready
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS.licenseTimeOut">
+            <summary>
+            The time out limit when checking the license key
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.SetUpPlayer(System.Collections.Generic.List{HISPlayerAPI.StreamProperties},System.String,System.Int32)">
+            <summary>
+            After the player has been initialized, the user can set up the different streams at any time in runtime.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS._eventQueue">
+            <summary>
+            Queue of the events to be processed
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayeriOS._errorQueue">
+            <summary>
+            Queue of the errors to be processed
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.ReceiveNativeEvent(System.Boolean,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.Int32,System.String)">
+            <summary>
+            Callback to receive the different Errors/Events from the native side
+            </summary>
+            <param name="isError">Determines if the received event is an error or not</param>
+            <param name="type">The Error/Event type</param>
+            <param name="playerIndex">The index attached to the Error/Event</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.UpdateVideosEveryFrame">
+            <summary>
+            Support function to update the video buffer every frame
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.ResizeTexture(System.Int32)">
+            <summary>
+            In case the stream resolution is updated from the native player, change the resolution of the texture.
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayeriOS.IsWatermarkNeeded">
+            <summary>
+            Check if it's necessary to create the watermark
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.Instance">
+            <summary>
+            HisPlayerWebGL's singleton
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.getInstance">
+            <summary>
+            Generate a new HisPlayerWebGL instance if
+            it was not already created.
+            </summary>
+            <returns>HisPlayerWebGL's singleton</returns>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.isPlayerSetUp">
+            <summary>
+            Determines if the player has been set up
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.totalScreens">
+            <summary>
+            Number of the screens into the scene
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.logger">
+            <summary>
+            Logger instance
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.isWatermarkChecked">
+            <summary>
+            Determines if the watermark has been checked
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.startBitrate">
+            <summary>
+            The WebGL starting bitrate.
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.playerIndexToWebGLIndex">
+            <summary>
+            Convert Unity playerIndex into WebGL playerIndex 
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.webGLIndexToPlayerIndex">
+            <summary>
+            Convert WebGL playerIndex into Unity playerIndex  
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerWebGL.isPlaybackReady">
+            <summary>
+            Determines if the playback of a certain stream is ready
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.WaterMarkCB(System.Boolean)">
+            <summary>
+            Callback for CheckWatermark request, necessary to retrieve the async data
+            </summary>
+            <param name="watermark">True if the watermark is enabled, false otherwise</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.CheckWatermark">
+            <summary>
+            Sets the watermark if the license has it enabled
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.HisPlayerListener(HISPlayerAPI.HISPlayerEventInfo)">
+            <summary>
+            Support function to process the current event received
+            </summary>
+            <param name="eventInfo">Struct which containt the information of the event</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.HISPlayerErrorListener(HISPlayerAPI.HISPlayerErrorInfo)">
+            <summary>
+            Support function to process the current error received
+            </summary>
+            <param name="errorInfo">Struct which containt the information of the error</param>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.UpdateVideosEveryFrame">
+            <summary>
+            Support function to update the video buffer every frame
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.UpdateVideoTexture(System.Int32)">
+            <summary>
+            Support function to update a certain video texture
+            </summary>
+            <param name="playerIndex">Index of the texture to be updated</param>
+            <returns>The updated texture</returns>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.AddStream(HISPlayerAPI.StreamProperties,System.Int32,System.Int32)">
+            <summary>
+            Auxiliar function to add streams
+            </summary>
+        </member>
+        <member name="M:HISPlayerAPI.HISPlayerWebGL.CleanPlayList(System.Int32)">
+            <summary>
+            Clean the entire playlist of a certain stream
+            </summary>
+        </member>
+        <member name="T:HISPlayerAPI.HISPlayerMimeTypes">
+            <summary>
+            HISPlayer supported MIME Types
+            <br>
+            </br>
+            URL_EXTENSION: The MIME type will be extracted from the URL extension
+            <br>
+            </br>
+            HLS: The "application/x-mpegURL" MIME type will be used
+            <br>
+            </br>
+            DASH: The "application/dash+xml" MIME type will be used. Not supported for iOS and macOS
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerTrack.id">
+            <summary>
+            id of the track
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerTrack.bitrate">
+            <summary>
+            Bit rate of the track in bits per second
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerTrack.width">
+            <summary>
+            Width of the track if available
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerTrack.height">
+            <summary>
+            Height of the track if available
+            </summary>
+        </member>
+        <member name="F:HISPlayerAPI.HISPlayerTrack.framerate">
+            <summary>
+            Frame rate of the track in frames per second
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:HISPlayerAPI.HISPlayerCaptionTrack.id" -->
+        <!-- Badly formed XML comment ignored for member "F:HISPlayerAPI.HISPlayerCaptionTrack.language" -->
+        <!-- Badly formed XML comment ignored for member "F:HISPlayerAPI.HISPlayerAudioTrack.id" -->
+        <!-- Badly formed XML comment ignored for member "F:HISPlayerAPI.HISPlayerAudioTrack.language" -->
+        <member name="F:HISPlayerAPI.HISPlayerCaptionElement.playerIndex">
+            <summary>
+            Index of the player associated
+            with the caption
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:HISPlayerAPI.HISPlayerCaptionElement.caption" -->
+        <!-- Badly formed XML comment ignored for member "M:HISPlayerAPI.HISPlayerCaptionElement.#ctor(System.Int32,System.String)" -->
+        <member name="T:HISPlayerUtility.CoroutineHelper">
+            <summary>
+            Support class for being able to use Coroutines into the HisPlayerInterface
+            </summary>
+        </member>
+        <member name="F:HISPlayerUtility.HISPlayerWatermarkRawImage.DEFAULT_SIZE">
+            <summary>
+            The default size of the width/height of the watermark image
+            </summary>
+        </member>
+        <member name="F:HISPlayerUtility.HISPlayerWatermarkRawImage.ASPECT_RATIO">
+            <summary>
+            The aspect ration between width and height of the watermark image
+            </summary>
+        </member>
+    </members>
+</doc>

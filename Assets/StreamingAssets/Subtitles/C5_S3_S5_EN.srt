@@ -1,0 +1,11 @@
+1
+00:00:14,414 --> 00:00:15,648
+You're hitting reef!
+
+2
+00:00:43,176 --> 00:00:45,912
+I love this position the best!
+
+3
+00:00:45,912 --> 00:00:47,647
+It feels so good!
