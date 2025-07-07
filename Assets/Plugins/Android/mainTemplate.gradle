@@ -2,20 +2,24 @@ apply plugin: 'com.android.library'
 **APPLY_PLUGINS**
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])    
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.3'
-    implementation 'org.bouncycastle:bcprov-jdk16:1.45'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    
+    implementation 'androidx.appcompat:appcompat:1.4.1'          // 添加 AppCompat 依赖
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'        // 添加 ViewPager2 依赖
+    implementation 'com.google.android.material:material:1.6.1'  // 添加 Material Design 库
+    implementation 'com.google.code.gson:gson:2.8.9'             // 添加 Gson 依赖
+
 **DEPS**}
 
 android {
-	namespace "com.unity3d.player"
-	ndkPath "**NDKPATH**"
+    namespace "com.unity3d.player"
+    ndkPath "**NDKPATH**"
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -34,10 +38,10 @@ android {
     }
 
     aaptOptions {
-        noCompress = ['.ress', '.resource', '.obb'] + unityStreamingAssets.tokenize(', ')
-        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+        noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**PACKAGING_OPTIONS**
-}**REPOSITORIES**
+}
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**
 **EXTERNAL_SOURCES**

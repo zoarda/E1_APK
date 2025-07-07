@@ -1,5 +1,6 @@
 using UnityEngine;
 using Naninovel;
+using Unity.VisualScripting;
 
 [CommandAlias("NaniSaveData")]
 public class NaniSaveData : Command
@@ -13,7 +14,9 @@ public class NaniSaveData : Command
     private static async UniTask SaveDataAsync(string name, AsyncToken asyncToken)
     {
         StartNani startNani = StartNani.Instance;
-        if (startNani.isLoggedIn)
+        ServerManager serverManager = ServerManager.Instance;
+        //暫時修改條件startNani.isLoggedIn 改成tap登入就先不做
+        if (!serverManager.isTapMode)
         {
             await startNani.SaveYaml(name);
         }

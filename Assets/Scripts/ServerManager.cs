@@ -1,11 +1,12 @@
 using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
-using System.Net.Http;
+// using System.Net.Http;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine.Networking;
-using Unity.VisualScripting;
+using Newtonsoft.Json.Linq;
+// using Unity.VisualScripting;
 
 public class ServerManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class ServerManager : MonoBehaviour
     const string serverUrl = "https://av1-api-dev.funplaytech.com";
     // const string serverUrl = "https://user.love6.tv";
     // const string serverUrl = "http://localhost:5688";
+    //for andriod
+    // const string serverUrl = "https://192.168.11.89:5688";
     public static ServerManager Instance { get; private set; }
 
     public UrlData urlData = new UrlData();
@@ -22,6 +25,9 @@ public class ServerManager : MonoBehaviour
     public TokenData tokenData = new TokenData();
 
     string curToken;
+    public bool isTapMode = true; // ✅ 若你想寫死 Tap 模式（後續可改成 config 設定）
+    [SerializeField]
+    TextAsset config;
 
     async void Awake()
     {
@@ -41,9 +47,26 @@ public class ServerManager : MonoBehaviour
     /// </summary>
     public async UniTask InitializeUrlQueryAsync()
     {
+        StartNani startNani = StartNani.Instance;
+
+        if (IsTapPlatform()) // ✅ 改這裡判斷是否為 TAP
+        {
+            Debug.Log("TAP 平台登入流程開始");
+
+            // 註冊登入回傳資料的處理邏輯
+            await HandleTapDBLoginAsync();
+
+            if (startNani != null) startNani.isLoggedIn = true;
+            return;
+        }
+
+        // ✅ 非 TAP 平台才處理網址
         await SetUrlQueryAsync();
     }
-
+    private bool IsTapPlatform()
+    {
+        return isTapMode;
+    }
     private async UniTask SetUrlQueryAsync()
     {
         StartNani startNani = StartNani.Instance;
@@ -141,15 +164,18 @@ public class ServerManager : MonoBehaviour
         }
 
         // 判斷登入方式，並儲存對應資料結構
-        if (!string.IsNullOrEmpty(token))
+        if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
         {
             urlData = new UrlData
             {
+                PlayerId = uid,
                 token = token,
                 language = language,
-                platform = 3 // 固定或可根據其他資訊決定
+                platform = 4, // TapDB
+                version = Application.version,
+                gameId = 1
             };
-            Debug.Log($"[SetUrlQuery] Using token login.");
+            Debug.Log($"[SetUrlQuery] Using TapDB login.");
         }
         else if (!string.IsNullOrEmpty(uid))
         {
@@ -181,7 +207,7 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask Login()
     {
-        // Token 登入（urlData 不為 null 且 token 不為空）
+        // Token 登入（urlData 不為 null 且 token和uid 不為空）
         if (urlData != null && !string.IsNullOrEmpty(urlData.token))
         {
             Debug.Log($"[SetUrlQuery] Using LoginByToken.");
@@ -285,7 +311,7 @@ public class ServerManager : MonoBehaviour
 
         LoadRequest requestData = new LoadRequest
         {
-            PlatformName = "3",      // 替换为实际的 platform name
+            PlatformName = "4",      // 替换为实际的 platform name
             GameIdentifier = "1"     // 替换为实际的 game identifier
         };
 
@@ -368,7 +394,7 @@ public class ServerManager : MonoBehaviour
         SaveRequest saveRequest = new SaveRequest()
         {
             Data = saveJson,
-            PlatformName = "3",         // 替換為你的實際 platform
+            PlatformName = "4",         // 替換為你的實際 platform
             GameIdentifier = "1"        // 替換為你的實際 gameId
         };
 
@@ -416,9 +442,71 @@ public class ServerManager : MonoBehaviour
             }
         }
     }
-    class JasonSaveData
+    private async UniTask HandleTapDBLoginAsync()
     {
-        public string Data;
+        var tcs = new UniTaskCompletionSource<bool>();
+
+        // Step 1: 初始化 SDK
+        NativeSDK.Instance.bindEvent((ret) =>
+        {
+            if (ret["event"]?.ToString() == "SWITCH_ACCOUNT")
+                Debug.Log("帳號已切換退出");
+        });
+
+        JObject param = new JObject();
+        param["config"] = JObject.Parse(config.text); // sdk配置
+        param["debug"] = true;
+
+        NativeSDK.Instance.init(
+            param,
+            (ret) =>
+            {
+                Debug.Log("TapDB SDK 初始化成功");
+
+                // Step 2: 開始登入
+                NativeSDK.Instance.login(
+                    (loginRet) =>
+                    {
+                        Debug.Log($"登入成功：{loginRet}");
+                        string uid = loginRet["uid"]?.ToString();
+                        string token = loginRet["token"]?.ToString();
+
+                        if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
+                        {
+                            ServerManager.Instance.urlData = new ServerManager.UrlData
+                            {
+                                PlayerId = uid,
+                                token = token,
+                                platform = 4,
+                                language = "zh",
+                                version = Application.version,
+                                gameId = 1
+                            };
+
+                            ServerManager.Instance.Login().Forget();
+                            tcs.TrySetResult(true);
+                        }
+                        else
+                        {
+                            Debug.LogError("TapDB 登入回傳資料缺失");
+                            tcs.TrySetResult(false);
+                        }
+                    },
+                    (failRet) =>
+                    {
+                        Debug.LogError($"登入失敗：{failRet}");
+                        tcs.TrySetResult(false);
+                    }
+                );
+            },
+            (ret) =>
+            {
+                Debug.LogError($"TapDB SDK 初始化失敗：{ret}");
+                tcs.TrySetResult(false);
+            }
+        );
+
+        await tcs.Task;
     }
     [Serializable]
     public class ApiResponse
@@ -448,9 +536,12 @@ public class ServerManager : MonoBehaviour
     /// </summary>
     public class UrlData
     {
-        public string token;
-        public string language;
-        public int platform;
+        public string PlayerId;   // TapDB uid 對應後端 CreateRequest.PlayerId
+        public string token;      // TapDB 登入後回傳 token
+        public int platform;      // EnumPlatfromEntity.Tap = 4
+        public string language;   // 可選: 用於前端語系設定
+        public string version;    // 可選: Application.version
+        public uint gameId; // 可選: 對應後端 GameId
     }
     public class UrlDataByUid
     {

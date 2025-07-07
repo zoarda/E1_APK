@@ -1,0 +1,10 @@
+{
+    "game_id":110,
+    "game_name":"AV導演",
+    "game_appid":"3214BDFC6C7AE73F5",
+    "access_key":"PEDXHTMfQPzQiR9",
+    "devicename":"android",
+    "game_url":"https://sdk.hdsedjem.com/",
+    "s3_url":"https://xxx.xxx.xxx",
+    "is_cloud":false
+}

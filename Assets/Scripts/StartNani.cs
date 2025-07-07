@@ -33,24 +33,26 @@ public class StartNani : MonoBehaviour
     // ChapterPage chapterPage;
     public GameObject VideoImage, ErrorPage, ChapterPage;
 
+//暫時修改成tap不登入使用
     public bool isLoggedIn = false; // 預設為未登入
+
 
     [SerializeField] private List<Toggle> toggles;
 
     WebGLStreamController webGLStreamController;
     public static StartNani Instance { get; private set; }
     [SerializeField] private List<string> Language = new();
-    // 定義與 JavaScript 函數的交互接口
-    [DllImport("__Internal")]
-    private static extern void SendMessageToParent(string message);
+    // // 定義與 JavaScript 函數的交互接口
+    // [DllImport("__Internal")]
+    // private static extern void SendMessageToParent(string message);
 
-    [DllImport("__Internal")]
-    private static extern void OpenUrl(string url);
-    [DllImport("__Internal")]
-    private static extern void Back();
+    // [DllImport("__Internal")]
+    // private static extern void OpenUrl(string url);
+    // [DllImport("__Internal")]
+    // private static extern void Back();
 
-    [DllImport("__Internal")]
-    private static extern void ReloadPage();
+    // [DllImport("__Internal")]
+    // private static extern void ReloadPage();
     // public Texture2D cursor;
     void Awake()
     {
@@ -81,14 +83,9 @@ public class StartNani : MonoBehaviour
     }
     async void Start()
     {
-        // OpenPageMessage();
-        // if (Application.platform == RuntimePlatform.WebGLPlayer)
-        await ServerManager.Instance.InitializeUrlQueryAsync();
+        // await ServerManager.Instance.InitializeUrlQueryAsync();
         Init();
         await subtitlesManager.Init();
-        // await naniCommandManger.Init();
-        // if (isAddressable)
-        //     await AddressablesLoad();
     }
     public async UniTask StartPlayVideo()
     {
@@ -163,7 +160,8 @@ public class StartNani : MonoBehaviour
             camera.UICamera.gameObject.AddComponent<AspectRatioControl>();
         //尋找存檔紀錄
         // SaveData saveData = await YamlLoader.LoadYaml<SaveData>(Application.persistentDataPath + "/SaveData.yaml");
-        if (isLoggedIn)
+        ServerManager serverManager = ServerManager.Instance;
+        if (!serverManager.isTapMode)
         {
             ServerManager.SaveData saveData = await ServerManager.Instance.Load();
             saveData.friendship = allFriendship();
@@ -377,7 +375,7 @@ public class StartNani : MonoBehaviour
 
                 // Example 2: 發送 'openurl' 事件
                 Debug.Log("shrimp: back");
-                Back();
+                // Back();
 
                 // // Example 3: 發送 'reload' 事件
                 // ReloadPage();
@@ -743,7 +741,8 @@ public class StartNani : MonoBehaviour
     //存檔
     public async UniTask SaveYaml(string scriptName)
     {
-        if (isLoggedIn)
+        ServerManager serverManager = ServerManager.Instance;
+        if (!serverManager.isTapMode)
         {
             var saveData = await ServerManager.Instance.Load();
 
