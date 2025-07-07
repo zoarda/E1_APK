@@ -83,7 +83,7 @@ public class StartNani : MonoBehaviour
     }
     async void Start()
     {
-        // await ServerManager.Instance.InitializeUrlQueryAsync();
+        await ServerManager.Instance.InitializeUrlQueryAsync();
         Init();
         await subtitlesManager.Init();
     }

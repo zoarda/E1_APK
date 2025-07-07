@@ -4,14 +4,10 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])    
     implementation 'com.google.android.exoplayer:exoplayer:2.18.3'
-        // AppCompat 額外加入，避免樣式屬性缺失
-    implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'org.bouncycastle:bcprov-jdk16:1.45'
 **DEPS**}
 
 android {
-	namespace "com.unity3d.player"
-	ndkPath "**NDKPATH**"
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
