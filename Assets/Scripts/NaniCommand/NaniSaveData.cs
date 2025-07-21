@@ -14,9 +14,9 @@ public class NaniSaveData : Command
     private static async UniTask SaveDataAsync(string name, AsyncToken asyncToken)
     {
         StartNani startNani = StartNani.Instance;
-        ServerManager serverManager = ServerManager.Instance;
+        // ServerManager serverManager = ServerManager.Instance;
         //暫時修改條件startNani.isLoggedIn 改成tap登入就先不做
-        if (!serverManager.isTapMode)
+        if (startNani.isLoggedIn)
         {
             await startNani.SaveYaml(name);
         }

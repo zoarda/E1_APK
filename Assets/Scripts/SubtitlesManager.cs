@@ -82,6 +82,7 @@ public class SubtitlesManager : MonoBehaviour
         if (!urlToScence.videoDictionary.TryGetValue(url, out string scriptBaseName))
         {
             Debug.LogError($"找不到對應的字幕名稱：URL = {url}");
+            subtitles.Clear(); // ✅
             return;
         }
 
@@ -102,26 +103,6 @@ public class SubtitlesManager : MonoBehaviour
         }
 
         Debug.Log($"選擇字幕語言：{LanguageCase}, 對應檔名：{videoName}");
-        // if (videoPlayer != null)
-        // {
-        //     switch (LanguageCase)
-        //     {
-        //         case Language.中文:
-        //             videoName = videoPlayer.clip.name;
-        //             break;
-        //         case Language.日文:
-        //             videoName = videoPlayer.clip.name + "_JP";
-        //             break;
-        //         case Language.英文:
-        //             videoName = videoPlayer.clip.name + "_EN";
-        //             break;
-        //     }
-        // }
-        // else
-        // {
-        //     Debug.Log("videoPlayer is null");
-        // }
-
         string subtitlePath = Application.streamingAssetsPath + "/Subtitles/" + videoName + ".srt";
 
         try
@@ -142,6 +123,7 @@ public class SubtitlesManager : MonoBehaviour
             if (string.IsNullOrEmpty(content))
             {
                 Debug.LogWarning($"字幕檔為空：{subtitlePath}");
+                subtitles.Clear(); // ✅ 加這行：字幕檔為空 → 清空字幕
             }
             else
             {
@@ -152,6 +134,7 @@ public class SubtitlesManager : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log($"讀取字幕檔時發生錯誤：{subtitlePath}\n{e}");
+            subtitles.Clear(); // ✅ 加這行：讀取失敗 → 清空字幕
         }
     }
     void ParseSubtitles(string subtitlesContent)

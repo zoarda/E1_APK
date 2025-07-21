@@ -41,27 +41,47 @@ public class ServerManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject); // 可選，確保在場景切換時保留
     }
-
+    public async UniTask<SaveData?> InitializeUrlQueryAndLoadAsync()
+    {
+        await InitializeUrlQueryAsync();
+        return await Load();
+    }
     /// <summary>
     /// 初始化 URL 查詢數據
     /// </summary>
-    public async UniTask InitializeUrlQueryAsync()
+    public async UniTask<SaveData?> InitializeUrlQueryAsync()
     {
         StartNani startNani = StartNani.Instance;
 
         if (IsTapPlatform()) // ✅ 改這裡判斷是否為 TAP
         {
             Debug.Log("TAP 平台登入流程開始");
-
-            // 註冊登入回傳資料的處理邏輯
             await HandleTapDBLoginAsync();
+            Debug.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
 
-            if (startNani != null) startNani.isLoggedIn = true;
-            return;
+            if (string.IsNullOrEmpty(curToken))
+            {
+                Debug.LogError("curToken is null after Tap login!");
+                return null;
+            }
+            if (StartNani.Instance != null)
+                StartNani.Instance.isLoggedIn = true;
+            // 登入成功後才 Load
+            return await Load();
         }
 
-        // ✅ 非 TAP 平台才處理網址
+        // ✅ 非 TAP 模式
+        Debug.Log("非 TAP 平台，開始網址解析 + 登入");
         await SetUrlQueryAsync();
+
+        Debug.Log($"curToken after SetUrlQueryAsync: {curToken}");
+        if (string.IsNullOrEmpty(curToken))
+        {
+            Debug.LogError("curToken is null after non-Tap login!");
+            return null;
+        }
+
+        return await Load();
     }
     private bool IsTapPlatform()
     {
@@ -205,24 +225,25 @@ public class ServerManager : MonoBehaviour
         // 可選：退出應用程式或執行其他操作
         // Application.Quit();
     }
-    public async UniTask Login()
+    public async UniTask<bool> Login()
     {
-        // Token 登入（urlData 不為 null 且 token和uid 不為空）
         if (urlData != null && !string.IsNullOrEmpty(urlData.token))
         {
             Debug.Log($"[SetUrlQuery] Using LoginByToken.");
             await LoginByToken();
+            return !string.IsNullOrEmpty(curToken);
         }
-        // UID 登入（urlDataByUid 不為 null 且 uid 不為空）
         else if (urlDataByUid != null && !string.IsNullOrEmpty(urlDataByUid.PlayerId))
         {
             Debug.Log($"[SetUrlQuery] Using LoginByUid.");
             await LoginByUid();
+            return !string.IsNullOrEmpty(curToken);
         }
         else
         {
             Debug.LogError("No valid login data.");
             await ShowErrorPageAsync("Invalid login state. Please login again.");
+            return false;
         }
     }
     public async UniTask LoginByUid()
@@ -273,6 +294,7 @@ public class ServerManager : MonoBehaviour
         {
             var jurlData = JsonUtility.ToJson(urlData);
             Debug.Log($"jLoginData: {jurlData}");
+
             UnityWebRequest request = new UnityWebRequest(url, "POST");
             byte[] bodyRaw = Encoding.UTF8.GetBytes(jurlData);
             request.uploadHandler = new UploadHandlerRaw(bodyRaw);
@@ -290,15 +312,41 @@ public class ServerManager : MonoBehaviour
             string responseBody = request.downloadHandler.text;
             Debug.Log($"Token Login Response: {responseBody}");
 
-            ApiResponse apiResponse = JsonUtility.FromJson<ApiResponse>(responseBody);
-            if (apiResponse.success == false || apiResponse.success == null)
+            // 外層 parse
+            var apiJson = JObject.Parse(responseBody);
+            bool success = apiJson["success"]?.Value<bool>() ?? false;
+            if (!success)
             {
                 Debug.Log($"Token Login Failed");
                 return;
             }
 
-            curToken = apiResponse.data;
-            Debug.Log($"curToken (from token): {curToken}");
+            // data 是個 JSON string，要 parse 第二次
+            string dataStr = apiJson["data"]?.Value<string>();
+            if (string.IsNullOrEmpty(dataStr))
+            {
+                Debug.Log($"Token Login Missing Data");
+                return;
+            }
+
+            var dataJson = JObject.Parse(dataStr);
+            int isPay = dataJson["IsPay"]?.Value<int>() ?? 0;
+
+            Debug.Log($"TapVerifyData: code={dataJson["TapVerify"]?["code"]}, msg={dataJson["TapVerify"]?["msg"]}, user_id={dataJson["TapVerify"]?["user_id"]}");
+            Debug.Log($"IsPay={isPay}");
+
+            if (isPay != 1)
+            {
+                StartNani.Instance.ispay = false;
+                Debug.LogWarning("用戶未購買，禁止進入遊戲");
+                return;
+            }
+
+            // 已購買：取得 JwtToken
+            string jwtToken = dataJson["JwtToken"]?.Value<string>();
+            Debug.Log($"curToken (from token): {jwtToken}");
+            curToken = jwtToken;
+            StartNani.Instance.ispay = true;
         }
         catch (Exception ex)
         {
@@ -307,8 +355,14 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask<SaveData?> Load()
     {
-        string url = $"{serverUrl}/api/a/Player/Load";
+        if (string.IsNullOrEmpty(curToken))
+        {
+            Debug.LogError("curToken is null or empty before Load!");
+            return null;
+        }
 
+        string url = $"{serverUrl}/api/a/Player/Load";
+        Debug.Log("curToken before Load: " + curToken);
         LoadRequest requestData = new LoadRequest
         {
             PlatformName = "4",      // 替换为实际的 platform name
@@ -442,6 +496,19 @@ public class ServerManager : MonoBehaviour
             }
         }
     }
+    //     // 加一個方法提示 & 關閉
+    //     private void ShowNotPurchasedMessageAndQuit()
+    //     {
+    //         // 顯示提示（可自行替換為 UI）
+    //         Debug.LogError("未購買本遊戲，請先購買再遊玩");
+
+    //         // 幾秒後關閉遊戲
+    //         Application.Quit();
+
+    // #if UNITY_EDITOR
+    //         UnityEditor.EditorApplication.isPlaying = false;
+    // #endif
+    //     }
     private async UniTask HandleTapDBLoginAsync()
     {
         var tcs = new UniTaskCompletionSource<bool>();
@@ -465,7 +532,7 @@ public class ServerManager : MonoBehaviour
 
                 // Step 2: 開始登入
                 NativeSDK.Instance.login(
-                    (loginRet) =>
+                  async (loginRet) =>
                     {
                         Debug.Log($"登入成功：{loginRet}");
                         string uid = loginRet["uid"]?.ToString();
@@ -473,7 +540,7 @@ public class ServerManager : MonoBehaviour
 
                         if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
                         {
-                            ServerManager.Instance.urlData = new ServerManager.UrlData
+                            urlData = new UrlData
                             {
                                 PlayerId = uid,
                                 token = token,
@@ -483,7 +550,7 @@ public class ServerManager : MonoBehaviour
                                 gameId = 1
                             };
 
-                            ServerManager.Instance.Login().Forget();
+                            await Login();
                             tcs.TrySetResult(true);
                         }
                         else
@@ -601,5 +668,11 @@ public class ServerManager : MonoBehaviour
         public string GameIdentifier;
     }
 
-
+    [Serializable]
+    public class TapVerifyData
+    {
+        public int code;
+        public string msg;
+        public string user_id;
+    }
 }

@@ -127,11 +127,11 @@ public class WebGLStreamController : HISPlayerManager
         EndPlay = true;
         StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha = 0;
         Debug.Log($"Alphat to 0{StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha},haveVIdeoReady{haveVideoReady}");
-        if (!haveVideoReady)
-        {
-            StartNani.Instance.OpenPageMessage();
-            haveVideoReady = true;
-        }
+        // if (!haveVideoReady)
+        // {
+        //     StartNani.Instance.OpenPageMessage();
+        //     haveVideoReady = true;
+        // }
     }
 
     public async UniTask PlayVideo()

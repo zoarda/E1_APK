@@ -2,22 +2,32 @@ apply plugin: 'com.android.library'
 **APPLY_PLUGINS**
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])    
-    implementation 'com.google.android.exoplayer:exoplayer:2.18.3'
-        // AppCompat 額外加入，避免樣式屬性缺失
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'org.bouncycastle:bcprov-jdk16:1.45'
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+    // ExoPlayer 播放器所需內容
+    implementation 'com.google.android.exoplayer:exoplayer:2.18.3'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.18.3'  // ✅ 必加
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.18.3' 
+    implementation 'com.google.android.exoplayer:exoplayer-smoothstreaming:2.18.3'
+
+    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+
 **DEPS**}
 
 android {
-	namespace "com.unity3d.player"
-	ndkPath "**NDKPATH**"
+    namespace "com.unity3d.player"
+    ndkPath "**NDKPATH**"
     compileSdkVersion **APIVERSION**
     buildToolsVersion '**BUILDTOOLS**'
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
 
     defaultConfig {
@@ -36,10 +46,10 @@ android {
     }
 
     aaptOptions {
-        noCompress = ['.ress', '.resource', '.obb'] + unityStreamingAssets.tokenize(', ')
-        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~"
+        noCompress = **BUILTIN_NOCOMPRESS** + unityStreamingAssets.tokenize(', ')
+        ignoreAssetsPattern = "!.svn:!.git:!.ds_store:!*.scc:!CVS:!thumbs.db:!picasa.ini:!*~"
     }**PACKAGING_OPTIONS**
-}**REPOSITORIES**
+}
 **IL_CPP_BUILD_SETUP**
 **SOURCE_BUILD_SETUP**
 **EXTERNAL_SOURCES**

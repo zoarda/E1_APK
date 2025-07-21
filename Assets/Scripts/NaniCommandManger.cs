@@ -136,7 +136,7 @@ public class NaniCommandManger : MonoBehaviour
         }
     }
     public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type)
-    {       
+    {
         // varManager.TrySetVariableValue("friendship", saveData.friendship);
         // friednshipList.Add(saveData.friendship);
 
@@ -179,7 +179,16 @@ public class NaniCommandManger : MonoBehaviour
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
         var varManager = Engine.GetService<ICustomVariableManager>();
         var myValue = varManager.GetVariableValue("friendship");
-        float a = float.Parse(myValue);
+        float a;
+        if (!string.IsNullOrEmpty(myValue))
+        {
+            a = float.Parse(myValue);
+        }
+        else
+        {
+            Debug.LogWarning("friendship variable is null or empty; using default value 0f");
+            a = 0f;
+        }
         choiceButton.onClick.RemoveAllListeners();
         choiceButton.onClick.AddListener(async () =>
         {

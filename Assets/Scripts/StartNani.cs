@@ -31,11 +31,12 @@ public class StartNani : MonoBehaviour
 
     public Button videoSkip, btnCheck;
     // ChapterPage chapterPage;
-    public GameObject VideoImage, ErrorPage, ChapterPage;
+    public GameObject VideoImage, ErrorPage, ChapterPage, LoginPage;
 
-//暫時修改成tap不登入使用
+    //暫時修改成tap不登入使用
     public bool isLoggedIn = false; // 預設為未登入
 
+    public bool ispay = true;
 
     [SerializeField] private List<Toggle> toggles;
 
@@ -83,7 +84,36 @@ public class StartNani : MonoBehaviour
     }
     async void Start()
     {
-        await ServerManager.Instance.InitializeUrlQueryAsync();
+        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WebGLPlayer)
+        {
+            LoginPage.SetActive(true);
+
+            // ✅ 登入並自動 Load
+            var saveData = await ServerManager.Instance.InitializeUrlQueryAndLoadAsync();
+
+            LoginPage.SetActive(false);
+
+            if (saveData != null)
+            {
+                saveData.friendship = allFriendship();
+
+                // 將設置好的友誼值存入 Manager 變數
+                var varManager = Engine.GetService<ICustomVariableManager>();
+                varManager.TrySetVariableValue("friendship", saveData.friendship);
+
+                friednshipList.Add(saveData.friendship);
+
+                await SelectOptionSwtich(saveData);
+            }
+            else
+            {
+                Debug.LogWarning("Load SaveData 失敗或未登入！");
+            }
+        }
+        else
+        {
+            Debug.Log("nologinmode");
+        }
         Init();
         await subtitlesManager.Init();
     }
@@ -158,23 +188,23 @@ public class StartNani : MonoBehaviour
         }
         if (!camera.UICamera.gameObject.TryGetComponent(out AspectRatioControl arc2))
             camera.UICamera.gameObject.AddComponent<AspectRatioControl>();
-        //尋找存檔紀錄
-        // SaveData saveData = await YamlLoader.LoadYaml<SaveData>(Application.persistentDataPath + "/SaveData.yaml");
-        ServerManager serverManager = ServerManager.Instance;
-        if (!serverManager.isTapMode)
-        {
-            ServerManager.SaveData saveData = await ServerManager.Instance.Load();
-            saveData.friendship = allFriendship();
-            // 將設置好的友誼值存入Manager變數
-            var varManager = Engine.GetService<ICustomVariableManager>();
-            varManager.TrySetVariableValue("friendship", saveData.friendship);
-            friednshipList.Add(saveData.friendship);
-            await SelectOptionSwtich(saveData);
-        }
-        else
-        {
-            Debug.Log("nologinmode");
-        }
+        // //尋找存檔紀錄
+        // // SaveData saveData = await YamlLoader.LoadYaml<SaveData>(Application.persistentDataPath + "/SaveData.yaml");
+        // ServerManager serverManager = ServerManager.Instance;
+        // if (isLoggedIn)
+        // {
+        //     ServerManager.SaveData saveData = await ServerManager.Instance.Load();
+        //     saveData.friendship = allFriendship();
+        //     // 將設置好的友誼值存入Manager變數
+        //     var varManager = Engine.GetService<ICustomVariableManager>();
+        //     varManager.TrySetVariableValue("friendship", saveData.friendship);
+        //     friednshipList.Add(saveData.friendship);
+        //     await SelectOptionSwtich(saveData);
+        // }
+        // else
+        // {
+        //     Debug.Log("nologinmode");
+        // }
         //初始化語言 並設置語言
         await LanguageManager.Init();
         var Player = Engine.GetService<IScriptPlayer>();
@@ -182,6 +212,11 @@ public class StartNani : MonoBehaviour
         // await Player.PreloadAndPlayAsync("StartGame");
         //設定選擇按鈕頁面
 
+        var sfx = Engine.GetService<IAudioManager>();
+        if (sfx != null)
+        {
+            await sfx.PlayBgmAsync("GameStart", 0.2f, 0.5f, true);
+        }
         await VideoManager.Instance.InitVideoControll();
         //設定初始選擇按鈕(給遙控器用)
         EventSystem.current.SetSelectedGameObject(Btn_StartGame.gameObject);
@@ -279,8 +314,14 @@ public class StartNani : MonoBehaviour
         //開始遊戲
         Btn_StartGame.onClick.AddListener(async () =>
         {
+            if (!ispay)
+            {
+                Debug.Log("尚未購買遊戲，跳出提示並關閉遊戲");
+                CheckPage.SetActive(!CheckPage.activeSelf);
+                return;
+            }
             // AudioManager.instance.PlaySFX("Up");
-            // OpenPage.SetActive(true);
+            OpenPage.SetActive(true);
             CanvasGroup canvasGroup = VideoImage.GetComponent<CanvasGroup>();
             canvasGroup.alpha = 1;
             StartGamePage.SetActive(!StartGamePage.activeSelf);
@@ -741,8 +782,8 @@ public class StartNani : MonoBehaviour
     //存檔
     public async UniTask SaveYaml(string scriptName)
     {
-        ServerManager serverManager = ServerManager.Instance;
-        if (!serverManager.isTapMode)
+        // ServerManager serverManager = ServerManager.Instance;
+        if (isLoggedIn)
         {
             var saveData = await ServerManager.Instance.Load();
 
