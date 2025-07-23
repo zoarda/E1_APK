@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class NativeSDK : MonoBehaviour
 {
-
     #region Internal
 
 #if UNITY_IOS
@@ -134,6 +133,13 @@ public class NativeSDK : MonoBehaviour
         Call("chat", EPMTY_PARAM.ToString());
     }
 
+    // 打开客服界面（未初始化时可用）
+    public void chat2(JObject param)
+    {
+        _map["chat"] = new CallbackInfo(null, null);
+        Call("chat", param.ToString());
+    }
+
     // 获取用户信息
     public void user(CallbackDelegate success, CallbackDelegate fail)
     {
@@ -141,14 +147,24 @@ public class NativeSDK : MonoBehaviour
         Call("user", EPMTY_PARAM.ToString());
     }
 
+    // 上报角色信息
+    public void uploadRole(JObject param)
+    {
+        _map["uploadRole"] = new CallbackInfo(null, null);
+        Call("uploadRole", param.ToString());
+    }
+
     void Call(string method, string paramString)
     {
         Debug.Log(String.Format("[Unity Call]{0}:{1}", method, paramString));
-#if UNITY_IOS
-        OnCall(method, paramString);
+#if UNITY_EDITOR
+        // Editor 模擬回調或直接跳過
+        Debug.Log("[NativeSDK] Editor environment - skipping native call.");
+#elif UNITY_IOS
+    OnCall(method, paramString);
 #elif UNITY_ANDROID
-        AndroidJavaObject jo = new AndroidJavaObject("com.external.UnityNativeInterface");
-        jo.CallStatic("OnCall", method, paramString);
+    AndroidJavaObject jo = new AndroidJavaObject("com.external.UnityNativeInterface");
+    jo.CallStatic("OnCall", method, paramString);
 #endif
     }
 

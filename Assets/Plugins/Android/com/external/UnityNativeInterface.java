@@ -8,7 +8,9 @@ import com.mchsdk.extras.Tracker;
 import com.mchsdk.open.IGPUserObsv;
 import com.mchsdk.open.MCApiFactory;
 import com.mchsdk.open.OrderInfo;
+import com.mchsdk.open.RoleInfo;
 import com.mchsdk.open.ToastUtil;
+import com.mchsdk.open.UploadRoleCallBack;
 
 import com.mchsdk.paysdk.bean.ChannelAndGameInfo;
 import com.mchsdk.paysdk.bean.PersonalCenterModel;
@@ -80,6 +82,11 @@ public class UnityNativeInterface {
             return;
         }
 
+        if(MCApiFactory.getMCApi().isLogin()){
+            ToastUtil.show(context, "已登录");
+            return;
+        }
+
         //拉起登录
         IGPUserObsv userObsv = MCApiFactory.getMCApi().getLoginCallback();
         if (!MCApiFactory.getMCApi().isLogin()) {
@@ -90,16 +97,18 @@ public class UnityNativeInterface {
     // 启动登出
     static void _logout(JSONObject data) {
         Activity context = MCApiFactory.getMCApi().getContext();
+        
         if(!MCApiFactory.getMCApi().isInit()){
             ToastUtil.show(context, "SDK未初始化");
             return;
         }
 
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
         try {
-            if (!MCApiFactory.getMCApi().isLogin()) {
-                ToastUtil.show(context, "未登录");
-                return;
-            }
             boolean silent = data.getBoolean("silent");
             MCApiFactory.getMCApi().loginOut(context, silent);
         } catch (JSONException e) {
@@ -116,7 +125,12 @@ public class UnityNativeInterface {
             return;
         }
 
-        Log.d(TAG, "_pay"+data.toString());
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
+        MCLog.d(TAG, "_pay:"+data.toString());
         try {
             String productId = data.getString("body");      //productId
             String productName = data.getString("title");   //name
@@ -149,7 +163,12 @@ public class UnityNativeInterface {
             return;
         }
 
-        Log.d(TAG, "_ptbpay"+data.toString());
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
+        MCLog.d(TAG, "_ptbpay:"+data.toString());
         MCApiFactory.getMCApi().ptbpay(context/*, order*//*, sdkPayCallback*/);
     }
 
@@ -161,20 +180,34 @@ public class UnityNativeInterface {
             return;
         }
 
-        Log.d(TAG, "_bill"+data.toString());
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
+        MCLog.d(TAG, "_bill:"+data.toString());
         MCApiFactory.getMCApi().bill();
     }
 
     static void _chat(JSONObject data) {
-        Activity context = MCApiFactory.getMCApi().getContext();
+        MCLog.d(TAG, "_chat:" + data.toString());
+        boolean isInit = MCApiFactory.getMCApi().isInit();
+        if (isInit) {
+            MCApiFactory.getMCApi().chat();
+        } else {
+            // 参数判断
+            if(data.length() <= 0) {
+                return;
+            }
 
-        if(!MCApiFactory.getMCApi().isInit()){
-            ToastUtil.show(context, "SDK未初始化");
-            return;
+            // 初始化（离线初始化）
+            Activity context = UnityPlayer.currentActivity;
+            IActiveJsb activeJsb = new UnityActiveJsb();
+            MCApiFactory.getMCApi().init2(context, data, activeJsb, false);
+
+            // 打开客服
+            MCApiFactory.getMCApi().chat2();
         }
-
-        Log.d(TAG, "_chat" + data.toString());
-        MCApiFactory.getMCApi().chat();
     }
 
     static void _user(JSONObject data) {
@@ -185,8 +218,43 @@ public class UnityNativeInterface {
             return;
         }
 
-        Log.d(TAG, "_user" + data.toString());
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
+        MCLog.d(TAG, "_user:" + data.toString());
         MCApiFactory.getMCApi().user();
+    }
+
+    static void _uploadRole(JSONObject data) {
+        Activity context = MCApiFactory.getMCApi().getContext();
+
+        if(!MCApiFactory.getMCApi().isInit()){
+            ToastUtil.show(context, "SDK未初始化");
+            return;
+        }
+
+        if (!MCApiFactory.getMCApi().isLogin()) {
+            ToastUtil.show(context, "未登录");
+            return;
+        }
+
+        MCLog.d(TAG, "_uploadRole:" + data.toString());
+
+        RoleInfo info = new RoleInfo();
+        info.setServerId(data.optString("serverId",""));
+        info.setServerName(data.optString("serverName",""));
+        info.setRoleId(data.optString("roleId",""));
+        info.setRoleName(data.optString("roleName",""));
+        info.setRoleLevel(data.optString("roleLevel",""));
+        info.setRoleCombat(data.optString("roleCombat",""));
+        MCApiFactory.getMCApi().uploadRole(info, new UploadRoleCallBack() {
+            @Override
+            public void onUploadComplete(String result) {
+                MCLog.d(TAG, "上传角色信息结果："+result);
+            }
+        });
     }
 
     // --埋点
@@ -260,6 +328,9 @@ public class UnityNativeInterface {
                             break;
                         case "user":
                             _user(data);
+                            break;
+                        case "uploadRole":
+                            _uploadRole(data);
                             break;
                         case "logSetUserId":
                             _logSetUserId(data);

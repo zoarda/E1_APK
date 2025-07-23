@@ -57,7 +57,7 @@ public class ServerManager : MonoBehaviour
         {
             Debug.Log("TAP 平台登入流程開始");
             await HandleTapDBLoginAsync();
-            Debug.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
+            DiscordLogger.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
 
             if (string.IsNullOrEmpty(curToken))
             {
@@ -269,7 +269,7 @@ public class ServerManager : MonoBehaviour
             }
 
             string responseBody = request.downloadHandler.text;
-            Debug.Log($"UID Login Response: {responseBody}");
+            DiscordLogger.Log($"UID Login Response: {responseBody}");
 
             ApiResponse apiResponse = JsonUtility.FromJson<ApiResponse>(responseBody);
             if (apiResponse.success == false || apiResponse.success == null)
@@ -534,7 +534,7 @@ public class ServerManager : MonoBehaviour
                 NativeSDK.Instance.login(
                   async (loginRet) =>
                     {
-                        Debug.Log($"登入成功：{loginRet}");
+                        DiscordLogger.Log($"登入成功：{loginRet}");
                         string uid = loginRet["uid"]?.ToString();
                         string token = loginRet["token"]?.ToString();
 
@@ -575,6 +575,7 @@ public class ServerManager : MonoBehaviour
 
         await tcs.Task;
     }
+
     [Serializable]
     public class ApiResponse
     {
