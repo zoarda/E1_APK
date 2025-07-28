@@ -332,8 +332,8 @@ public class ServerManager : MonoBehaviour
             var dataJson = JObject.Parse(dataStr);
             int isPay = dataJson["IsPay"]?.Value<int>() ?? 0;
 
-            Debug.Log($"TapVerifyData: code={dataJson["TapVerify"]?["code"]}, msg={dataJson["TapVerify"]?["msg"]}, user_id={dataJson["TapVerify"]?["user_id"]}");
-            Debug.Log($"IsPay={isPay}");
+            DiscordLogger.Log($"TapVerifyData: code={dataJson["TapVerify"]?["code"]}, msg={dataJson["TapVerify"]?["msg"]}, user_id={dataJson["TapVerify"]?["user_id"]}");
+            DiscordLogger.Log($"IsPay={isPay}");
 
             if (isPay != 1)
             {

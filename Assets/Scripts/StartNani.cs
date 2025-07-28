@@ -237,7 +237,7 @@ public class StartNani : MonoBehaviour
             // 確保有成功取得後再播放
             if (controller != null)
             {
-                await controller.Play("https://zhuanma.eidol.tw/video/m3u8/54affb3c/index.m3u8");
+                await controller.Play("https://zhuanma.eidol.tw/video/m3u8/ae98fb56/index.m3u8");
                 Debug.Log("播放開頭動畫");
             }
             else
@@ -245,6 +245,7 @@ public class StartNani : MonoBehaviour
                 Debug.LogError("找不到 WebGLStreamController 組件！");
             }
         });
+
         //設定影片控制顯示
         buttonController.onClick.AddListener(() =>
         {
