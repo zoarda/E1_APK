@@ -804,7 +804,7 @@ public class StartNani : MonoBehaviour
             if (!saveData.scriptName.Contains(scriptName))
                 saveData.scriptName.Add(scriptName);
 
-            saveData.PlatformName = "2"; // 可以用 Application.platform.ToString() 也行
+            saveData.PlatformName = "4"; // 可以用 Application.platform.ToString() 也行
             saveData.GameIdentifier = "1"; // 也可用 Application.identifier
 
             await ServerManager.Instance.Save(saveData);

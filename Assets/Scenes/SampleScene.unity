@@ -346,7 +346,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6903469629889118883, guid: 150afac9a1498dc40bd407399caf00f5, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8560948822922380779, guid: 150afac9a1498dc40bd407399caf00f5, type: 3}
       propertyPath: m_Pivot.x
@@ -1381,7 +1381,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &337077116
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3736,7 +3736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5370028927207608556, guid: 691812056c51fe747af8c5071cdb7a7a, type: 3}
       propertyPath: multiStreamProperties.Array.data[0].url.Array.data[0]
-      value: https://zhuanma.eidol.tw/video/m3u8/99b78820/index.m3u8
+      value: https://cdnlove6.cdnk.xyz/dispatch/redirect?path=/video6/m3u8/fa5c2ec5/index.m3u8
       objectReference: {fileID: 0}
     - target: {fileID: 6306036015961478112, guid: 691812056c51fe747af8c5071cdb7a7a, type: 3}
       propertyPath: m_Enabled
@@ -3836,6 +3836,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6306036015961478113, guid: 691812056c51fe747af8c5071cdb7a7a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6306036015961478118, guid: 691812056c51fe747af8c5071cdb7a7a, type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6306036015961478118, guid: 691812056c51fe747af8c5071cdb7a7a, type: 3}
@@ -7296,6 +7300,37 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 892021697408997641, guid: 5d2964442a842e44eabf007ae86038f9, type: 3}
   m_PrefabInstance: {fileID: 1745433809}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1832924391
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1832924392}
+  m_Layer: 0
+  m_Name: MiniCheck
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1832924392
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832924391}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 435.27075, y: 704.9974, z: 17.519705}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1910713339
 GameObject:
   m_ObjectHideFlags: 0
@@ -10226,3 +10261,4 @@ SceneRoots:
   - {fileID: 1735623840}
   - {fileID: 690398054}
   - {fileID: 1596291220}
+  - {fileID: 1832924392}

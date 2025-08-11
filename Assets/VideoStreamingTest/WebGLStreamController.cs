@@ -261,15 +261,29 @@ public class WebGLStreamController : HISPlayerManager
     private async UniTask<bool> WaitUntilReady(int timeoutMs)
     {
         int elapsed = 0;
-        int interval = 100; // 每 100ms 檢查一次
+        const int logInterval = 10000; // 每 10 秒輸出一次
+        const int checkInterval = 100; // 每 0.1 秒檢查一次
 
-        while (!waitready && elapsed < timeoutMs)
+        int nextLogThreshold = logInterval;
+
+        while (!waitready)
         {
-            await UniTask.Delay(interval);
-            elapsed += interval;
+            await UniTask.Delay(checkInterval);
+            elapsed += checkInterval;
+
+            if (elapsed >= nextLogThreshold)
+            {
+                int seconds = elapsed / 1000;
+                string msg = $"[WaitUntilReady] 已等待 {seconds} 秒，仍未準備完成...";
+                Debug.Log(msg);
+                DiscordLogger.Log(msg);
+                nextLogThreshold += logInterval;
+            }
         }
 
-        return waitready;
+        Debug.Log("[WaitUntilReady] 準備完成！");
+        DiscordLogger.Log("[WaitUntilReady] 準備完成！");
+        return true;
     }
     public long GetVideotime()
     {
