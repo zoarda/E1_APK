@@ -204,7 +204,7 @@ public class StartNani : MonoBehaviour
             // 確保有成功取得後再播放
             if (controller != null)
             {
-                await controller.Play("https://zhuanma.eidol.tw/video/m3u8/54affb3c/index.m3u8");
+                await controller.Play("https://cdnlove6.cdnk.xyz/video6/m3u8/fa5c2ec5/index.m3u8");
                 Debug.Log("播放開頭動畫");
             }
             else
