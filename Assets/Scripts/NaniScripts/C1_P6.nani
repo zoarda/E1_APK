@@ -2,8 +2,8 @@
 @despawn LovePlayPage
 @streamingPlay "C1_P6"
 @speedButtonEnable
-@forcedChoice choiceTime:2
-@waitMovie choiceTime:2
+@forcedChoice choiceTime:3
+@waitMovie choiceTime:3
 @EndMovie
 @sfx GameStart volume:0.3
 @galleryPageOpen

@@ -542,6 +542,7 @@ public class NaniCommandManger : MonoBehaviour
     {
         WebGLStreamController webGLStreamController = WebGLStreamController.Instance;
         var length = webGLStreamController.GetVideoLenght();
+        Debug.Log($"VideoLenght {length}");
         var videolength = length / 1000f;
         if (videolength <= SetELT)
         {

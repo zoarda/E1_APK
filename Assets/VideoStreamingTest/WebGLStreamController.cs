@@ -8,6 +8,8 @@ using UnityEngine.Networking;
 
 public class WebGLStreamController : HISPlayerManager
 {
+    [SerializeField] private int discordReportIntervalMs = 5000; // 每 5 秒回報一次
+    private bool isReporting = false;
     [SerializeField] int addTimeMillisecond = 5000;
     static WebGLStreamController instance;
 
@@ -43,6 +45,7 @@ public class WebGLStreamController : HISPlayerManager
 
         SetUpPlayer();
         LoadYaml();
+        StartStatusReporting();
     }
 
     void Update()
@@ -58,7 +61,28 @@ public class WebGLStreamController : HISPlayerManager
         Debug.Log("[HISPlayer Debug] OnDestroy - release HISPlayer");
         Release();
     }
+    /// <summary>
+    /// 定期回報目前影片狀態到 Discord
+    /// </summary>
+    private async void StartStatusReporting()
+    {
+        if (isReporting) return;
+        isReporting = true;
 
+        while (true)
+        {
+            await UniTask.Delay(discordReportIntervalMs);
+
+            string url = GetUrl(0);
+            long currentTime = GetVideotime();
+            long duration = GetVideoLenght();
+            float speed = GetPlaySpeed();
+
+            string msg = $"[VideoStatus] URL={url}, Time={currentTime}/{duration} ms, Speed={speed}x";
+            Debug.Log(msg);
+            DiscordLogger.Log(msg);
+        }
+    }
     protected override async void EventPlaybackReady(HISPlayerEventInfo eventInfo)
     {
         Debug.Log($"EventPlaybackReady triggered: playerIndex={eventInfo.playerIndex}");
@@ -119,11 +143,11 @@ public class WebGLStreamController : HISPlayerManager
     {
         Debug.Log($"[HISPlayer Debug] ▶ EventEndOfContent | playerIndex={eventInfo.playerIndex} | url={GetUrl(eventInfo.playerIndex)} | time={GetVideotime()}");
 
-        if (EndPlay)
-        {
-            Debug.Log("EventEndOfContent 已觸發過，跳過");
-            return;
-        }
+        // if (EndPlay)
+        // {
+        //     Debug.Log("EventEndOfContent 已觸發過，跳過");
+        //     return;
+        // }
         EndPlay = true;
         StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha = 0;
         Debug.Log($"[HISPlayer Debug] Alphat to 0 {StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha}, haveVideoReady {haveVideoReady}");
@@ -254,6 +278,7 @@ public class WebGLStreamController : HISPlayerManager
                 Debug.LogError("[Play] 第二次嘗試仍超時，放棄等待");
             }
         }
+        await SubtitlesManager.Instance.LoadSubtitles();
     }
     /// <summary>
     /// 等待 waitready=true，最多 timeoutMs 毫秒
