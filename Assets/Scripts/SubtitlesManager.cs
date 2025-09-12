@@ -137,6 +137,46 @@ public class SubtitlesManager : MonoBehaviour
             subtitles.Clear(); // ✅ 加這行：讀取失敗 → 清空字幕
         }
     }
+
+//gpt寫的
+    void ParseSubtitles(string subtitlesContent)
+    {
+        subtitles.Clear();
+
+        try
+        {
+            using (StringReader reader = new StringReader(subtitlesContent))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    // 跳過序號行
+                    string timeLine = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(timeLine)) continue;
+
+                    string[] times = timeLine.Split(new string[] { " --> " }, StringSplitOptions.None);
+                    if (times.Length != 2) continue;
+
+                    double startTime = ParseTime(times[0].Trim());
+                    double endTime = ParseTime(times[1].Trim());
+
+                    string text = reader.ReadLine() ?? "";
+                    subtitles.Add((startTime, endTime, text.Trim()));
+
+                    // 跳過空行
+                    reader.ReadLine();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("加载字幕文件出错：" + ex.Message);
+            subtitles.Clear();
+        }
+    }
+
+
+    /*改成用上面gpt寫的
     void ParseSubtitles(string subtitlesContent)
     {
         subtitles.Clear();
@@ -213,7 +253,9 @@ public class SubtitlesManager : MonoBehaviour
             }
 
         }
-    }
+    }*/
+
+
     double ParseTime(string time)
     {
         string[] parts = time.Split(':');
