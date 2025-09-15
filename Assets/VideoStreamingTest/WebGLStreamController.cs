@@ -1,15 +1,12 @@
 using UnityEngine;
 using HISPlayerAPI;
 using Cysharp.Threading.Tasks;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.Networking;
 
 public class WebGLStreamController : HISPlayerManager
 {
-    [SerializeField] private int discordReportIntervalMs = 5000; // 每 5 秒回報一次
-    private bool isReporting = false;
     [SerializeField] int addTimeMillisecond = 5000;
     static WebGLStreamController instance;
 
@@ -20,32 +17,54 @@ public class WebGLStreamController : HISPlayerManager
         get
         {
             if (instance == null)
-            {
                 instance = FindObjectOfType<WebGLStreamController>();
-            }
             return instance;
         }
     }
 
-    bool firstPlay = true;
+    public enum PlayerState
+    {
+        Idle,
+        Ready,
+        Playing,
+        Paused,
+        Buffering,
+        Stopped,
+        TrackChanged,
+        VideoSizeChanged,
+        Ended,
+        Error
+    }
+
+    private PlayerState currentState = PlayerState.Idle;
+
     bool haveVideoReady = false;
     bool waitready = false;
     public bool EndPlay = false;
     public bool waitseek = false;
     string curPlayingUrl = null;
+
+    bool hasPlayed = false;
     NameToUrl nameToUrl;
     private Dictionary<string, string> urlToName = new Dictionary<string, string>();
+    private Dictionary<string, string> nameToUrlReversed = new Dictionary<string, string>();
+
+    // ★ 新增：防止多次 Ready 造成重播；讓 Play 只呼叫一次
+    private bool startedOnce = false;    // 一次性的初始化
+    private bool hasPlayedOnce = false;  // 保證 Play() 只呼叫一次
 
     protected override void Awake()
     {
         base.Awake();
-        Debug.Log("===== [HISPlayer Debug] Awake =====");
-        Debug.Log($"[HISPlayer Debug] Device: {SystemInfo.deviceModel}, OS: {SystemInfo.operatingSystem}");
-        Debug.Log($"[HISPlayer Debug] HISPlayer Version: 4.6.1");
-
         SetUpPlayer();
-        LoadYaml();
-        StartStatusReporting();
+        LoadYaml().Forget();
+        StartLoggingLoop().Forget();
+    }
+
+    void OnDestroy()
+    {
+        Debug.Log("[WebGLStreamController] Release player");
+        Release();
     }
 
     void Update()
@@ -56,387 +75,301 @@ public class WebGLStreamController : HISPlayerManager
             AddTime(-addTimeMillisecond);
     }
 
-    void OnDestroy()
+    protected override void ErrorInfo(HISPlayerErrorInfo errorInfo)
     {
-        Debug.Log("[HISPlayer Debug] OnDestroy - release HISPlayer");
-        Release();
-    }
-    /// <summary>
-    /// 定期回報目前影片狀態到 Discord
-    /// </summary>
-    private async void StartStatusReporting()
-    {
-        if (isReporting) return;
-        isReporting = true;
+        Debug.Log($"[WebGL] Player {errorInfo.playerIndex} Error: {errorInfo.errorType}, Info: {errorInfo.stringInfo}");
+        DiscordLogger.Log($"[WebGL] Player {errorInfo.playerIndex} Error: {errorInfo.errorType}, Info: {errorInfo.stringInfo}");
+        SetState(PlayerState.Error, errorInfo.stringInfo);
 
+        base.ErrorInfo(errorInfo);
+    }
+
+    #region 狀態更新與心跳
+    private void SetState(PlayerState state, string extra = "")
+    {
+        currentState = state;
+        Debug.Log($"[HISPlayer] State = {state} {extra}");
+        DiscordLogger.Log($"[HISPlayer] State = {state} {extra}");
+    }
+
+    private async UniTaskVoid StartLoggingLoop()
+    {
         while (true)
         {
-            await UniTask.Delay(discordReportIntervalMs);
-
-            string url = GetUrl(0);
-            long currentTime = GetVideotime();
-            long duration = GetVideoLenght();
-            float speed = GetPlaySpeed();
-
-            string msg = $"[VideoStatus] URL={url}, Time={currentTime}/{duration} ms, Speed={speed}x";
-            Debug.Log(msg);
-            DiscordLogger.Log(msg);
+            DiscordLogger.Log($"[HISPlayer] Current state = {currentState}, Pos={GetVideotime()}/{GetVideoLenght()} ms");
+            await UniTask.Delay(TimeSpan.FromSeconds(10));
         }
     }
-    protected override async void EventPlaybackReady(HISPlayerEventInfo eventInfo)
+    #endregion
+
+    #region 事件覆寫
+    protected override void EventPlaybackReady(HISPlayerEventInfo eventInfo)
     {
-        Debug.Log($"EventPlaybackReady triggered: playerIndex={eventInfo.playerIndex}");
+        base.EventPlaybackReady(eventInfo);
+        Debug.Log($"[WebGLStreamController] Playback ready for player {eventInfo.playerIndex}");
 
-        try
+        // 一次性初始化（不要整段 return，避免卡住不播）
+        if (!startedOnce)
         {
-            EndPlay = false;
-            waitready = true; // 一定要確保這裡被呼叫且正確設定
+            startedOnce = true;
+        }
 
-            StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha = 1;
-            curPlayingUrl = multiStreamProperties[eventInfo.playerIndex].url[0];
-            block.SetActive(false);
+        EndPlay = false;
+        curPlayingUrl = multiStreamProperties[eventInfo.playerIndex].url[0];
+        block?.SetActive(false);
+
+        // ★ 關鍵：只讓 Play() 執行一次，避免多次 Ready 造成無限循環
+        if (!hasPlayedOnce)
+        {
+            hasPlayedOnce = true;
             Play(eventInfo.playerIndex);
+        }
 
-            float volume = 1f;
-            if (GameSettingPage.Instance != null)
-            {
-                volume = GameSettingPage.Instance.VideoVolum;
-            }
-            else
-            {
-                Debug.LogWarning("GameSettingPage Instance not found, default volume = 1");
-            }
-            SetVolume(eventInfo.playerIndex, volume);
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Exception in EventPlaybackReady: {ex}");
-        }
+        if (GameSettingPage.Instance != null)
+            SetVolume(eventInfo.playerIndex, GameSettingPage.Instance.VideoVolum);
+        else
+            SetVolume(eventInfo.playerIndex, 1);
+
+        waitready = true;
+        SetState(PlayerState.Ready);
     }
 
-    protected override void EventOnTrackChange(HISPlayerEventInfo eventInfo)
+    protected override void EventPlaybackPlay(HISPlayerEventInfo eventInfo)
     {
-        Debug.Log($"[HISPlayer Debug] ▶ EventOnTrackChanged | playerIndex={eventInfo.playerIndex} | url={GetUrl(eventInfo.playerIndex)} | time={GetVideotime()}");
+        base.EventPlaybackPlay(eventInfo);
+        hasPlayed = true;
+        SetState(PlayerState.Playing);
+    }
+
+    protected override void EventPlaybackStop(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackStop(eventInfo);
+        SetState(PlayerState.Stopped);
+    }
+
+    protected override void EventPlaybackPause(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackPause(eventInfo);
+        SetState(PlayerState.Paused);
+    }
+
+    protected override void EventPlaybackBuffering(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackBuffering(eventInfo);
+        SetState(PlayerState.Buffering);
     }
 
     protected override void EventPlaybackSeek(HISPlayerEventInfo eventInfo)
     {
-        Debug.Log($"[HISPlayer Debug] ▶ EventPlaybackSeek | playerIndex={eventInfo.playerIndex} | url={GetUrl(eventInfo.playerIndex)} | time={GetVideotime()}");
+        base.EventPlaybackSeek(eventInfo);
+        Debug.Log($"[WebGLStreamController] Seek complete, current time: {GetVideotime()}");
+        waitseek = true;
 
-        if (eventInfo.eventType == HISPlayerEvent.HISPLAYER_EVENT_PLAYBACK_SEEK)
-        {
-            Debug.Log($"Seek to time in {GetVideotime()}");
-            waitseek = true;
-            if (NaniCommandManger.Instance.videoOnLoop)
-            {
-                NaniCommandManger.Instance.isLooping = true;
-            }
-        }
+        if (NaniCommandManger.Instance.videoOnLoop)
+            NaniCommandManger.Instance.isLooping = true;
     }
 
-    public void extendEndOfContent(HISPlayerEventInfo eventInfo)
+    protected override void EventVideoSizeChange(HISPlayerEventInfo eventInfo)
     {
-        EventEndOfContent(eventInfo);
+        base.EventVideoSizeChange(eventInfo);
+        SetState(PlayerState.VideoSizeChanged, $"Size={eventInfo.param1}x{eventInfo.param2}");
+        // ★ 重要：不要在這裡呼叫 Play()，Android 上此事件可能多次觸發，會導致重播循環
+        // 若真的需要，可加一次性保護：
+        // if (!hasPlayedOnce) { hasPlayedOnce = true; Play(eventInfo.playerIndex); }
     }
 
+    protected override void EventOnTrackChange(HISPlayerEventInfo eventInfo)
+    {
+        base.EventOnTrackChange(eventInfo);
+        SetState(PlayerState.TrackChanged, $"Track={eventInfo.stringInfo}");
+    }
+
+    // ★ 新增：Android VOD 常一定會觸發 EndOfContent（不一定有 EndOfPlaylist）
     protected override void EventEndOfContent(HISPlayerEventInfo eventInfo)
     {
-        Debug.Log($"[HISPlayer Debug] ▶ EventEndOfContent | playerIndex={eventInfo.playerIndex} | url={GetUrl(eventInfo.playerIndex)} | time={GetVideotime()}");
+        base.EventEndOfContent(eventInfo);
+        Debug.Log("[WebGLStreamController] End of content");
 
-        // if (EndPlay)
-        // {
-        //     Debug.Log("EventEndOfContent 已觸發過，跳過");
-        //     return;
-        // }
+        if (EndPlay) return;        // 防抖：只處理一次
         EndPlay = true;
-        StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha = 0;
-        Debug.Log($"[HISPlayer Debug] Alphat to 0 {StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha}, haveVideoReady {haveVideoReady}");
+
+        var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+            canvasGroup.alpha = 0;
+
+        if (!haveVideoReady)
+        {
+            StartNani.Instance.OpenPageMessage();
+            haveVideoReady = true;
+        }
+
+        // 重置旗標，讓下一段/下一輪可以再次 Ready→Play
+        hasPlayedOnce = false;
+        startedOnce   = false;
+
+        SetState(PlayerState.Ended);
     }
 
-    protected override void ErrorInfo(HISPlayerErrorInfo errorInfo)
+    protected override void EventEndOfPlaylist(HISPlayerEventInfo eventInfo)
     {
-        var log = $"[HISPlayer Debug] ▶ ErrorInfo | Code={errorInfo.errorType} | Msg={errorInfo.errorType}";
-        Debug.LogError(log);
-        DiscordLogger.Log(log);
-    }
+        base.EventEndOfPlaylist(eventInfo);
+        Debug.Log("[WebGLStreamController] End of playlist");
 
-    protected override void ErrorNetworkFailed(HISPlayerErrorInfo errorInfo)
-    {
-        var log = $"[HISPlayer Debug] ▶ ErrorNetworkFailed | Code={errorInfo.errorType} | Msg={errorInfo.errorType}";
-        Debug.LogError(log);
-        DiscordLogger.Log(log);
-    }
+        if (EndPlay) return;        // 與 EndOfContent 保持一致
+        EndPlay = true;
 
-    public async UniTask PlayVideo()
-    {
-        Play(0);
-        await UniTask.CompletedTask;
-    }
+        var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+            canvasGroup.alpha = 0;
 
-    public async UniTask PlayPause()
-    {
-        Pause(0);
-        await UniTask.CompletedTask;
-    }
+        if (!haveVideoReady)
+        {
+            StartNani.Instance.OpenPageMessage();
+            haveVideoReady = true;
+        }
 
+        // 與 EndOfContent 同步重置
+        hasPlayedOnce = false;
+        startedOnce   = false;
+
+        SetState(PlayerState.Ended);
+    }
+    #endregion
+
+    #region 對外方法
     public async UniTask LoadYaml()
     {
         try
         {
-            nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<NameToUrl>(Application.streamingAssetsPath + "/Yaml/URLToScence.yaml");
-            Debug.Log("YAML 加載成功");
-            if (nameToUrl?.videoDictionary != null)
-            {
-                foreach (var pair in nameToUrl.videoDictionary)
-                {
-                    Debug.Log($"[YAML解析結果] 名稱: {pair.Key} -> URL: {pair.Value}");
-                }
-            }
-            else
-            {
-                Debug.LogError("YAML解析結果為空");
-            }
-            urlToName = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
+            nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<NameToUrl>(
+                Application.streamingAssetsPath + "/Yaml/URLToScence.yaml");
+
+            urlToName = nameToUrl.videoDictionary;
+            nameToUrlReversed = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
+
+            Debug.Log("[WebGLStreamController] YAML 加載成功");
         }
         catch (Exception e)
         {
-            Debug.LogError($"YAML 加載錯誤: {e}");
+            Debug.LogError($"[WebGLStreamController] YAML 加載失敗: {e}");
         }
     }
 
-    public string GetUrlByName(string name)
-    {
-        if (nameToUrl?.videoDictionary == null)
-        {
-            Debug.LogError("videoDictionary 尚未初始化");
-            return null;
-        }
-        return nameToUrl.videoDictionary.TryGetValue(name, out string url) ? url : null;
-    }
+    public string GetUrlByName(string name) =>
+        nameToUrlReversed?.TryGetValue(name, out var url) == true ? url : null;
 
-    public string GetNameByUrl(string url)
-    {
-        if (urlToName == null)
-        {
-            Debug.LogError("urlToName 尚未初始化");
-            return null;
-        }
-        return urlToName.TryGetValue(url, out string name) ? name : null;
-    }
+    public string GetNameByUrl(string url) =>
+        urlToName?.TryGetValue(url, out var name) == true ? name : null;
 
     public async UniTask Play(string input)
     {
-        Debug.Log($"[Play] input={input}");
-        string url = GetNameByUrl(input) ?? input;
-        Debug.Log($"[Play] resolved url={url}");
-        await CheckStreamAvailability(url);
+        // 讓這次播放的事件能被偵測到
+        hasPlayed = false;
+
+        // 把 name 轉成 url（若你傳進來的是 key 而不是完整 url）
+        string url = input;
+        if (nameToUrlReversed != null && nameToUrlReversed.ContainsKey(input))
+            url = nameToUrlReversed[input];
+
         if (string.IsNullOrEmpty(url))
         {
             Debug.LogError($"[WebGLStreamController] Play: 找不到對應的 URL，輸入值: {input}");
             return;
         }
 
-        Debug.Log($"[Play] multiStreamProperties[0].url.Count={multiStreamProperties[0].url.Count}");
+        Debug.Log($"[WebGLStreamController] Play: 輸入 input = {input}, 轉換後 url = {url}");
 
-        EndPlay = false;
+        // 依你原本的流程：關閉自動 loop 狀態
+        NaniCommandManger.Instance.videoOnLoop = false;
+
+        // ========= 關鍵重置（每次切新片以前）=========
+        // 讓下一段 Ready 事件可以再次觸發 Play()
+        EndPlay        = false;
+        waitready      = false;
+        startedOnce    = false;
+        hasPlayedOnce  = false;
+        // =============================================
+
+        // UI：隱藏遮罩、把影片容器顯示
+        if (block != null) block.SetActive(false);
+        var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.alpha = 1;
+
+        // 切換到新影片來源（這行會驅動 SDK 走一輪 Ready/Buffering/TrackChanged 等事件）
+        ChangeVideoContent(0, url);
+
+        // 等待影片進入可播放狀態（你的既有等待邏輯）
+        float timeout = 10f;
+        float timer = 0f;
         waitready = false;
 
-        if (multiStreamProperties[0].url.Count == 0)
+        while (!waitready && timer < timeout)
         {
-            Debug.Log("[Play] AddVideoContent");
-            AddVideoContent(0, url);
-        }
-        else
-        {
-            Debug.Log("[Play] ChangeVideoContent");
-            ChangeVideoContent(0, url);
-        }
-
-        bool ready = await WaitUntilReady(10000);
-        Debug.Log($"[Play] WaitUntilReady finished: ready={ready}");
-
-        if (!ready)
-        {
-            Debug.LogWarning("[Play] 等待播放準備超時，再試一次");
-            // 再次嘗試
-            if (multiStreamProperties[0].url.Count == 0)
+            // 判斷影片是否已經有長度，視為已 ready
+            if (GetVideoDuration(0) > 0)
             {
-                Debug.Log("[Play] Retry AddVideoContent");
-                AddVideoContent(0, url);
-            }
-            else
-            {
-                Debug.Log("[Play] Retry ChangeVideoContent");
-                ChangeVideoContent(0, url);
+                waitready = true;
+                break;
             }
 
-            ready = await WaitUntilReady(10000);
-            Debug.Log($"[Play] Retry WaitUntilReady finished: ready={ready}");
-
-            if (!ready)
-            {
-                Debug.LogError("[Play] 第二次嘗試仍超時，放棄等待");
-            }
+            await Cysharp.Threading.Tasks.UniTask.DelayFrame(1);
+            timer += Time.deltaTime;
         }
+
+        if (!waitready)
+            Debug.LogWarning("[WebGLStreamController] 影片未準備好，可能 SDK 未觸發 PlaybackReady");
+
+        // 載入字幕（照你原本流程）
         await SubtitlesManager.Instance.LoadSubtitles();
-    }
-    /// <summary>
-    /// 等待 waitready=true，最多 timeoutMs 毫秒
-    /// </summary>
-    private async UniTask<bool> WaitUntilReady(int timeoutMs)
-    {
-        int elapsed = 0;
-        const int logInterval = 10000; // 每 10 秒輸出一次
-        const int checkInterval = 100; // 每 0.1 秒檢查一次
 
-        int nextLogThreshold = logInterval;
-
-        while (!waitready)
-        {
-            await UniTask.Delay(checkInterval);
-            elapsed += checkInterval;
-
-            if (elapsed >= nextLogThreshold)
-            {
-                int seconds = elapsed / 1000;
-                string msg = $"[WaitUntilReady] 已等待 {seconds} 秒，仍未準備完成...";
-                Debug.Log(msg);
-                DiscordLogger.Log(msg);
-                nextLogThreshold += logInterval;
-            }
-        }
-
-        Debug.Log("[WaitUntilReady] 準備完成！");
-        DiscordLogger.Log("[WaitUntilReady] 準備完成！");
-        return true;
-    }
-    public long GetVideotime()
-    {
-        return GetVideoPosition(0);
+        // 等待一次真正的播放事件（照你原本流程）
+        await WaitForPlayedOnce();
     }
 
-    public long GetVideoLenght()
+    async UniTask WaitForPlayedOnce()
     {
-        return GetVideoDuration(0);
-    }
-
-    public void AddTime(int millisecond)
-    {
-        var curTime = GetVideoPosition(0);
-        var newTime = curTime + millisecond;
-        Seek(0, newTime);
-    }
-
-    public async UniTask SeekTime(long setsecond)
-    {
-        Seek(0, setsecond);
-        waitseek = false;
-        while (!waitseek)
+        float timeout = 10f;
+        float timer = 0f;
+        while (!hasPlayed && timer < timeout)
         {
             await UniTask.DelayFrame(1);
-            if (waitseek) break;
+            timer += Time.deltaTime;
         }
+
+        if (!hasPlayed)
+            Debug.LogWarning("[WebGLStreamController] 播放事件未觸發 (可能是 SDK 問題)");
+    }
+
+    public async UniTask PlayVideo() { Play(0); await UniTask.CompletedTask; }
+    public async UniTask PlayPause() { Pause(0); await UniTask.CompletedTask; }
+
+    public long GetVideoLenght() => GetVideoDuration(0);
+    public long GetVideotime() => GetVideoPosition(0);
+
+    public void AddTime(int millisecond) => Seek(0, GetVideoPosition(0) + millisecond);
+
+    public async UniTask SeekTime(long targetMs)
+    {
+        waitseek = false;
+        Seek(0, targetMs);
+        await UniTask.WaitUntil(() => waitseek);
         await SubtitlesManager.Instance.LoadSubtitles();
     }
 
-    public async UniTask NaniSeekTime(long setsecond)
+    public async UniTask NaniSeekTime(long setMillisecond)
     {
-        Seek(0, setsecond);
-        Debug.Log($"shrimp seek time {setsecond}");
+        waitseek = false;
+        Seek(0, setMillisecond);
+        Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms");
+
+        await UniTask.WaitUntil(() => waitseek);
+        await SubtitlesManager.Instance.LoadSubtitles();
     }
 
-    public void PlaySpeed(float speed)
-    {
-        SetPlaybackSpeedRate(0, speed);
-    }
+    public void PlaySpeed(float speed) => SetPlaybackSpeedRate(0, speed);
+    public float GetPlaySpeed() => GetPlaybackSpeedRate(0);
+    public void SetHisVolume(float volume) => SetVolume(0, volume);
+    #endregion
 
-    public float GetPlaySpeed()
-    {
-        return GetPlaybackSpeedRate(0);
-    }
-
-    public void SetHisVolume(float volume)
-    {
-        SetVolume(0, volume);
-    }
-
-    public class NameToUrl
-    {
-        public Dictionary<string, string> videoDictionary;
-    }
-
-    /// <summary>
-    /// 檢查 m3u8 串流是否可用：先抓 m3u8，再解析第一段 ts 串流嘗試下載
-    /// </summary>
-    public async UniTask CheckStreamAvailability(string url)
-    {
-        try
-        {
-            Debug.Log($"[StreamCheck] Start checking m3u8: {url}");
-
-            using (UnityWebRequest m3u8Request = UnityWebRequest.Get(url))
-            {
-                await m3u8Request.SendWebRequest();
-
-                if (m3u8Request.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.LogError($"[StreamCheck] Failed to fetch m3u8: {m3u8Request.error}");
-                    return;
-                }
-
-                string m3u8Content = m3u8Request.downloadHandler.text;
-                Debug.Log("[StreamCheck] m3u8 fetched successfully");
-
-                // 嘗試找出第一個 ts 段 URL
-                string[] lines = m3u8Content.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
-                string firstTsLine = lines.FirstOrDefault(l => !l.StartsWith("#"));
-
-                if (string.IsNullOrEmpty(firstTsLine))
-                {
-                    Debug.LogError("[StreamCheck] m3u8 沒有找到 ts 段");
-                    return;
-                }
-
-                // 如果 ts 是相對路徑，要組絕對 URL
-                string tsUrl = firstTsLine;
-                if (!tsUrl.StartsWith("http"))
-                {
-                    Uri baseUri = new Uri(url);
-                    tsUrl = new Uri(baseUri, tsUrl).AbsoluteUri;
-                }
-
-                Debug.Log($"[StreamCheck] Checking first ts segment: {tsUrl}");
-
-                using (UnityWebRequest tsRequest = UnityWebRequest.Head(tsUrl))
-                {
-                    await tsRequest.SendWebRequest();
-
-                    if (tsRequest.result != UnityWebRequest.Result.Success)
-                    {
-                        Debug.LogError($"[StreamCheck] Failed to fetch ts: {tsRequest.error}");
-                    }
-                    else
-                    {
-                        Debug.Log("[StreamCheck] First ts segment is accessible!");
-                    }
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"[StreamCheck] Exception: {ex}");
-        }
-    }
-    private string GetUrl(int playerIndex)
-    {
-        try
-        {
-            if (multiStreamProperties != null && playerIndex < multiStreamProperties.Count && multiStreamProperties[playerIndex].url.Count > 0)
-            {
-                return multiStreamProperties[playerIndex].url[0];
-            }
-        }
-        catch { }
-        return "N/A";
-    }
+    public class NameToUrl { public Dictionary<string, string> videoDictionary; }
 }
