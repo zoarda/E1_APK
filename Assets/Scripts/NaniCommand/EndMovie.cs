@@ -22,7 +22,7 @@ public class EndMovie : Command
                 Debug.Log("still loop");
                 return;
             }
-            var waitedEnough = webGLStreamController.EndPlay;
+            var waitedEnough = webGLStreamController;
 
             // 更新計時器
             timer += Time.deltaTime;
@@ -30,10 +30,17 @@ public class EndMovie : Command
             // 如果超過10秒，設置 waitedEnough 為 true
             if (timer >= timeout)
             {
-                Debug.Log("Timeout reached, setting waitedEnough to true");
-                webGLStreamController.extendEndOfContent(new HISPlayerAPI.HISPlayerEventInfo());
-                // waitedEnough = true;
-                // webGLStreamController.EndPlay = true; // 確保狀態同步到控制器
+                Debug.Log("Timeout reached, force stop video.");
+
+                // ✅ 直接標記 EndPlay
+                webGLStreamController.EndPlay = true;
+
+                // ✅ 如果你要讓狀態機走到 Ended
+                typeof(WebGLStreamController)
+                    .GetMethod("EventEndOfPlaylist", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                    ?.Invoke(webGLStreamController, new object[] { new HISPlayerAPI.HISPlayerEventInfo() });
+
+                break; // 跳出 while，不然還會繼續 loop
             }
 
             if (waitedEnough) break;
