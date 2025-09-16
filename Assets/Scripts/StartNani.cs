@@ -95,6 +95,7 @@ public class StartNani : MonoBehaviour
 
             if (saveData != null)
             {
+                // 設定友好度
                 saveData.friendship = allFriendship();
 
                 var varManager = Engine.GetService<ICustomVariableManager>();
@@ -109,37 +110,40 @@ public class StartNani : MonoBehaviour
                 Debug.LogWarning("Load SaveData 失敗或未登入！");
             }
 
-            // 2️⃣ 下載阿里雲影片到本地（先讀 YAML）
-            WebGLStreamController.NameToUrl nameToUrl = null;
+            // 2️⃣ 下載影片到本地，並生成/更新 LocalVideoPath.yaml
             try
             {
-                nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToUrl>(
-                    Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml"));
-                Debug.Log("[Start] YAML 加載完成，開始下載影片...");
+                string yamlPath = Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml");
+                var nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToUrl>(yamlPath);
+                Debug.Log("[Start] 原始 YAML 加載完成");
+
+                if (nameToUrl?.videoDictionary != null)
+                {
+                    // 下載缺失影片
+                    var downloader = new VideoDownloader();
+                    var localDict = await downloader.DownloadVideos(nameToUrl.videoDictionary);
+
+                    // 註冊到 WebGLStreamController
+                    if (localDict != null && localDict.Count > 0)
+                    {
+                        WebGLStreamController.Instance.SetLocalVideoDictionary(localDict);
+                        Debug.Log("[Start] 已註冊本地影片路徑");
+
+                        // 生成或更新本地 YAML
+                        string localYamlPath = Path.Combine(Application.persistentDataPath, "LocalVideoPath.yaml");
+                        var localWrapper = new WebGLStreamController.NameToLocalPath { videoDictionary = localDict };
+                        YamlLoader.SaveToYaml(localWrapper, localYamlPath);
+                        Debug.Log("[Start] 本地 YAML 已生成/更新: " + localYamlPath);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("[Start] 沒有影片被下載或註冊");
+                    }
+                }
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[Start] YAML 加載失敗: {e}");
-            }
-
-            if (nameToUrl != null && nameToUrl.videoDictionary != null)
-            {
-                var downloader = new VideoDownloader();
-                Debug.Log("[Start] 開始下載影片...");
-
-                // 下載並取得 name -> localPath 映射
-                var localDict = await downloader.DownloadVideos(nameToUrl.videoDictionary);
-
-                // 把本地映射告訴 WebGLStreamController（它會把 name->localPath 存起來）
-                if (localDict != null && localDict.Count > 0)
-                {
-                    WebGLStreamController.Instance.SetLocalVideoDictionary(localDict);
-                    Debug.Log("[Start] 已註冊本地影片路徑");
-                }
-                else
-                {
-                    Debug.LogWarning("[Start] 沒有任何影片被下載或註冊");
-                }
+                Debug.LogError($"[Start] 影片下載或 YAML 處理失敗: {e}");
             }
         }
         else
@@ -147,7 +151,7 @@ public class StartNani : MonoBehaviour
             Debug.Log("nologinmode");
         }
 
-        // 3️⃣ 原始初始化（你的其他初始化）
+        // 3️⃣ 原始初始化
         Init();
         await subtitlesManager.Init();
     }
