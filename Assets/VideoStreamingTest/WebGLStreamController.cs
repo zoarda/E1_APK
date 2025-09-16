@@ -4,12 +4,14 @@ using Cysharp.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 public class WebGLStreamController : HISPlayerManager
 {
     [SerializeField] int addTimeMillisecond = 5000;
-    static WebGLStreamController instance;
+    private const string baseUrl = "https://data-av.ymytmx.com/";
 
+    static WebGLStreamController instance;
     public GameObject block;
 
     public static WebGLStreamController Instance
@@ -22,20 +24,7 @@ public class WebGLStreamController : HISPlayerManager
         }
     }
 
-    public enum PlayerState
-    {
-        Idle,
-        Ready,
-        Playing,
-        Paused,
-        Buffering,
-        Stopped,
-        TrackChanged,
-        VideoSizeChanged,
-        Ended,
-        Error
-    }
-
+    public enum PlayerState { Idle, Ready, Playing, Paused, Buffering, Stopped, TrackChanged, VideoSizeChanged, Ended, Error }
     private PlayerState currentState = PlayerState.Idle;
 
     bool haveVideoReady = false;
@@ -46,12 +35,20 @@ public class WebGLStreamController : HISPlayerManager
 
     bool hasPlayed = false;
     NameToUrl nameToUrl;
+
+    // name -> localPath  (example: "C0_S0" -> "/storage/.../Videos/EP1_mp4_720p/1/0.mp4")
+    private Dictionary<string, string> nameToLocalPath = new Dictionary<string, string>();
+
+    // yaml structures:
+    // urlToName: relativePath -> name   (eg "Videos/EP1_mp4_720p/1/0.mp4" -> "C0_S0")
     private Dictionary<string, string> urlToName = new Dictionary<string, string>();
+
+    // nameToUrlReversed: name -> relativePath (eg "C0_S0" -> "Videos/EP1_mp4_720p/1/0.mp4")
     private Dictionary<string, string> nameToUrlReversed = new Dictionary<string, string>();
 
-    // ★ 新增：防止多次 Ready 造成重播；讓 Play 只呼叫一次
-    private bool startedOnce = false;    // 一次性的初始化
-    private bool hasPlayedOnce = false;  // 保證 Play() 只呼叫一次
+    // 保護旗標
+    private bool startedOnce = false;
+    private bool hasPlayedOnce = false;
 
     protected override void Awake()
     {
@@ -69,10 +66,8 @@ public class WebGLStreamController : HISPlayerManager
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-            AddTime(addTimeMillisecond);
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            AddTime(-addTimeMillisecond);
+        if (Input.GetKeyDown(KeyCode.RightArrow)) AddTime(addTimeMillisecond);
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) AddTime(-addTimeMillisecond);
     }
 
     protected override void ErrorInfo(HISPlayerErrorInfo errorInfo)
@@ -80,7 +75,6 @@ public class WebGLStreamController : HISPlayerManager
         Debug.Log($"[WebGL] Player {errorInfo.playerIndex} Error: {errorInfo.errorType}, Info: {errorInfo.stringInfo}");
         DiscordLogger.Log($"[WebGL] Player {errorInfo.playerIndex} Error: {errorInfo.errorType}, Info: {errorInfo.stringInfo}");
         SetState(PlayerState.Error, errorInfo.stringInfo);
-
         base.ErrorInfo(errorInfo);
     }
 
@@ -108,20 +102,16 @@ public class WebGLStreamController : HISPlayerManager
         base.EventPlaybackReady(eventInfo);
         Debug.Log($"[WebGLStreamController] Playback ready for player {eventInfo.playerIndex}");
 
-        // 一次性初始化（不要整段 return，避免卡住不播）
-        if (!startedOnce)
-        {
-            startedOnce = true;
-        }
+        if (!startedOnce) startedOnce = true;
 
         EndPlay = false;
         curPlayingUrl = multiStreamProperties[eventInfo.playerIndex].url[0];
         block?.SetActive(false);
 
-        // ★ 關鍵：只讓 Play() 執行一次，避免多次 Ready 造成無限循環
         if (!hasPlayedOnce)
         {
             hasPlayedOnce = true;
+            // 注意：這裡呼叫的是 SDK 的 Play(playerIndex)（不是我們的 Play(string)）
             Play(eventInfo.playerIndex);
         }
 
@@ -164,18 +154,13 @@ public class WebGLStreamController : HISPlayerManager
         base.EventPlaybackSeek(eventInfo);
         Debug.Log($"[WebGLStreamController] Seek complete, current time: {GetVideotime()}");
         waitseek = true;
-
-        if (NaniCommandManger.Instance.videoOnLoop)
-            NaniCommandManger.Instance.isLooping = true;
+        if (NaniCommandManger.Instance.videoOnLoop) NaniCommandManger.Instance.isLooping = true;
     }
 
     protected override void EventVideoSizeChange(HISPlayerEventInfo eventInfo)
     {
         base.EventVideoSizeChange(eventInfo);
         SetState(PlayerState.VideoSizeChanged, $"Size={eventInfo.param1}x{eventInfo.param2}");
-        // ★ 重要：不要在這裡呼叫 Play()，Android 上此事件可能多次觸發，會導致重播循環
-        // 若真的需要，可加一次性保護：
-        // if (!hasPlayedOnce) { hasPlayedOnce = true; Play(eventInfo.playerIndex); }
     }
 
     protected override void EventOnTrackChange(HISPlayerEventInfo eventInfo)
@@ -184,18 +169,16 @@ public class WebGLStreamController : HISPlayerManager
         SetState(PlayerState.TrackChanged, $"Track={eventInfo.stringInfo}");
     }
 
-    // ★ 新增：Android VOD 常一定會觸發 EndOfContent（不一定有 EndOfPlaylist）
     protected override void EventEndOfContent(HISPlayerEventInfo eventInfo)
     {
         base.EventEndOfContent(eventInfo);
         Debug.Log("[WebGLStreamController] End of content");
 
-        if (EndPlay) return;        // 防抖：只處理一次
+        if (EndPlay) return;
         EndPlay = true;
 
         var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0;
+        if (canvasGroup != null) canvasGroup.alpha = 0;
 
         if (!haveVideoReady)
         {
@@ -203,9 +186,8 @@ public class WebGLStreamController : HISPlayerManager
             haveVideoReady = true;
         }
 
-        // 重置旗標，讓下一段/下一輪可以再次 Ready→Play
         hasPlayedOnce = false;
-        startedOnce   = false;
+        startedOnce = false;
 
         SetState(PlayerState.Ended);
     }
@@ -215,12 +197,11 @@ public class WebGLStreamController : HISPlayerManager
         base.EventEndOfPlaylist(eventInfo);
         Debug.Log("[WebGLStreamController] End of playlist");
 
-        if (EndPlay) return;        // 與 EndOfContent 保持一致
+        if (EndPlay) return;
         EndPlay = true;
 
         var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
-        if (canvasGroup != null)
-            canvasGroup.alpha = 0;
+        if (canvasGroup != null) canvasGroup.alpha = 0;
 
         if (!haveVideoReady)
         {
@@ -228,9 +209,8 @@ public class WebGLStreamController : HISPlayerManager
             haveVideoReady = true;
         }
 
-        // 與 EndOfContent 同步重置
         hasPlayedOnce = false;
-        startedOnce   = false;
+        startedOnce = false;
 
         SetState(PlayerState.Ended);
     }
@@ -245,6 +225,7 @@ public class WebGLStreamController : HISPlayerManager
                 Application.streamingAssetsPath + "/Yaml/URLToScence.yaml");
 
             urlToName = nameToUrl.videoDictionary;
+            // name -> relativePath
             nameToUrlReversed = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
 
             Debug.Log("[WebGLStreamController] YAML 加載成功");
@@ -255,21 +236,65 @@ public class WebGLStreamController : HISPlayerManager
         }
     }
 
-    public string GetUrlByName(string name) =>
-        nameToUrlReversed?.TryGetValue(name, out var url) == true ? url : null;
+    // 取得雲端相對路徑（由 name 取得）
+    public string GetRelativePathByName(string name) =>
+        nameToUrlReversed?.TryGetValue(name, out var rel) == true ? rel : null;
 
-    public string GetNameByUrl(string url) =>
-        urlToName?.TryGetValue(url, out var name) == true ? name : null;
+    // ResolveUrl：輸入可以是 name / relativePath / full url
+    private string ResolveUrl(string input)
+    {
+        if (string.IsNullOrEmpty(input)) return null;
+
+        // Case A: input is name (eg "C1_S0")
+        if (nameToUrlReversed != null && nameToUrlReversed.ContainsKey(input))
+        {
+            // 1. 如果本地有，使用本地
+            if (nameToLocalPath != null && nameToLocalPath.ContainsKey(input))
+            {
+                var local = nameToLocalPath[input];
+                // 大多數播放器在 Android 上需要 file:// 前綴
+                if (Application.platform == RuntimePlatform.Android && !local.StartsWith("file://"))
+                    return "file://" + local;
+                return local;
+            }
+
+            // 2. 否則使用雲端 URL
+            var relative = nameToUrlReversed[input];
+            return baseUrl + relative;
+        }
+
+        // Case B: input is relative path (eg "Videos/EP1_mp4_720p/1/0.mp4")
+        if (input.StartsWith("Videos/") || input.StartsWith("/Videos/"))
+        {
+            // try to find a name for this relative (to check local mapping)
+            if (urlToName != null && urlToName.ContainsKey(input))
+            {
+                var name = urlToName[input];
+                if (nameToLocalPath != null && nameToLocalPath.ContainsKey(name))
+                {
+                    var local = nameToLocalPath[name];
+                    if (Application.platform == RuntimePlatform.Android && !local.StartsWith("file://"))
+                        return "file://" + local;
+                    return local;
+                }
+            }
+            // fallback remote
+            return baseUrl + input.TrimStart('/');
+        }
+
+        // Case C: full url already provided
+        if (input.StartsWith("http://") || input.StartsWith("https://"))
+            return input;
+
+        Debug.LogError($"[ResolveUrl] 無法解析 input={input}");
+        return null;
+    }
 
     public async UniTask Play(string input)
     {
-        // 讓這次播放的事件能被偵測到
         hasPlayed = false;
 
-        // 把 name 轉成 url（若你傳進來的是 key 而不是完整 url）
-        string url = input;
-        if (nameToUrlReversed != null && nameToUrlReversed.ContainsKey(input))
-            url = nameToUrlReversed[input];
+        string url = ResolveUrl(input);
 
         if (string.IsNullOrEmpty(url))
         {
@@ -277,41 +302,33 @@ public class WebGLStreamController : HISPlayerManager
             return;
         }
 
-        Debug.Log($"[WebGLStreamController] Play: 輸入 input = {input}, 轉換後 url = {url}");
+        Debug.Log($"[WebGLStreamController] Play: 輸入 input = {input}, 解析後 url = {url}");
 
-        // 依你原本的流程：關閉自動 loop 狀態
         NaniCommandManger.Instance.videoOnLoop = false;
 
-        // ========= 關鍵重置（每次切新片以前）=========
-        // 讓下一段 Ready 事件可以再次觸發 Play()
-        EndPlay        = false;
-        waitready      = false;
-        startedOnce    = false;
-        hasPlayedOnce  = false;
-        // =============================================
+        EndPlay = false;
+        waitready = false;
+        startedOnce = false;
+        hasPlayedOnce = false;
 
-        // UI：隱藏遮罩、把影片容器顯示
         if (block != null) block.SetActive(false);
         var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.alpha = 1;
 
-        // 切換到新影片來源（這行會驅動 SDK 走一輪 Ready/Buffering/TrackChanged 等事件）
+        // 切換到新影片來源
         ChangeVideoContent(0, url);
 
-        // 等待影片進入可播放狀態（你的既有等待邏輯）
+        // 等待 ready
         float timeout = 10f;
         float timer = 0f;
         waitready = false;
-
         while (!waitready && timer < timeout)
         {
-            // 判斷影片是否已經有長度，視為已 ready
             if (GetVideoDuration(0) > 0)
             {
                 waitready = true;
                 break;
             }
-
             await Cysharp.Threading.Tasks.UniTask.DelayFrame(1);
             timer += Time.deltaTime;
         }
@@ -319,10 +336,7 @@ public class WebGLStreamController : HISPlayerManager
         if (!waitready)
             Debug.LogWarning("[WebGLStreamController] 影片未準備好，可能 SDK 未觸發 PlaybackReady");
 
-        // 載入字幕（照你原本流程）
         await SubtitlesManager.Instance.LoadSubtitles();
-
-        // 等待一次真正的播放事件（照你原本流程）
         await WaitForPlayedOnce();
     }
 
@@ -336,8 +350,7 @@ public class WebGLStreamController : HISPlayerManager
             timer += Time.deltaTime;
         }
 
-        if (!hasPlayed)
-            Debug.LogWarning("[WebGLStreamController] 播放事件未觸發 (可能是 SDK 問題)");
+        if (!hasPlayed) Debug.LogWarning("[WebGLStreamController] 播放事件未觸發 (可能是 SDK 問題)");
     }
 
     public async UniTask PlayVideo() { Play(0); await UniTask.CompletedTask; }
@@ -345,7 +358,6 @@ public class WebGLStreamController : HISPlayerManager
 
     public long GetVideoLenght() => GetVideoDuration(0);
     public long GetVideotime() => GetVideoPosition(0);
-
     public void AddTime(int millisecond) => Seek(0, GetVideoPosition(0) + millisecond);
 
     public async UniTask SeekTime(long targetMs)
@@ -361,7 +373,6 @@ public class WebGLStreamController : HISPlayerManager
         waitseek = false;
         Seek(0, setMillisecond);
         Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms");
-
         await UniTask.WaitUntil(() => waitseek);
         await SubtitlesManager.Instance.LoadSubtitles();
     }
@@ -371,5 +382,33 @@ public class WebGLStreamController : HISPlayerManager
     public void SetHisVolume(float volume) => SetVolume(0, volume);
     #endregion
 
+    // 用來接收下載後的 name -> localPath 字典（不要覆寫 YAML 映射）
+    public void SetLocalVideoDictionary(Dictionary<string, string> localDict)
+    {
+        if (localDict == null) return;
+        foreach (var kv in localDict)
+        {
+            nameToLocalPath[kv.Key] = kv.Value;
+            Debug.Log($"[WebGLStreamController] SetLocalVideoDictionary: {kv.Key} -> {kv.Value}");
+        }
+    }
+
+    // 若想要直接註冊 single file (relativePath, localPath)，可用此方法
+    public void RegisterLocalVideo(string relativePath, string localPath)
+    {
+        if (string.IsNullOrEmpty(relativePath) || string.IsNullOrEmpty(localPath)) return;
+        // 嘗試找 name（yaml 中的 mapping）
+        if (urlToName != null && urlToName.TryGetValue(relativePath, out var name))
+        {
+            nameToLocalPath[name] = localPath;
+            Debug.Log($"[WebGLStreamController] RegisterLocalVideo: {name} -> {localPath}");
+        }
+        else
+        {
+            Debug.LogWarning($"[WebGLStreamController] RegisterLocalVideo 未找到對應 name: relativePath={relativePath}");
+        }
+    }
+
+    // YAML wrapper
     public class NameToUrl { public Dictionary<string, string> videoDictionary; }
 }

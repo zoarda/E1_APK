@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Naninovel;
+using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -88,16 +89,14 @@ public class StartNani : MonoBehaviour
         {
             LoginPage.SetActive(true);
 
-            // ✅ 登入並自動 Load
+            // 1️⃣ 登入並 Load SaveData
             var saveData = await ServerManager.Instance.InitializeUrlQueryAndLoadAsync();
-
             LoginPage.SetActive(false);
 
             if (saveData != null)
             {
                 saveData.friendship = allFriendship();
 
-                // 將設置好的友誼值存入 Manager 變數
                 var varManager = Engine.GetService<ICustomVariableManager>();
                 varManager.TrySetVariableValue("friendship", saveData.friendship);
 
@@ -109,11 +108,46 @@ public class StartNani : MonoBehaviour
             {
                 Debug.LogWarning("Load SaveData 失敗或未登入！");
             }
+
+            // 2️⃣ 下載阿里雲影片到本地（先讀 YAML）
+            WebGLStreamController.NameToUrl nameToUrl = null;
+            try
+            {
+                nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToUrl>(
+                    Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml"));
+                Debug.Log("[Start] YAML 加載完成，開始下載影片...");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[Start] YAML 加載失敗: {e}");
+            }
+
+            if (nameToUrl != null && nameToUrl.videoDictionary != null)
+            {
+                var downloader = new VideoDownloader();
+                Debug.Log("[Start] 開始下載影片...");
+
+                // 下載並取得 name -> localPath 映射
+                var localDict = await downloader.DownloadVideos(nameToUrl.videoDictionary);
+
+                // 把本地映射告訴 WebGLStreamController（它會把 name->localPath 存起來）
+                if (localDict != null && localDict.Count > 0)
+                {
+                    WebGLStreamController.Instance.SetLocalVideoDictionary(localDict);
+                    Debug.Log("[Start] 已註冊本地影片路徑");
+                }
+                else
+                {
+                    Debug.LogWarning("[Start] 沒有任何影片被下載或註冊");
+                }
+            }
         }
         else
         {
             Debug.Log("nologinmode");
         }
+
+        // 3️⃣ 原始初始化（你的其他初始化）
         Init();
         await subtitlesManager.Init();
     }
