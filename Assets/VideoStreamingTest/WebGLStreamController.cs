@@ -54,7 +54,10 @@ public class WebGLStreamController : HISPlayerManager
     {
         base.Awake();
         SetUpPlayer();
-        LoadYaml().Forget();
+
+        // 使用 UniTaskVoid 包裝 async
+        LoadYamlWithDebug().Forget();
+
         StartLoggingLoop().Forget();
     }
 
@@ -84,32 +87,51 @@ public class WebGLStreamController : HISPlayerManager
     #endregion
 
     #region YAML 載入與下載
-    public async UniTask LoadYaml()
+    private async UniTaskVoid LoadYamlWithDebug()
     {
         try
         {
-            // 1️⃣ 原始雲端 YAML
-            nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<NameToUrl>(
-                Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml"));
+            // ⚡ 使用 static 方法載入 YAML
+            string yamlPath = Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml");
+            nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToUrl>(yamlPath);
 
-            urlToName = nameToUrl.videoDictionary;
-            nameToUrlReversed = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
-            Debug.Log("[WebGLStreamController] 原始 YAML 加載成功");
-
-            // 2️⃣ 載入本地 YAML（如果存在）
-            if (File.Exists(localYamlPath))
+            if (nameToUrl?.videoDictionary == null)
             {
-                var localDict = await YamlLoader.LoadStreamingAssetsYaml<NameToLocalPath>(localYamlPath);
-                nameToLocalPath = localDict.videoDictionary ?? new Dictionary<string, string>();
-                Debug.Log("[WebGLStreamController] 本地 YAML 載入完成");
+                Debug.LogWarning("[LoadYamlWithDebug] YAML 沒有資料");
+                return;
             }
 
-            // 3️⃣ 開始下載本地缺失影片
-            await DownloadMissingVideos();
+            // 生成反轉表
+            urlToName = nameToUrl.videoDictionary;
+            nameToUrlReversed = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
+
+            // Debug 原始 YAML
+            Debug.Log("[LoadYamlWithDebug] 原始 YAML 對照表:");
+            foreach (var kv in nameToUrl.videoDictionary)
+                Debug.Log($"  RelativePath={kv.Key}, Name={kv.Value}");
+
+            // 如果有本地 YAML，載入本地影片字典
+            string localYamlPath = Path.Combine(Application.persistentDataPath, "LocalVideoPath.yaml");
+            if (File.Exists(localYamlPath))
+            {
+                var localDict = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToLocalPath>(localYamlPath);
+                nameToLocalPath = localDict?.videoDictionary ?? new Dictionary<string, string>();
+
+                Debug.Log("[LoadYamlWithDebug] 本地影片字典:");
+                foreach (var kv in nameToLocalPath)
+                {
+                    bool exists = File.Exists(kv.Value);
+                    Debug.Log($"  Name={kv.Key}, LocalPath={kv.Value}, Exists={exists}");
+                }
+            }
+            else
+            {
+                Debug.Log("[LoadYamlWithDebug] 尚無本地影片 YAML");
+            }
         }
         catch (Exception e)
         {
-            Debug.LogError($"[WebGLStreamController] YAML 加載失敗: {e}");
+            Debug.LogError($"[LoadYamlWithDebug] 載入 YAML 失敗: {e}");
         }
     }
 
@@ -176,6 +198,7 @@ public class WebGLStreamController : HISPlayerManager
         Debug.Log($"[Play] 播放影片 input={input}, 解析後 URL={url}");
         ChangeVideoContent(0, url);
 
+        // 等待 ready
         float timeout = 10f;
         float timer = 0f;
         while (!waitready && timer < timeout)
@@ -189,9 +212,17 @@ public class WebGLStreamController : HISPlayerManager
             timer += Time.deltaTime;
         }
 
-        if (!waitready)
-            Debug.LogWarning("[WebGLStreamController] 影片未準備好");
+        if (waitready)
+        {
+            Debug.Log("[Play] 影片準備好，自動播放");
+            Play(0);  // 呼叫 HISPlayer 播放
+        }
+        else
+        {
+            Debug.LogWarning("[Play] 影片未準備好");
+        }
 
+        // 等待字幕
         await SubtitlesManager.Instance.LoadSubtitles();
         await WaitForPlayedOnce();
     }
