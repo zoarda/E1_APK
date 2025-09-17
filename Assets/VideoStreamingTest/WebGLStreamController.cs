@@ -10,6 +10,12 @@ public class WebGLStreamController : HISPlayerManager
 {
     [SerializeField] int addTimeMillisecond = 5000;
     private const string baseUrl = "https://data-av.ymytmx.com/";
+    private bool useLoopSegment = false;
+    private float loopStart = 0f;
+    private float loopEnd = 0f;
+
+    public bool waitingForChoice { get; private set; } = false;
+    public float choiceAppearTime { get; private set; } = 0f;
 
     static WebGLStreamController instance;
     public GameObject block;
@@ -26,38 +32,25 @@ public class WebGLStreamController : HISPlayerManager
 
     public enum PlayerState { Idle, Ready, Playing, Paused, Buffering, Stopped, TrackChanged, VideoSizeChanged, Ended, Error }
     private PlayerState currentState = PlayerState.Idle;
-
-    bool haveVideoReady = false;
+    public Action OnVideoEnded;
     bool waitready = false;
     public bool EndPlay = false;
     public bool waitseek = false;
     string curPlayingUrl = null;
-
     bool hasPlayed = false;
     NameToUrl nameToUrl;
-
-    // 本地檔案字典（下載完成後記錄）
     private Dictionary<string, string> nameToLocalPath = new Dictionary<string, string>();
-
-    // YAML 對照表
     private Dictionary<string, string> urlToName = new Dictionary<string, string>();
     private Dictionary<string, string> nameToUrlReversed = new Dictionary<string, string>();
-
-    // 保護旗標
     private bool startedOnce = false;
     private bool hasPlayedOnce = false;
-
-    // 本地 YAML 路徑
     private string localYamlPath => Path.Combine(Application.persistentDataPath, "LocalVideoPath.yaml");
 
     protected override void Awake()
     {
         base.Awake();
         SetUpPlayer();
-
-        // 使用 UniTaskVoid 包裝 async
         LoadYamlWithDebug().Forget();
-
         StartLoggingLoop().Forget();
     }
 
@@ -65,11 +58,18 @@ public class WebGLStreamController : HISPlayerManager
 
     void Update()
     {
+        float curSec = GetVideotime() / 1000f;
+
+        if (useLoopSegment && curSec >= loopEnd)
+        {
+            Seek(0, (long)(loopStart * 1000));
+            Debug.Log($"[WebGLStreamController] 循環回 {loopStart}s");
+        }
+
         if (Input.GetKeyDown(KeyCode.RightArrow)) AddTime(addTimeMillisecond);
         if (Input.GetKeyDown(KeyCode.LeftArrow)) AddTime(-addTimeMillisecond);
     }
 
-    #region 狀態與心跳
     private void SetState(PlayerState state, string extra = "")
     {
         currentState = state;
@@ -84,14 +84,11 @@ public class WebGLStreamController : HISPlayerManager
             await UniTask.Delay(TimeSpan.FromSeconds(10));
         }
     }
-    #endregion
 
-    #region YAML 載入與下載
     private async UniTaskVoid LoadYamlWithDebug()
     {
         try
         {
-            // ⚡ 使用 static 方法載入 YAML
             string yamlPath = Path.Combine(Application.streamingAssetsPath, "Yaml", "URLToScence.yaml");
             nameToUrl = await YamlLoader.LoadStreamingAssetsYaml<WebGLStreamController.NameToUrl>(yamlPath);
 
@@ -101,16 +98,13 @@ public class WebGLStreamController : HISPlayerManager
                 return;
             }
 
-            // 生成反轉表
             urlToName = nameToUrl.videoDictionary;
             nameToUrlReversed = nameToUrl.videoDictionary.ToDictionary(pair => pair.Value, pair => pair.Key);
 
-            // Debug 原始 YAML
             Debug.Log("[LoadYamlWithDebug] 原始 YAML 對照表:");
             foreach (var kv in nameToUrl.videoDictionary)
                 Debug.Log($"  RelativePath={kv.Key}, Name={kv.Value}");
 
-            // 如果有本地 YAML，載入本地影片字典
             string localYamlPath = Path.Combine(Application.persistentDataPath, "LocalVideoPath.yaml");
             if (File.Exists(localYamlPath))
             {
@@ -135,47 +129,11 @@ public class WebGLStreamController : HISPlayerManager
         }
     }
 
-    private async UniTask DownloadMissingVideos()
-    {
-        if (nameToUrl?.videoDictionary == null) return;
-
-        var downloader = new VideoDownloader();
-        var videosToDownload = new Dictionary<string, string>();
-
-        // 只下載本地沒有的影片
-        foreach (var kv in nameToUrl.videoDictionary)
-        {
-            var name = kv.Value;
-            if (!nameToLocalPath.ContainsKey(name) || !File.Exists(nameToLocalPath[name]))
-                videosToDownload[kv.Key] = name;
-        }
-
-        if (videosToDownload.Count == 0)
-        {
-            Debug.Log("[WebGLStreamController] 本地影片已完整，不需下載");
-            return;
-        }
-
-        var downloaded = await downloader.DownloadVideos(videosToDownload);
-
-        // 更新本地字典
-        foreach (var kv in downloaded)
-            nameToLocalPath[kv.Key] = kv.Value;
-
-        // 生成本地 YAML
-        var localWrapper = new NameToLocalPath { videoDictionary = nameToLocalPath };
-        YamlLoader.SaveToYaml(localWrapper, localYamlPath);
-        Debug.Log("[WebGLStreamController] 本地 YAML 更新完成");
-    }
-
-    #endregion
-
     public async UniTask Play(string input)
     {
         hasPlayed = false;
         string url = ResolveUrl(input);
 
-        // Debug 本地影片對照表
         Debug.Log("[Play] 當前本地影片字典:");
         foreach (var kv in nameToLocalPath)
             Debug.Log($"  Name={kv.Key}, LocalPath={kv.Value}");
@@ -198,7 +156,6 @@ public class WebGLStreamController : HISPlayerManager
         Debug.Log($"[Play] 播放影片 input={input}, 解析後 URL={url}");
         ChangeVideoContent(0, url);
 
-        // 等待 ready
         float timeout = 10f;
         float timer = 0f;
         while (!waitready && timer < timeout)
@@ -215,14 +172,13 @@ public class WebGLStreamController : HISPlayerManager
         if (waitready)
         {
             Debug.Log("[Play] 影片準備好，自動播放");
-            Play(0);  // 呼叫 HISPlayer 播放
+            Play(0);
         }
         else
         {
             Debug.LogWarning("[Play] 影片未準備好");
         }
 
-        // 等待字幕
         await SubtitlesManager.Instance.LoadSubtitles();
         await WaitForPlayedOnce();
     }
@@ -239,30 +195,25 @@ public class WebGLStreamController : HISPlayerManager
 
         if (!hasPlayed) Debug.LogWarning("[WebGLStreamController] 播放事件未觸發");
     }
-    #region 本地影片註冊與解析（大小寫安全）
-    /// <summary>
-    /// 接收下載後的 name -> localPath 映射，註冊到播放器使用（大小寫安全）
-    /// </summary>
+
     public void SetLocalVideoDictionary(Dictionary<string, string> localDict)
     {
         if (localDict == null) return;
         foreach (var kv in localDict)
         {
-            string keyLower = kv.Key.ToUpper(); // key 統一大寫
-            nameToLocalPath[keyLower] = kv.Value;
-            Debug.Log($"[WebGLStreamController] 註冊本地影片: {keyLower} -> {kv.Value}");
+            string keyUpper = kv.Key.ToUpper();
+            nameToLocalPath[keyUpper] = kv.Value;
+            Debug.Log($"[WebGLStreamController] 註冊本地影片: {keyUpper} -> {kv.Value}");
         }
     }
-    /// <summary>
-    /// 單一影片註冊用（大小寫安全）
-    /// </summary>
+
     public void RegisterLocalVideo(string relativePath, string localPath)
     {
         if (string.IsNullOrEmpty(relativePath) || string.IsNullOrEmpty(localPath)) return;
 
         if (urlToName != null && urlToName.TryGetValue(relativePath, out var name))
         {
-            nameToLocalPath[name.ToLower()] = localPath; // key 小寫化
+            nameToLocalPath[name.ToLower()] = localPath;
             Debug.Log($"[WebGLStreamController] RegisterLocalVideo: {name.ToLower()} -> {localPath}");
         }
         else
@@ -270,28 +221,24 @@ public class WebGLStreamController : HISPlayerManager
             Debug.LogWarning($"[WebGLStreamController] RegisterLocalVideo 未找到對應 name: {relativePath}");
         }
     }
-    /// <summary>
-    /// 解析影片 URL（大小寫安全）
-    /// </summary>
+
     private string ResolveUrl(string input)
     {
         if (string.IsNullOrEmpty(input)) return null;
 
         string resolvedUrl = null;
 
-        // 1️⃣ 優先檢查原始 YAML 映射
         if (nameToUrlReversed != null)
         {
             var key = nameToUrlReversed.Keys.FirstOrDefault(k => string.Equals(k, input, StringComparison.OrdinalIgnoreCase));
             if (key != null)
             {
-                resolvedUrl = nameToUrlReversed[key]; // 使用原始相對路徑
+                resolvedUrl = nameToUrlReversed[key];
                 Debug.Log($"[ResolveUrl] input={input} => YAML URL={resolvedUrl}");
                 return resolvedUrl;
             }
         }
 
-        // 2️⃣ 如果輸入就是相對路徑
         if (input.StartsWith("Videos/") || input.StartsWith("/Videos/"))
         {
             resolvedUrl = input.TrimStart('/');
@@ -299,7 +246,6 @@ public class WebGLStreamController : HISPlayerManager
             return resolvedUrl;
         }
 
-        // 3️⃣ 如果輸入是完整 URL
         if (input.StartsWith("http://") || input.StartsWith("https://"))
         {
             resolvedUrl = input;
@@ -310,31 +256,39 @@ public class WebGLStreamController : HISPlayerManager
         Debug.LogError($"[ResolveUrl] 無法解析 input={input}");
         return null;
     }
-    #endregion
 
     public async UniTask NaniSeekTime(long setMillisecond) { waitseek = false; Seek(0, setMillisecond); Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms"); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
     public async UniTask PlayVideo() { Play(0); await UniTask.CompletedTask; }
     public async UniTask PlayPause() { Pause(0); await UniTask.CompletedTask; }
-
     public long GetVideoLenght() => GetVideoDuration(0);
     public long GetVideotime() => GetVideoPosition(0);
     public void AddTime(int millisecond) => Seek(0, GetVideoPosition(0) + millisecond);
-    public async UniTask SeekTime(long targetMs)
-    {
-        waitseek = false;
-        Seek(0, targetMs);
-        await UniTask.WaitUntil(() => waitseek);
-        await SubtitlesManager.Instance.LoadSubtitles();
-    }
-
+    public async UniTask SeekTime(long targetMs) { waitseek = false; Seek(0, targetMs); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
+    public async UniTask SetLoopSegment(float start, float end, bool enableLoop) { loopStart = start; loopEnd = end; useLoopSegment = enableLoop; }
+    public void SetChoiceAppear(float appearTime) { choiceAppearTime = appearTime; waitingForChoice = true; }
+    public void ClearChoice() => waitingForChoice = false;
+    private float waitTimeSec = 0f;
+    public void SetWaitTime(float seconds) { waitTimeSec = seconds; }
     public void PlaySpeed(float speed) => SetPlaybackSpeedRate(0, speed);
     public float GetPlaySpeed() => GetPlaybackSpeedRate(0);
     public void SetHisVolume(float volume) => SetVolume(0, volume);
+    public bool IsLooping() => useLoopSegment;
+    public void GetLoopSegment(out float start, out float end)
+    {
+        start = loopStart;
+        end = loopEnd;
+    }
+    protected override void EventEndOfPlaylist(HISPlayerEventInfo eventInfo)
+    {
+        base.EventEndOfPlaylist(eventInfo);
+        Debug.Log("[WebGLStreamController] 播放結束，進入 Ended 狀態");
+        EndPlay = true;
+        SetState(PlayerState.Ended);
+        OnVideoEnded?.Invoke();
+    }
 
-    #region 本地 YAML 包裝類
     [Serializable]
     public class NameToUrl { public Dictionary<string, string> videoDictionary; }
     [Serializable]
     public class NameToLocalPath { public Dictionary<string, string> videoDictionary; }
-    #endregion
 }

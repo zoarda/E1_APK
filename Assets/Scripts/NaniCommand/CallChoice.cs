@@ -8,7 +8,7 @@ public class CallChoice : Command
     }
     public static async UniTask Skip(AsyncToken asyncToken)
     {
-        VideoManager.Instance.SkipVideo();
+        await VideoManager.Instance.SkipVideo();
         await UniTask.CompletedTask;
     }
 }

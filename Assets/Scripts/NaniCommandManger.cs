@@ -30,8 +30,8 @@ public class NaniCommandManger : MonoBehaviour
     private string videoName;
     public bool isLooping = false;
 
-    private float SetSLT;
-    private float SetELT;
+    public float SetSLT;
+    public float SetELT;
 
     private bool videoSeekDone = true;
 
@@ -542,18 +542,22 @@ public class NaniCommandManger : MonoBehaviour
     {
         WebGLStreamController webGLStreamController = WebGLStreamController.Instance;
         var length = webGLStreamController.GetVideoLenght();
-        Debug.Log($"VideoLenght {length}");
-        var videolength = length / 1000f;
-        if (videolength <= SetELT)
+        Debug.Log($"VideoLength {length}");
+        float videolength = length / 1000f;
+
+        // 確保 ELT > 0 並小於影片長度
+        if (SetELT <= 0 || SetELT > videolength)
         {
-            isLooping = isLoop;
-            Debug.Log($"VideoLenght less SetELT");
-            SetELT = videolength - 1;
-            Debug.Log($"BaseVideoTime /ELT{SetELT}");
-            SetSLT = videolength - 10;
-            Debug.Log($"BaseVideoTime /SLT{SetSLT}");
-            return;
+            SetELT = Mathf.Max(videolength - 1f, 0f);
+            Debug.Log($"ELT 修正為 {SetELT}");
         }
+
+        if (SetSLT < 0 || SetSLT >= SetELT)
+        {
+            SetSLT = Mathf.Max(SetELT - 10f, 0f);
+            Debug.Log($"SLT 修正為 {SetSLT}");
+        }
+
         isLooping = isLoop;
     }
     public async UniTask SetVideoTime(float SLT, float ELT, bool isLoop)

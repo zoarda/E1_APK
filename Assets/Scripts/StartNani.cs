@@ -111,6 +111,9 @@ public class StartNani : MonoBehaviour
         }
         else
         {
+            //  單例呼叫
+            if (DownloadPage.Instance != null)
+                await DownloadPage.Instance.ShowAndDownloadAsync();
             Debug.Log("nologinmode");
         }
 

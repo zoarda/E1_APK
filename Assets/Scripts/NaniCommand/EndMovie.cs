@@ -5,48 +5,48 @@ public class EndMovie : Command
 {
     public override async UniTask ExecuteAsync(AsyncToken asyncToken = default)
     {
-        WebGLStreamController webGLStreamController = WebGLStreamController.Instance;
+        var webGLController = WebGLStreamController.Instance;
+        if (webGLController == null)
+        {
+            Debug.LogError("[EndMovie] 找不到 WebGLStreamController");
+            return;
+        }
 
         IInputManager inputManager = Engine.GetService<IInputManager>();
         inputManager.ProcessInput = false;
-        //TODO TEMP TO SKIP ENDMOVIE ENDMOVIE IN C3_S4_P2 HAVE ERROE
-        float timer = 0f; // 計時器
-        const float timeout = 3f; // 10秒的限制
+
+        // 用 TaskCompletionSource 來等待影片結束
+        var tcs = new UniTaskCompletionSource();
+        void Handler() => tcs.TrySetResult();
+
+        webGLController.OnVideoEnded += Handler;
+
+        float timer = 0f;
+        const float timeout = 3f;
 
         while (Application.isPlaying && asyncToken.EnsureNotCanceledOrCompleted())
         {
-            await AsyncUtils.WaitEndOfFrameAsync(asyncToken);
+            await UniTask.Yield();
 
-            if (webGLStreamController == null)
-            {
-                Debug.Log("still loop");
-                return;
-            }
-            var waitedEnough = webGLStreamController;
-
-            // 更新計時器
             timer += Time.deltaTime;
-
-            // 如果超過10秒，設置 waitedEnough 為 true
             if (timer >= timeout)
             {
-                Debug.Log("Timeout reached, force stop video.");
+                Debug.Log("[EndMovie] Timeout reached, force stop video.");
 
-                // ✅ 直接標記 EndPlay
-                webGLStreamController.EndPlay = true;
-
-                // ✅ 如果你要讓狀態機走到 Ended
+                webGLController.EndPlay = true;
                 typeof(WebGLStreamController)
                     .GetMethod("EventEndOfPlaylist", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                    ?.Invoke(webGLStreamController, new object[] { new HISPlayerAPI.HISPlayerEventInfo() });
+                    ?.Invoke(webGLController, new object[] { new HISPlayerAPI.HISPlayerEventInfo() });
 
-                break; // 跳出 while，不然還會繼續 loop
+                break;
             }
-
-            if (waitedEnough) break;
         }
 
-        Debug.Log("unloop");
+        await tcs.Task; // 等待影片結束回調
+
+        webGLController.OnVideoEnded -= Handler;
+
+        Debug.Log("[EndMovie] 結束播放流程");
         await UniTask.CompletedTask;
     }
 }

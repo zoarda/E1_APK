@@ -1,3 +1,13 @@
+# C0_S0
+@speedButtonEnable
+@streamingPlay "C0_S0"
+@videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
+@forcedChoice choiceTime:1
+@waitMovie choiceTime:1
+@EndMovie
+@goto .C1_S0
+@stop
+
 # C1_S0
 @NaniSaveData ScriptName:C1_VB
 @NaniSaveData ScriptName:C1_S0
