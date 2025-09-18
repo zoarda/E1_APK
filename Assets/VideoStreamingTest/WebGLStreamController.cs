@@ -132,6 +132,8 @@ public class WebGLStreamController : HISPlayerManager
 
     public async UniTask Play(string input)
     {
+        float totalStart = Time.realtimeSinceStartup;
+
         hasPlayed = false;
         string url = ResolveUrl(input);
 
@@ -155,22 +157,34 @@ public class WebGLStreamController : HISPlayerManager
         if (canvasGroup != null) canvasGroup.alpha = 1;
 
         Debug.Log($"[Play] 播放影片 input={input}, 解析後 URL={url}");
+
+        // ChangeVideoContent
+        float t0 = Time.realtimeSinceStartup;
         ChangeVideoContent(0, url);
+        Debug.Log($"[Play][耗時] ChangeVideoContent 花費 {(Time.realtimeSinceStartup - t0) * 1000f:F1} ms");
+
+        // 等待 HISPlayer 發出 PlaybackReady
+        bool isReady = false;
+        void OnReady()
+        {
+            isReady = true;
+            waitready = true;
+            Debug.Log($"[Play] EventPlaybackReady 觸發，耗時 {(Time.realtimeSinceStartup - t0) * 1000f:F1} ms");
+        }
+
+        OnPlaybackReadyEvent += OnReady;
 
         float timeout = 10f;
         float timer = 0f;
-        while (!waitready && timer < timeout)
+        while (!isReady && timer < timeout)
         {
-            if (GetVideoDuration(0) > 0)
-            {
-                waitready = true;
-                break;
-            }
             await UniTask.Yield();
             timer += Time.deltaTime;
         }
 
-        if (waitready)
+        OnPlaybackReadyEvent -= OnReady;
+
+        if (isReady)
         {
             Debug.Log("[Play] 影片準備好，自動播放");
             Play(0);
@@ -180,8 +194,17 @@ public class WebGLStreamController : HISPlayerManager
             Debug.LogWarning("[Play] 影片未準備好");
         }
 
+        // 載入字幕
+        float t2 = Time.realtimeSinceStartup;
         await SubtitlesManager.Instance.LoadSubtitles();
+        Debug.Log($"[Play][耗時] 載入字幕 花費 {(Time.realtimeSinceStartup - t2) * 1000f:F1} ms");
+
+        // 等待第一次播放完成
+        float t3 = Time.realtimeSinceStartup;
         await WaitForPlayedOnce();
+        Debug.Log($"[Play][耗時] WaitForPlayedOnce 花費 {(Time.realtimeSinceStartup - t3) * 1000f:F1} ms");
+
+        Debug.Log($"[Play][總耗時] 整個流程完成 花費 {(Time.realtimeSinceStartup - totalStart) * 1000f:F1} ms");
     }
 
     async UniTask WaitForPlayedOnce()
@@ -292,9 +315,7 @@ public class WebGLStreamController : HISPlayerManager
         base.EventPlaybackReady(eventInfo);
 
         Debug.Log("[WebGLStreamController] EventPlaybackReady 觸發");
-
-        // 觸發 public 事件
-        OnPlaybackReadyEvent?.Invoke();
+        OnPlaybackReadyEvent?.Invoke(); // 通知外部
     }
     [Serializable]
     public class NameToUrl { public Dictionary<string, string> videoDictionary; }

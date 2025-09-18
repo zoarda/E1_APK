@@ -19,13 +19,11 @@ public class PlayStreamingVideo : Command
         if (webGLStreamController != null)
         {
             bool isReady = false;
-
             void OnReady() { isReady = true; Debug.Log("[PlayStreamingVideo] 影片準備好"); }
             webGLStreamController.OnPlaybackReadyEvent += OnReady;
 
             await webGLStreamController.Play(Url);
 
-            // 等待事件觸發或超時
             float timeout = 2f;
             float timer = 0f;
             while (!isReady && timer < timeout)
@@ -37,6 +35,6 @@ public class PlayStreamingVideo : Command
             webGLStreamController.OnPlaybackReadyEvent -= OnReady;
         }
 
-        await UniTask.CompletedTask; // 指令立即完成
+        await UniTask.CompletedTask;
     }
 }
