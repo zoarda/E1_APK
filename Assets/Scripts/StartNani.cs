@@ -329,7 +329,7 @@ public class StartNani : MonoBehaviour
             CanvasGroup canvasGroup = VideoImage.GetComponent<CanvasGroup>();
             canvasGroup.alpha = 1;
             StartGamePage.SetActive(!StartGamePage.activeSelf);
-            await Player.PreloadAndPlayAsync("C2_VB");
+            await Player.PreloadAndPlayAsync("C1_VB");
             ICharacterManager actorManager = Engine.GetService<ICharacterManager>();
             actorManager.RemoveAllActors();
             NaniCommandManger.Instance.SpeedButtonClearSpawn();

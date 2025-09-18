@@ -1,8 +1,8 @@
 # C2_S0
-; ; @saveData scriptName:C2_VB
 @NaniSaveData ScriptName:C2_VB
 @NaniSaveData ScriptName:C2_S0
 @stopSfx GameStart
+@speedButtonDisable
 @streamingPlay "C2_S0"
 @speedButtonEnable
 @forcedChoice choiceTime:716
@@ -46,6 +46,7 @@
 @stop
 
 # C2_S0_P1-choice
+@speedButtonDisable
 @streamingPlay "C2_S0"
 @speedButtonEnable
 @forcedChoice choiceTime:708
@@ -86,6 +87,7 @@
 @speedButtonEnable
 
 # C2_S0_P2-choice
+@speedButtonDisable
 @streamingPlay "C2_S0"
 @speedButtonEnable
 @forcedChoice choiceTime:692
@@ -113,7 +115,9 @@
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
 @stop
 # C2_S0_P3-choice
+@speedButtonDisable
 @streamingPlay "C2_S0"
+@speedButtonEnable
 @forcedChoice choiceTime:680
 @CallChoice
 @waitMovie choiceTime:680
@@ -136,6 +140,7 @@
 @stopSfx GameStart
 @forcedChoice choiceTime:10
 @spawn Block
+@speedButtonDisable
 @streamingPlay "C2_S0"
 @speedButtonEnable
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
@@ -150,8 +155,9 @@
 
 # C2-1P
 @NaniSaveData ScriptName:C2-1P
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C2-1P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
@@ -160,8 +166,9 @@
 
 # C2-2P
 @NaniSaveData ScriptName:C2-2P
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C2-2P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
@@ -170,8 +177,9 @@
 
 # C2-3P
 @NaniSaveData ScriptName:C2-3P
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C2-3P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
@@ -181,17 +189,21 @@
 # C2_S0_P1
 @speedButtonDisable
 @streamingPlay "C2_S0_P1"
+@speedButtonEnable
 @videoControll StartLoopTime:48.24 EndLoopTime:62.10 isLooping:true
 @stop
 
 # C2_S0_P2
 @speedButtonDisable
 @streamingPlay "C2_S0_P2"
+@speedButtonEnable
 @videoControll StartLoopTime:17.02 EndLoopTime:180 isLooping:true
 @stop
 
 # C2_S1_P1_noLoop
+@speedButtonDisable
 @streamingPlay "C2_S1_P1"
+@speedButtonEnable
 @spawn LovePlayPage
 @spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C2_S1_P1,C2_S1_P3,C2_S1_P4,C2_S1_P5 cumLabel:C2_S1_P5_cum type:demoForPlay
 @videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
@@ -200,29 +212,34 @@
 # C2_S1_P1
 @speedButtonDisable
 @streamingPlay "C2_S1_P1"
+@speedButtonEnable
 @videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
 @stop
 
 # C2_S1_P3
 @speedButtonDisable
 @streamingPlay "C2_S1_P3"
+@speedButtonEnable
 @videoControll StartLoopTime:18.23 EndLoopTime:171.12 isLooping:true
 @stop
 
 # C2_S1_P4
 @speedButtonDisable
 @streamingPlay "C2_S1_P4"
+@speedButtonEnable
 @videoControll StartLoopTime:28.20 EndLoopTime:181.12 isLooping:true
 @stop
 
 # C2_S1_P5
 @speedButtonDisable
 @streamingPlay "C2_S1_P5"
+@speedButtonEnable
 @videoControll StartLoopTime:80.10 EndLoopTime:447.19 isLooping:true
 @stop
 # C2_S1_P5_cum
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C2_S1_P5_cum"
+@speedButtonEnable
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
 @EndMovie

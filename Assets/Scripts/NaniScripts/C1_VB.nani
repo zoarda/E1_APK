@@ -121,8 +121,8 @@
 @speedButtonDisable
 @streamingPlay "C1_S1_P2"
 @speedButtonEnable
-@waitMovie choiceTime:16
 @forcedChoice choiceTime:16
+@waitMovie choiceTime:16
 @spawn FriendShipUp wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:13

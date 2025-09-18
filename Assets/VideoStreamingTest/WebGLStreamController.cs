@@ -13,6 +13,8 @@ public class WebGLStreamController : HISPlayerManager
     private bool useLoopSegment = false;
     private float loopStart = 0f;
     private float loopEnd = 0f;
+    // 新增事件訂閱變數
+    private UniTaskCompletionSource waitPlayedTcs;
 
     public bool waitingForChoice { get; private set; } = false;
     public float choiceAppearTime { get; private set; } = 0f;
@@ -136,7 +138,12 @@ public class WebGLStreamController : HISPlayerManager
 
         hasPlayed = false;
         string url = ResolveUrl(input);
-
+        // 重置循環
+        useLoopSegment = false;
+        loopStart = 0f;
+        loopEnd = 0f;
+        choiceAppearTime = 0f;
+        waitingForChoice = false;
         Debug.Log("[Play] 當前本地影片字典:");
         foreach (var kv in nameToLocalPath)
             Debug.Log($"  Name={kv.Key}, LocalPath={kv.Value}");
@@ -201,7 +208,7 @@ public class WebGLStreamController : HISPlayerManager
 
         // 等待第一次播放完成
         float t3 = Time.realtimeSinceStartup;
-        await WaitForPlayedOnce();
+        // await WaitForPlayedOnce();
         Debug.Log($"[Play][耗時] WaitForPlayedOnce 花費 {(Time.realtimeSinceStartup - t3) * 1000f:F1} ms");
 
         Debug.Log($"[Play][總耗時] 整個流程完成 花費 {(Time.realtimeSinceStartup - totalStart) * 1000f:F1} ms");
