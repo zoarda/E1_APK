@@ -13,6 +13,8 @@ public class SpeedButtonEnable : Command
     {
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
         startNani.buttonController.gameObject.SetActive(true);
+        startNani.videoManager.gameObject.SetActive(true);
+        await VideoManager.Instance.InitVideoControll();
         await UniTask.CompletedTask;
     }
 }

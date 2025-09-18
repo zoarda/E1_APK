@@ -12,6 +12,7 @@
 @NaniSaveData ScriptName:C1_VB
 @NaniSaveData ScriptName:C1_S0
 @stopSfx GameStart
+@speedButtonDisable
 @streamingPlay "C1_S0"
 @speedButtonEnable
 @videoControll StartLoopTime:80 EndLoopTime:82 isLooping:true

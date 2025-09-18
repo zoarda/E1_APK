@@ -2585,7 +2585,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v1.7.2
+  m_Text: v1.7.3
 --- !u!222 &775214846
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6659,6 +6659,7 @@ MonoBehaviour:
   StartGamePage: {fileID: 762684562}
   GalleryPage: {fileID: 1576720252}
   OpenCheck: {fileID: 51888660}
+  videoManager: {fileID: 3317307013806408054}
   friednshipList: []
   subtitlesManager: {fileID: 253769918}
   LanguageManager: {fileID: 2040531984}
@@ -9113,6 +9114,8 @@ MonoBehaviour:
   video: {fileID: 0}
   CloneVideo: {fileID: 0}
   isLooping: 0
+  SetSLT: 0
+  SetELT: 0
   MainCamera: {fileID: 0}
   canvas: {fileID: 1084636878}
   videoOnLoop: 0
@@ -9781,7 +9784,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &4064396099843801058
 GameObject:
   m_ObjectHideFlags: 0

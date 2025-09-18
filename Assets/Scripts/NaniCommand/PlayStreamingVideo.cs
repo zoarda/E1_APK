@@ -18,22 +18,23 @@ public class PlayStreamingVideo : Command
 
         if (webGLStreamController != null)
         {
-            // 先等影片準備好
+            bool isReady = false;
+
+            void OnReady() { isReady = true; Debug.Log("[PlayStreamingVideo] 影片準備好"); }
+            webGLStreamController.OnPlaybackReadyEvent += OnReady;
+
             await webGLStreamController.Play(Url);
 
-            // 確保影片 ready
-            float timeout = 10f;
+            // 等待事件觸發或超時
+            float timeout = 2f;
             float timer = 0f;
-            while (webGLStreamController.GetVideoLenght() <= 0 && !webGLStreamController.EndPlay && timer < timeout)
+            while (!isReady && timer < timeout)
             {
                 await UniTask.Yield();
                 timer += Time.deltaTime;
             }
 
-            if (webGLStreamController.GetVideoLenght() > 0)
-                Debug.Log("[PlayStreamingVideo] 影片已準備好，可以進入 WaitMovie");
-            else
-                Debug.LogWarning("[PlayStreamingVideo] 影片準備超時");
+            webGLStreamController.OnPlaybackReadyEvent -= OnReady;
         }
 
         await UniTask.CompletedTask; // 指令立即完成

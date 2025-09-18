@@ -19,6 +19,7 @@ public class WebGLStreamController : HISPlayerManager
 
     static WebGLStreamController instance;
     public GameObject block;
+    public Action OnPlaybackReadyEvent; // 新增 public 事件
 
     public static WebGLStreamController Instance
     {
@@ -286,7 +287,15 @@ public class WebGLStreamController : HISPlayerManager
         SetState(PlayerState.Ended);
         OnVideoEnded?.Invoke();
     }
+    protected override void EventPlaybackReady(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackReady(eventInfo);
 
+        Debug.Log("[WebGLStreamController] EventPlaybackReady 觸發");
+
+        // 觸發 public 事件
+        OnPlaybackReadyEvent?.Invoke();
+    }
     [Serializable]
     public class NameToUrl { public Dictionary<string, string> videoDictionary; }
     [Serializable]

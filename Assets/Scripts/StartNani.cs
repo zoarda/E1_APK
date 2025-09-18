@@ -11,7 +11,7 @@ public class StartNani : MonoBehaviour
 {
     [Header("Scripts")]
     public Button buttonController;
-    public GameObject StartGamePage, GalleryPage, OpenCheck;
+    public GameObject StartGamePage, GalleryPage, OpenCheck, videoManager;
     public List<float> friednshipList;
     [SerializeField] private SubtitlesManager subtitlesManager;
     // [SerializeField] private NaniCommandManger naniCommandManger;
@@ -162,6 +162,7 @@ public class StartNani : MonoBehaviour
         }
         ErrorPage.SetActive(false);
         StartGamePage.SetActive(true);
+
         if (sfx != null)
         {
             await sfx.PlayBgmAsync("GameStart", 0.2f, 0.5f, true);
@@ -220,7 +221,6 @@ public class StartNani : MonoBehaviour
         {
             await sfx.PlayBgmAsync("GameStart", 0.2f, 0.5f, true);
         }
-        await VideoManager.Instance.InitVideoControll();
         //設定初始選擇按鈕(給遙控器用)
         EventSystem.current.SetSelectedGameObject(Btn_StartGame.gameObject);
 

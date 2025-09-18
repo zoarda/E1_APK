@@ -34,9 +34,9 @@
 @speedButtonEnable
 @forcedChoice choiceTime:672
 @waitMovie choiceTime:672
-@forcedChoice choiceTime:405
+@forcedChoice choiceTime:406
 @waitMovie choiceTime:405
-@forcedChoice choiceTime:10
+@forcedChoice choiceTime:11
 @waitMovie choiceTime:10
 @NaniSaveData ScriptName:C2_S0_Love
 @speedButtonDisable

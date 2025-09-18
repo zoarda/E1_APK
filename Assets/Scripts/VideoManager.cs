@@ -7,7 +7,9 @@ using Cysharp.Threading.Tasks;
 public class VideoManager : MonoBehaviour
 {
     public VideoPlayer videoPlayer;
+    private bool skipCooldown = false;
 
+    private bool reachedSafeLimit = false; // 新增旗標
     public static VideoManager instance;
 
     public Button Btn_SpeedViewFront, Btn_ChoiceViewFront, Btn_Speed;
@@ -84,19 +86,17 @@ public class VideoManager : MonoBehaviour
         float totalLength = controller.GetVideoLenght() / 1000f;
         float choiceTime = controller.choiceAppearTime;
 
-        float loopEnd = NaniCommandManger.Instance.SetELT;
-        bool looping = NaniCommandManger.Instance.isLooping;
+        // 從 WebGLStreamController 取得循環資訊
+        controller.GetLoopSegment(out float loopStart, out float loopEnd);
+        bool looping = controller.IsLooping();
 
         float safeLimit = totalLength;
 
-        // 如果有循環點，限制在循環結束前
-        if (looping && loopEnd > 0) safeLimit = Mathf.Min(safeLimit, loopEnd);
+        if (looping && loopEnd > 0f) safeLimit = Mathf.Min(safeLimit, loopEnd);
+        if (choiceTime > 0f) safeLimit = Mathf.Min(safeLimit, totalLength - choiceTime);
 
-        // 如果有選項點，限制在選項前（安全距離）
-        if (choiceTime > 0) safeLimit = Mathf.Min(safeLimit, choiceTime);
-
-        // 確保剩餘至少 9 秒（防止快進到影片尾端導致異常）
-        safeLimit = Mathf.Min(safeLimit, totalLength - 9f);
+        // 確保剩餘至少 9 秒
+        safeLimit = Mathf.Min(safeLimit, totalLength - 1f);
 
         return safeLimit;
     }
@@ -126,12 +126,23 @@ public class VideoManager : MonoBehaviour
     // 快進到選項
     public async UniTask SkipVideo()
     {
+        if (skipCooldown) return; // 冷卻中不處理
+
+        skipCooldown = true;
+        UniTask.Void(async () =>
+        {
+            await UniTask.Delay(500); // 0.5 秒冷卻
+            skipCooldown = false;
+        });
+
         var controller = WebGLStreamController.Instance;
         if (controller == null) return;
 
         await UniTask.WaitUntil(() => controller.GetVideoLenght() > 0 || controller.EndPlay);
 
+        float curTime = controller.GetVideotime() / 1000f;
         float choiceTime = controller.choiceAppearTime;
+
         if (choiceTime <= 0)
         {
             Debug.LogWarning("沒有設定選項點，無法快進");
@@ -139,10 +150,19 @@ public class VideoManager : MonoBehaviour
         }
 
         float safeLimit = GetSafeLimit();
-        float targetTime = Mathf.Min(choiceTime, safeLimit);
+
+        // 如果當前時間已經 >= 安全上限，則直接返回
+        if (curTime >= safeLimit)
+        {
+            Debug.Log("快進到選項無效：已經在選項點或之後");
+            return;
+        }
+
+        // 增加 2 秒緩衝，但不能超過影片總長度
+        float targetTime = Mathf.Min(safeLimit, controller.GetVideoLenght() / 1000f);
 
         await controller.SeekTime((long)(targetTime * 1000));
-        Debug.Log($"已快進到選項點 ({targetTime:F1}s, 安全上限: {safeLimit:F1}s)");
+        Debug.Log($"已快進到選項點 + 緩衝時間 ({targetTime:F1}s)");
     }
 
 
