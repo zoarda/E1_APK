@@ -36,6 +36,10 @@ g
 /*.userprefs
 
 #StreamingAssets
+/Assets/StreamingAssets/Videos
+/Assets/StreamingAssets/Videos.meta
+
+
 /Assets/StreamingAssets/build_info
 /Assets/StreamingAssets/build_info.meta
 
