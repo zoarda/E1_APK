@@ -2,6 +2,7 @@
 @NaniSaveData ScriptName:C3_VB
 @NaniSaveData ScriptName:C3_S0
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C3_S0"
 @speedButtonEnable
 @forcedChoice choiceTime:12
@@ -19,6 +20,7 @@
 
 # C3_S1
 @NaniSaveData ScriptName:C3_S1
+@speedButtonDisable
 @streamingPlay "C3_S1"
 @speedButtonEnable
 @videoControll StartLoopTime:109 EndLoopTime:119 isLooping:true
@@ -32,6 +34,7 @@
 @clearChoice
 
 # C3_S1_P1
+@speedButtonDisable
 @streamingPlay "C3_S1_P1"
 @speedButtonEnable
 @videoControll StartLoopTime:38 EndLoopTime:42 isLooping:true
@@ -50,6 +53,7 @@
 @clearChoice
 
 # C3_S1_P2
+@speedButtonDisable
 @streamingPlay "C3_S1_P2"
 @speedButtonEnable
 @videoControll StartLoopTime:49 EndLoopTime:53 isLooping:true
@@ -68,6 +72,7 @@
 @clearChoice
 
 # C3_S1_P1-1
+@speedButtonDisable
 @streamingPlay "C3_S1_P1-1"
 @speedButtonEnable
 @forcedChoice choiceTime:1
@@ -76,6 +81,7 @@
 @goto C4_VB
 
 # C3_S1_P1-2
+@speedButtonDisable
 @streamingPlay "C3_S1_P1-2"
 @speedButtonEnable
 @forcedChoice choiceTime:5
@@ -88,6 +94,7 @@
 
 # C3_S2
 @NaniSaveData ScriptName:C3_S2
+@speedButtonDisable
 @streamingPlay "C3_S2"
 @speedButtonEnable
 @setVideoPlayer
@@ -102,13 +109,8 @@
 @clearChoice
 
 # C3_S2_P1
+@speedButtonDisable
 @streamingPlay "C3_S2_P1"
-; @speedButtonEnable
-; @videoControll StartLoopTime:92 EndLoopTime:100 isLooping:true
-; @wait 23
-; @spawn FriendShipUp wait:false
-; @wait 2
-; @despawn FriendShipUp
 @speedButtonEnable
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:2
@@ -116,6 +118,7 @@
 @goto C4_VB
 
 # C3_S2_P2
+@speedButtonDisable
 @streamingPlay "C3_S2_P2"
 @speedButtonEnable
 @forcedChoice choiceTime:34
@@ -132,6 +135,7 @@
 
 # C3_S3
 @NaniSaveData ScriptName:C3_S3
+@speedButtonDisable
 @streamingPlay "C3_S3"
 @speedButtonEnable
 @videoControll StartLoopTime:68 EndLoopTime:76 isLooping:true
@@ -145,6 +149,7 @@
 @clearChoice
 
 # C3_S3_P1
+@speedButtonDisable
 @streamingPlay "C3_S3_P1"
 @speedButtonEnable
 @forcedChoice choiceTime:44
@@ -156,6 +161,7 @@
 @goto C4_VB
 
 # C3_S3_P2
+@speedButtonDisable
 @streamingPlay "C3_S3_P2"
 @speedButtonEnable
 @forcedChoice choiceTime:2
@@ -165,6 +171,7 @@
 
 # C3_S4
 @NaniSaveData ScriptName:C3_S4
+@speedButtonDisable
 @streamingPlay "C3_S4"
 @speedButtonEnable
 @videoControll StartLoopTime:59 EndLoopTime:70 isLooping:true
@@ -180,6 +187,7 @@
 
 #C3_S4_P1
 @NaniSaveData ScriptName:C3_S4_P1
+@speedButtonDisable
 @streamingPlay "C3_S4_P1"
 @speedButtonEnable
 @videoControll startLoopTime:170 endLoopTime:200 isLooping:true
@@ -191,6 +199,7 @@
 @stop
 
 #C3_S4_P2
+@speedButtonDisable
 @streamingPlay "C3_S4_P2"
 @speedButtonEnable
 @forcedChoice choiceTime:2
@@ -199,74 +208,74 @@
 @goto C4_VB
 
 # C3_S4_P1-O1
-@streamingPlay "C3_S4_P1-O1"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-O1"
 @videoControll startLoopTime:11.23 endLoopTime:77.06 isLooping:true
 @stop
 
 # C3_S4_P1-O2
-@streamingPlay "C3_S4_P1-O2"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-O2"
 @videoControll startLoopTime:59.19 endLoopTime:77.06 isLooping:true
 @stop
 
 # C3_S4_P1-O3
-@streamingPlay "C3_S4_P1-O3"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-O3"
 @videoControll startLoopTime:53.27 endLoopTime:232.21 isLooping:true
 @stop
 
 # C3_S4_P1-O4
-@streamingPlay "C3_S4_P1-O4"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-O4"
 @videoControll startLoopTime:27.07 endLoopTime:148.08 isLooping:true
 @stop
 
 # C3_S4_P1-S1_noLoop
 @spawn LovePlayPage
 @spawnLovePlayPage poseName:sex_D_02,sex_G_02,sex_A_02,sex_C_02,sex_F_02 label:C3_S4_P1-S1,C3_S4_P1-S2,C3_S4_P1-S3,C3_S4_P1-S4,C3_S4_P1-S5 cumLabel:C3_S4_P1-S5_cum type:sex
-@streamingPlay "C3_S4_P1-S1"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S1"
 @videoControll startLoopTime:59.24 endLoopTime:246.17 isLooping:true
 @stop
 
 # C3_S4_P1-S1
-@streamingPlay "C3_S4_P1-S1"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S1"
 @videoControll startLoopTime:59.24 endLoopTime:246.17 isLooping:true
 @stop
 
 
 # C3_S4_P1-S2
-@streamingPlay "C3_S4_P1-S2"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S2"
 @videoControll startLoopTime:13.02 endLoopTime:212.21 isLooping:true
 @stop
 
 
 # C3_S4_P1-S3
-@streamingPlay "C3_S4_P1-S3"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S3"
 @videoControll startLoopTime:25.20 endLoopTime:198.03 isLooping:true
 @stop
 
 
 # C3_S4_P1-S4
-@streamingPlay "C3_S4_P1-S4"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S4"
 @videoControll startLoopTime:15.02 endLoopTime:212.21 isLooping:true
 @stop
 
 
 # C3_S4_P1-S5
-@streamingPlay "C3_S4_P1-S5"
 @speedButtonDisable
+@streamingPlay "C3_S4_P1-S5"
 @videoControll startLoopTime:17.21 endLoopTime:217.18 isLooping:true
 @stop
 
 # C3_S4_P1-S5_cum
-@streamingPlay "C3_S4_P1-S5_cum"
 @speedButtonEnable
+@streamingPlay "C3_S4_P1-S5_cum"
 @waitMovie choiceTime:2
 @EndMovie
 @goto .C3_S4_P1-1
@@ -274,8 +283,8 @@
 
 # C3_S4_P1-1
 ; @waitMovie choiceTime:0.1
-@streamingPlay "C3_S4_P1-1"
 @speedButtonEnable
+@streamingPlay "C3_S4_P1-1"
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
 @EndMovie

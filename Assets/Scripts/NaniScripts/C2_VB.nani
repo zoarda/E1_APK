@@ -41,7 +41,7 @@
 @NaniSaveData ScriptName:C2_S0_Love
 @speedButtonDisable
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:foreplay
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
 @stop
 
@@ -79,7 +79,7 @@
 @NaniSaveData ScriptName:C2_S0_Love
 @speedButtonDisable
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:foreplay
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
 @stop
 @wait 10
@@ -111,7 +111,7 @@
 @NaniSaveData ScriptName:C2_S0_Love
 @speedButtonDisable
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:foreplay
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
 @stop
 # C2_S0_P3-choice
@@ -133,24 +133,24 @@
 @NaniSaveData ScriptName:C2_S0_Love
 @speedButtonDisable
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:foreplay
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
 @stop
 #C2_S0_Love
 @stopSfx GameStart
-@forcedChoice choiceTime:10
 @spawn Block
 @speedButtonDisable
 @streamingPlay "C2_S0"
 @speedButtonEnable
 @videoControll startLoopTime:730 endLoopTime:739 isLooping:true
+@forcedChoice choiceTime:10
 @CallChoice
 @waitMovie choiceTime:10
 @despawn Block
 @NaniSaveData ScriptName:C2_VB_Love
 @speedButtonDisable
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:demoForPlay
+@spawnLovePlayPage poseName:sex_M_02,sex_I_02 label:C2_S0_P1,C2_S0_P2 cumLabel:C2_S1_P1_noLoop type:foreplay
 @stop
 
 # C2-1P
@@ -189,21 +189,18 @@
 # C2_S0_P1
 @speedButtonDisable
 @streamingPlay "C2_S0_P1"
-@speedButtonEnable
 @videoControll StartLoopTime:48.24 EndLoopTime:62.10 isLooping:true
 @stop
 
 # C2_S0_P2
 @speedButtonDisable
 @streamingPlay "C2_S0_P2"
-@speedButtonEnable
 @videoControll StartLoopTime:17.02 EndLoopTime:180 isLooping:true
 @stop
 
 # C2_S1_P1_noLoop
 @speedButtonDisable
 @streamingPlay "C2_S1_P1"
-@speedButtonEnable
 @spawn LovePlayPage
 @spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C2_S1_P1,C2_S1_P3,C2_S1_P4,C2_S1_P5 cumLabel:C2_S1_P5_cum type:demoForPlay
 @videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
@@ -212,28 +209,24 @@
 # C2_S1_P1
 @speedButtonDisable
 @streamingPlay "C2_S1_P1"
-@speedButtonEnable
 @videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
 @stop
 
 # C2_S1_P3
 @speedButtonDisable
 @streamingPlay "C2_S1_P3"
-@speedButtonEnable
 @videoControll StartLoopTime:18.23 EndLoopTime:171.12 isLooping:true
 @stop
 
 # C2_S1_P4
 @speedButtonDisable
 @streamingPlay "C2_S1_P4"
-@speedButtonEnable
 @videoControll StartLoopTime:28.20 EndLoopTime:181.12 isLooping:true
 @stop
 
 # C2_S1_P5
 @speedButtonDisable
 @streamingPlay "C2_S1_P5"
-@speedButtonEnable
 @videoControll StartLoopTime:80.10 EndLoopTime:447.19 isLooping:true
 @stop
 # C2_S1_P5_cum

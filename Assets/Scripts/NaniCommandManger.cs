@@ -495,7 +495,7 @@ public class NaniCommandManger : MonoBehaviour
             objCum.SetActive(true);
             objHidenCum.SetActive(false);
             objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("LovePlayPage/sex_P_02");
+            imaCum.sprite = Resources.Load<Sprite>("LovePlayPage/sex_N_02");
             imaCum.SetNativeSize();
             objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("LovePlayPage/sex_O_02");
             objHidenCum.GetComponent<Image>().SetNativeSize();

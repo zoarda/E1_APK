@@ -287,14 +287,41 @@ public class WebGLStreamController : HISPlayerManager
         Debug.LogError($"[ResolveUrl] 無法解析 input={input}");
         return null;
     }
+    private UniTaskCompletionSource seekTcs;
+    public async UniTask NaniSeekTime(long setMillisecond)
+    {
+        seekTcs = new UniTaskCompletionSource();
+        Seek(0, setMillisecond);
+        Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms");
 
-    public async UniTask NaniSeekTime(long setMillisecond) { waitseek = false; Seek(0, setMillisecond); Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms"); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
+        await seekTcs.Task; // 等待事件觸發
+        await SubtitlesManager.Instance.LoadSubtitles();
+    }
+
+    public async UniTask SeekTime(long targetMs)
+    {
+        seekTcs = new UniTaskCompletionSource();
+        Seek(0, targetMs);
+        Debug.Log($"[WebGLStreamController] SeekTime: Seek to {targetMs} ms");
+
+        await seekTcs.Task;
+        await SubtitlesManager.Instance.LoadSubtitles();
+    }
+
+    // EventPlaybackSeek 事件
+    protected override void EventPlaybackSeek(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackSeek(eventInfo);
+        Debug.Log($"[WebGLStreamController] EventPlaybackSeek 完成: {eventInfo}");
+        seekTcs?.TrySetResult(); // 通知等待完成
+    }
+    // public async UniTask NaniSeekTime(long setMillisecond) { waitseek = false; Seek(0, setMillisecond); Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms"); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
     public async UniTask PlayVideo() { Play(0); await UniTask.CompletedTask; }
     public async UniTask PlayPause() { Pause(0); await UniTask.CompletedTask; }
     public long GetVideoLenght() => GetVideoDuration(0);
     public long GetVideotime() => GetVideoPosition(0);
     public void AddTime(int millisecond) => Seek(0, GetVideoPosition(0) + millisecond);
-    public async UniTask SeekTime(long targetMs) { waitseek = false; Seek(0, targetMs); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
+    // public async UniTask SeekTime(long targetMs) { waitseek = false; Seek(0, targetMs); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
     public async UniTask SetLoopSegment(float start, float end, bool enableLoop) { loopStart = start; loopEnd = end; useLoopSegment = enableLoop; }
     public void SetChoiceAppear(float appearTime) { choiceAppearTime = appearTime; waitingForChoice = true; }
     public void ClearChoice() => waitingForChoice = false;
@@ -313,8 +340,15 @@ public class WebGLStreamController : HISPlayerManager
     {
         base.EventEndOfPlaylist(eventInfo);
         Debug.Log("[WebGLStreamController] 播放結束，進入 Ended 狀態");
+
         EndPlay = true;
         SetState(PlayerState.Ended);
+
+        // 🔑 立刻把畫面蓋掉，避免閃回 0 秒
+        if (block != null) block.SetActive(true);
+        var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
+        if (canvasGroup != null) canvasGroup.alpha = 0;
+
         OnVideoEnded?.Invoke();
     }
     protected override void EventPlaybackReady(HISPlayerEventInfo eventInfo)

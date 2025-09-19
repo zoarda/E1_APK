@@ -1,8 +1,8 @@
 # C5_S0
-; @saveData scriptName:C5_VB
 @NaniSaveData ScriptName:C5_VB
 @NaniSaveData ScriptName:C5_S0
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C5_S0"
 @speedButtonEnable
 @videoControll startLoopTime:225 endLoopTime:234 isLooping:true
@@ -18,6 +18,7 @@
 
 # C5_S0_P1
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C5_S0_P1"
 @speedButtonEnable
 @forcedChoice choiceTime:2
@@ -41,6 +42,7 @@
 
 # C5_S0_P2
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C5_S0_P2"
 @speedButtonEnable
 @forcedChoice choiceTime:2
@@ -62,6 +64,7 @@
 
 # C5_S0_P3
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C5_S0_P3"
 @speedButtonEnable
 @forcedChoice choiceTime:2
@@ -75,7 +78,8 @@
 @forcedChoice choiceTime:30
 @waitMovie choiceTime:30
 @speedButtonDisable
-@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+; @choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S1
 @choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S2
 @choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
 @reBuildChoice
@@ -86,6 +90,7 @@
 # C5_S1
 @NaniSaveData ScriptName:C5_S1
 @stopSfx GameStart fade:0.5
+@speedButtonDisable
 @streamingPlay "C5_S1"
 @speedButtonEnable
 @forcedChoice choiceTime:228
@@ -113,22 +118,22 @@
 
 # C5_S1_O1
 @stopSfx GameStart fade:0.5
-@streamingPlay "C5_S1_O1"
 @speedButtonDisable
+@streamingPlay "C5_S1_O1"
 @videoControll startLoopTime:46.03 endLoopTime:225.29 isLooping:true
 @stop
 
 # C5_S1_O2
 @stopSfx GameStart fade:0.5
-@streamingPlay "C5_S1_O2"
 @speedButtonDisable
+@streamingPlay "C5_S1_O2"
 @videoControll startLoopTime:61.24 endLoopTime:243 isLooping:true
 @stop
 
 # C5_S1_O3
 @stopSfx GameStart fade:0.5
-@streamingPlay "C5_S1_O3"
 @speedButtonDisable
+@streamingPlay "C5_S1_O3"
 @videoControll startLoopTime:19.15 endLoopTime:112.29 isLooping:true
 @stop
 
@@ -145,43 +150,43 @@
 @stop
 
 # C5_S1_S1
-@streamingPlay "C5_S1_S1"
 @speedButtonDisable
+@streamingPlay "C5_S1_S1"
 @videoControll startLoopTime:39.16 endLoopTime:204.18 isLooping:true
 @stop
 
 # C5_S1_S2
-@streamingPlay "C5_S1_S2"
 @speedButtonDisable
+@streamingPlay "C5_S1_S2"
 @videoControll startLoopTime:28.02 endLoopTime:207.29 isLooping:true
 @stop
 
 
 # C5_S1_S3
-@streamingPlay "C5_S1_S3"
 @speedButtonDisable
+@streamingPlay "C5_S1_S3"
 @videoControll startLoopTime:28.02 endLoopTime:207.29 isLooping:true
 @stop
 
 
 # C5_S1_S4
-@streamingPlay C5_S1_S4"
 @speedButtonDisable
+@streamingPlay "C5_S1_S4"
 @videoControll startLoopTime:71 endLoopTime:215.03 isLooping:true
 @stop
 
 
 # C5_S1_S5_cum
-@streamingPlay "C5_S1_S5_cum"
 @speedButtonEnable
+@streamingPlay "C5_S1_S5_cum"
 @waitMovie choiceTime:2
 @EndMovie
 @goto .EndGameB
 @stop
 
 # C5_S1_S6
-@streamingPlay "C5_S1_S6"
 @speedButtonEnable
+@streamingPlay "C5_S1_S6"
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:2
 @EndMovie
@@ -190,6 +195,7 @@
 # C5_S2
 @stopBgm GameStart
 @NaniSaveData ScriptName:C5_S2
+@speedButtonDisable
 @streamingPlay "C5_S2"
 @speedButtonEnable
 @forcedChoice choiceTime:58
@@ -205,6 +211,7 @@
 @stopBgm GameStart
 @forcedChoice choiceTime:138
 @spawn Block
+@speedButtonDisable
 @streamingPlay "C5_S2"
 @speedButtonEnable
 @CallChoice
@@ -216,28 +223,28 @@
 @stop
 
 # C5_S2_O1
-@streamingPlay "C5_S2_O1"
 @speedButtonDisable
+@streamingPlay "C5_S2_O1"
 @videoControll startLoopTime:102.11 endLoopTime:269.28 isLooping:true
 @stop
 
 
 # C5_S2_O2
-@streamingPlay "C5_S2_O2"
 @speedButtonDisable
+@streamingPlay "C5_S2_O2"
 @videoControll startLoopTime:63.23 endLoopTime:185.03 isLooping:true
 @stop
 
 
 # C5_S2_O3
-@streamingPlay "C5_S2_O3"
 @speedButtonDisable
+@streamingPlay "C5_S2_O3"
 @videoControll startLoopTime:17.23 endLoopTime:216.26 isLooping:true
 @stop
 
 # C5_S2_O4
-@streamingPlay "C5_S2_O4"
 @speedButtonDisable
+@streamingPlay "C5_S2_O4"
 @videoControll startLoopTime:8.08 endLoopTime:122.17 isLooping:true
 @stop
 
@@ -252,46 +259,47 @@
 @stop
 
 # C5_S2_S1
-@streamingPlay "C5_S2_S1"
 @speedButtonDisable
+@streamingPlay "C5_S2_S1"
 @videoControll startLoopTime:62.14 endLoopTime:214.21 isLooping:true
 @stop
 
 # C5_S2_S2
-@streamingPlay "C5_S2_S2"
 @speedButtonDisable
+@streamingPlay "C5_S2_S2"
 @videoControll startLoopTime:14.21 endLoopTime:163.28 isLooping:true
 @stop
 
 
 # C5_S2_S3
-@streamingPlay "C5_S2_S3"
 @speedButtonDisable
+@streamingPlay "C5_S2_S3"
 @videoControll startLoopTime:6.01 endLoopTime:191.29 isLooping:true
 @stop
 
 # C5_S2_S4
-@streamingPlay "C5_S2_S4"
 @speedButtonDisable
+@streamingPlay "C5_S2_S4"
 @videoControll startLoopTime:8.04 endLoopTime:167.29 isLooping:true
 @stop
 
 
 # C5_S2_S5
-@streamingPlay "C5_S2_S5"
 @speedButtonDisable
+@streamingPlay "C5_S2_S5"
 @videoControll startLoopTime:4.29 endLoopTime:99.13 isLooping:true
 @stop
 
 
 # C5_S2_S6
-@streamingPlay "C5_S2_S6"
 @speedButtonDisable
+@streamingPlay "C5_S2_S6"
 @videoControll startLoopTime:11.18 endLoopTime:155.23 isLooping:true
 @stop
 
 
 # C5_S2_S6_cum
+@speedButtonDisable
 @streamingPlay "C5_S2_S6_cum"
 @speedButtonEnable
 @waitMovie choiceTime:2
@@ -299,6 +307,7 @@
 @goto .GameOver
 
 # C5_S2_S7_cuminside
+@speedButtonDisable
 @streamingPlay "C5_S2_S7_cuminside"
 @speedButtonEnable
 @waitMovie choiceTime:2
@@ -309,6 +318,7 @@
 # C5_S3
 @stopBgm GameStart 
 @NaniSaveData ScriptName:C5_S3
+@speedButtonDisable
 @streamingPlay "C5_S3"
 @speedButtonEnable
 @forcedChoice choiceTime:582
@@ -324,6 +334,7 @@
 @stopBgm GameStart 
 @forcedChoice choiceTime:582
 @spawn Block
+@speedButtonDisable
 @streamingPlay "C5_S3"
 @speedButtonEnable
 @CallChoice
@@ -336,23 +347,23 @@
 @stop
 
 # C5_S3_O1
-@streamingPlay "C5_S3_O1"
 @speedButtonDisable
+@streamingPlay "C5_S3_O1"
 @videoControll startLoopTime:40.04 endLoopTime:248.08 isLooping:true
 @stop
 
 
 
 # C5_S3_O2
-@streamingPlay "C5_S3_O2"
 @speedButtonDisable
+@streamingPlay "C5_S3_O2"
 @videoControll startLoopTime:79.09 endLoopTime:204.06 isLooping:true
 @stop
 
 
 # C5_S3_O3
-@streamingPlay "C5_S3_O3"
 @speedButtonDisable
+@streamingPlay "C5_S3_O3"
 @videoControll startLoopTime:23.27 endLoopTime:207.14 isLooping:true
 @stop
 
@@ -366,40 +377,40 @@
 @stop
 
 # C5_S3_S1
-@streamingPlay "C5_S3_S1"
 @speedButtonDisable
+@streamingPlay "C5_S3_S1"
 @videoControll startLoopTime:78.11 endLoopTime:303 isLooping:true
 @stop
 
 # C5_S3_S2
-@streamingPlay "C5_S3_S2"
 @speedButtonDisable
+@streamingPlay "C5_S3_S2"
 @videoControll startLoopTime:131.13 endLoopTime:200.16 isLooping:true
 @stop
 
 # C5_S3_S3
-@streamingPlay "C5_S3_S3"
 @speedButtonDisable
+@streamingPlay "C5_S3_S3"
 @videoControll startLoopTime:43.28 endLoopTime:174 isLooping:true
 @stop
 
 # C5_S3_S5
-@streamingPlay "C5_S3_S5"
 @speedButtonDisable
+@streamingPlay "C5_S3_S5"
 @videoControll startLoopTime:8.10 endLoopTime:187.21 isLooping:true
 @stop
 
 
 # C5_S3_S6_cuminside
-@streamingPlay "C5_S3_S6_cuminside"
 @speedButtonEnable
+@streamingPlay "C5_S3_S6_cuminside"
 @waitMovie choiceTime:2
 @EndMovie
 @goto .EndGameC
 
 # C5_S3_S7_cum
-@streamingPlay "C5_S3_S7_cum"
 @speedButtonEnable
+@streamingPlay "C5_S3_S7_cum"
 @waitMovie choiceTime:2
 @EndMovie
 @goto .GameOver

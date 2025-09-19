@@ -103,6 +103,7 @@ public class GameClearBack : Command
             {
                 await sfx.PlayBgmAsync("GameStart", 0.2f, 0.5f, true);
             }
+            StartNani.Instance.VideoImage.GetComponent<CanvasGroup>().alpha = 0;
             // spawnManager.DestroySpawned("GameClearPage");
             NaniCommandManger.Instance.SpeedButtonClearSpawn();
         });
