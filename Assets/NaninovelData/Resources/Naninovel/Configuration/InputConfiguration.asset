@@ -121,11 +121,7 @@ MonoBehaviour:
     - AxisName: Mouse ScrollWheel
       TriggerMode: 1
       TriggerTolerance: 0.001
-    Swipes:
-    - Direction: 3
-      FingerCount: 1
-      MinimumDistance: 50
-      ActivateOnMove: 0
+    Swipes: []
   - Name: CameraLookX
     AlwaysProcess: 0
     Keys: 
