@@ -1,6 +1,11 @@
 # C2_S0
-@NaniSaveData ScriptName:C2_VB
+@speedButtonDisable
+@wait 2
+@back C1_S2_Change time:0.5 wait:true
+@wait 2
+@back C1_S2_Change visible:false time:0.5 wait:true
 @NaniSaveData ScriptName:C2_S0
+@NaniSaveData ScriptName:C2_VB
 @stopSfx GameStart
 @speedButtonDisable
 @streamingPlay "C2_S0"

@@ -39,18 +39,18 @@ public class WaitMovie : Command
 
             if (controller.EndPlay)
             {
-                // Debug.Log("[WaitMovie] 影片播放結束，跳出等待");
+                Debug.Log("[WaitMovie] 影片播放結束，跳出等待");
                 break;
             }
 
             if (remainingTime <= remainingThreshold)
             {
-                // Debug.Log($"[WaitMovie] 剩餘時間 {remainingTime:F2}s <= {remainingThreshold}s，結束等待");
+                Debug.Log($"[WaitMovie] 剩餘時間 {remainingTime:F2}s <= {remainingThreshold}s，結束等待");
                 break;
             }
             if (!choiceHandled && controller.waitingForChoice && remainingTime <= controller.choiceAppearTime)
             {
-                // Debug.Log($"[WaitMovie] 已到達選項點 (剩餘時間 {remainingTime:F2}s) <= {controller.choiceAppearTime}s，結束等待");
+                Debug.Log($"[WaitMovie] 已到達選項點 (剩餘時間 {remainingTime:F2}s) <= {controller.choiceAppearTime}s，結束等待");
                 choiceHandled = true;
                 break;
             }

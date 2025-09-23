@@ -5,7 +5,6 @@
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0
 @stop
 
@@ -35,7 +34,6 @@
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
 # C1_S0-2P
@@ -46,7 +44,6 @@
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
 
@@ -58,7 +55,6 @@
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
 
@@ -107,12 +103,12 @@
 ; @forcedChoice choiceTime:2
 @waitMovie choiceTime:5
 @despawn FriendShipDown
-@waitMovie choiceTime:0.1
+@waitMovie choiceTime:1
 ; ;串接過廠
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
@@ -127,13 +123,12 @@
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:13
 @despawn FriendShipUp
-@waitMovie choiceTime:1
-@EndMovie
+@waitMovie choiceTime:2
 ; ;串接過廠
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 ; @stop
 
@@ -163,11 +158,11 @@
 @waitMovie choiceTime:17
 @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
@@ -182,11 +177,10 @@
 @waitMovie choiceTime:5
 @despawn FriendShipDown
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
@@ -216,11 +210,10 @@
 @waitMovie choiceTime:17
 @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
@@ -248,11 +241,11 @@
 @waitMovie choiceTime:7
 @despawn FriendShipDown
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; ; @wait 2
+; ; @back C1_S2_Change time:0.5 wait:true
+; ; @wait 2
+; ; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
@@ -267,10 +260,10 @@
 @waitMovie choiceTime:7
 @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @sto

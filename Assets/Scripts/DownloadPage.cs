@@ -9,6 +9,7 @@ public class DownloadPage : MonoBehaviour
 
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Text progressText;
+    bool haveVideoReady = false;
 
     private void Awake()
     {
@@ -39,7 +40,12 @@ public class DownloadPage : MonoBehaviour
             gameObject.SetActive(false);
 
             StartNani.Instance.OpenPage.SetActive(true);
-            StartNani.Instance.StartGamePage.SetActive(true);
+
+            if (!haveVideoReady)
+            {
+                StartNani.Instance.OpenPageMessage();
+                haveVideoReady = true;
+            }
             return;
         }
         gameObject.SetActive(true);
@@ -105,6 +111,11 @@ public class DownloadPage : MonoBehaviour
         gameObject.SetActive(false);
 
         StartNani.Instance.OpenPage.SetActive(true);
-        StartNani.Instance.StartGamePage.SetActive(true);
+
+        if (!haveVideoReady)
+        {
+            StartNani.Instance.OpenPageMessage();
+            haveVideoReady = true;
+        }
     }
 }

@@ -337,15 +337,15 @@ public class WebGLStreamController : HISPlayerManager
         Debug.Log($"[WebGLStreamController] EventPlaybackSeek 完成: {eventInfo}");
         seekTcs?.TrySetResult(); // 通知等待完成
     }
-    protected override void EventEndOfPlaylist(HISPlayerEventInfo eventInfo)
+    protected override void EventEndOfContent(HISPlayerEventInfo eventInfo)
     {
-        base.EventEndOfPlaylist(eventInfo);
-        Debug.Log("[WebGLStreamController] 播放結束，進入 Ended 狀態");
+        base.EventEndOfContent(eventInfo);
+        Debug.Log("[WebGLStreamController] EventEndOfContent 播放結束，進入 Ended 狀態");
 
         EndPlay = true;
         SetState(PlayerState.Ended);
 
-        // 🔑 立刻把畫面蓋掉，避免閃回 0 秒
+        // ✅ 這裡不再讓 HISPlayer 自動 seek 到 0，避免畫面閃回
         if (block != null) block.SetActive(true);
         var canvasGroup = StartNani.Instance.VideoImage?.GetComponent<CanvasGroup>();
         if (canvasGroup != null) canvasGroup.alpha = 0;
