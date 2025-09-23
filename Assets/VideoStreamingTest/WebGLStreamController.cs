@@ -11,6 +11,7 @@ public class WebGLStreamController : HISPlayerManager
     [SerializeField] int addTimeMillisecond = 5000;
     private const string baseUrl = "https://data-av.ymytmx.com/";
     private bool useLoopSegment = false;
+    private bool waitingForFirstFrame = false;
     private float loopStart = 0f;
     private float loopEnd = 0f;
     // 新增事件訂閱變數
@@ -308,13 +309,6 @@ public class WebGLStreamController : HISPlayerManager
         await SubtitlesManager.Instance.LoadSubtitles();
     }
 
-    // EventPlaybackSeek 事件
-    protected override void EventPlaybackSeek(HISPlayerEventInfo eventInfo)
-    {
-        base.EventPlaybackSeek(eventInfo);
-        Debug.Log($"[WebGLStreamController] EventPlaybackSeek 完成: {eventInfo}");
-        seekTcs?.TrySetResult(); // 通知等待完成
-    }
     // public async UniTask NaniSeekTime(long setMillisecond) { waitseek = false; Seek(0, setMillisecond); Debug.Log($"[WebGLStreamController] NaniSeekTime: Seek to {setMillisecond} ms"); await UniTask.WaitUntil(() => waitseek); await SubtitlesManager.Instance.LoadSubtitles(); }
     public async UniTask PlayVideo() { Play(0); await UniTask.CompletedTask; }
     public async UniTask PlayPause() { Pause(0); await UniTask.CompletedTask; }
@@ -335,6 +329,13 @@ public class WebGLStreamController : HISPlayerManager
     {
         start = loopStart;
         end = loopEnd;
+    }
+    // EventPlaybackSeek 事件
+    protected override void EventPlaybackSeek(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackSeek(eventInfo);
+        Debug.Log($"[WebGLStreamController] EventPlaybackSeek 完成: {eventInfo}");
+        seekTcs?.TrySetResult(); // 通知等待完成
     }
     protected override void EventEndOfPlaylist(HISPlayerEventInfo eventInfo)
     {
@@ -357,6 +358,33 @@ public class WebGLStreamController : HISPlayerManager
 
         Debug.Log("[WebGLStreamController] EventPlaybackReady 觸發");
         OnPlaybackReadyEvent?.Invoke(); // 通知外部
+    }
+    protected override void EventPlaybackPlay(HISPlayerEventInfo eventInfo)
+    {
+        base.EventPlaybackPlay(eventInfo);
+        Debug.Log("[WebGLStreamController] EventPlaybackStarted 觸發");
+
+        if (!hasPlayedOnce)
+        {
+            hasPlayedOnce = true;
+            hasPlayed = true;
+        }
+
+        if (!startedOnce)
+        {
+            startedOnce = true;
+            if (waitTimeSec > 0f)
+            {
+                Debug.Log($"[WebGLStreamController] 初次播放，等待 {waitTimeSec} 秒");
+                Pause(0);
+                UniTask.Delay(TimeSpan.FromSeconds(waitTimeSec)).ContinueWith(() =>
+                {
+                    Debug.Log("[WebGLStreamController] 等待結束，自動播放");
+                    Play(0);
+                }).Forget();
+                waitTimeSec = 0f; // 重置
+            }
+        }
     }
     [Serializable]
     public class NameToUrl { public Dictionary<string, string> videoDictionary; }
