@@ -328,7 +328,7 @@ public class ServerManager : MonoBehaviour
                 Debug.Log($"Token Login Missing Data");
                 return;
             }
-
+            Debug.Log($"Raw dataStr: {dataStr}");
             var dataJson = JObject.Parse(dataStr);
             int isPay = dataJson["IsPay"]?.Value<int>() ?? 0;
 
@@ -338,6 +338,11 @@ public class ServerManager : MonoBehaviour
             if (isPay != 1)
             {
                 StartNani.Instance.ispay = false;
+
+                // 新增訊息紀錄
+                DiscordLogger.Log($"[TokenLogin] UserId={dataJson["PlayerId"]}, IsPay=0, 禁止進入遊戲");
+                DiscordLogger.Log($"TapVerifyData: code={dataJson["TapVerify"]?["code"]}, msg={dataJson["TapVerify"]?["msg"]}, user_id={dataJson["TapVerify"]?["user_id"]}");
+
                 Debug.LogWarning("用戶未購買，禁止進入遊戲");
                 return;
             }
