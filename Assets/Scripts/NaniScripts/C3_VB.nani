@@ -190,12 +190,12 @@
 @speedButtonDisable
 @streamingPlay "C3_S4_P1"
 @speedButtonEnable
-@videoControll startLoopTime:170 endLoopTime:200 isLooping:true
-@forcedChoice choiceTime:170
-@waitMovie choiceTime:170
+@forcedChoice choiceTime:7
+@waitMovie choiceTime:7
 @speedButtonDisable
 @spawn LovePlayPage
 @spawnLovePlayPage poseName:sex_L_02,sex_J_02,sex_H_02 label:C3_S4_P1-O1,C3_S4_P1-O2,C3_S4_P1-O3 cumLabel:C3_S4_P1-S1_noLoop type:foreplay
+@videoControll startLoopTime:193 endLoopTime:200 isLooping:true
 @stop
 
 #C3_S4_P2
