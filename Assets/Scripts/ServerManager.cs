@@ -6,6 +6,7 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
+using Unity.VisualScripting;
 // using Unity.VisualScripting;
 
 public class ServerManager : MonoBehaviour
@@ -43,45 +44,23 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask<SaveData?> InitializeUrlQueryAndLoadAsync()
     {
-        await InitializeUrlQueryAsync();
-        return await Load();
-    }
-    /// <summary>
-    /// 初始化 URL 查詢數據
-    /// </summary>
-    public async UniTask<SaveData?> InitializeUrlQueryAsync()
-    {
-        StartNani startNani = StartNani.Instance;
-
-        if (IsTapPlatform()) // ✅ 改這裡判斷是否為 TAP
-        {
-            Debug.Log("TAP 平台登入流程開始");
-            await HandleTapDBLoginAsync();
-            DiscordLogger.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
-
-            if (string.IsNullOrEmpty(curToken))
-            {
-                Debug.LogError("curToken is null after Tap login!");
-                return null;
-            }
-            if (StartNani.Instance != null)
-                StartNani.Instance.isLoggedIn = true;
-            // 登入成功後才 Load
-            return await Load();
-        }
-
-        // ✅ 非 TAP 模式
-        Debug.Log("非 TAP 平台，開始網址解析 + 登入");
-        await SetUrlQueryAsync();
-
-        Debug.Log($"curToken after SetUrlQueryAsync: {curToken}");
-        if (string.IsNullOrEmpty(curToken))
-        {
-            Debug.LogError("curToken is null after non-Tap login!");
+        bool loginOk = await InitializeUrlQueryAsync(); // ✅ 只做登入，不要 Load
+        if (!loginOk)
             return null;
+
+        return await Load(); // ✅ 成功登入後才 Load
+    }
+
+    public async UniTask<bool> InitializeUrlQueryAsync()
+    {
+        if (IsTapPlatform())
+        {
+            await HandleTapDBLoginAsync();
+            return !string.IsNullOrEmpty(curToken);
         }
 
-        return await Load();
+        await SetUrlQueryAsync();
+        return !string.IsNullOrEmpty(curToken);
     }
     private bool IsTapPlatform()
     {
@@ -352,6 +331,12 @@ public class ServerManager : MonoBehaviour
             Debug.Log($"curToken (from token): {jwtToken}");
             curToken = jwtToken;
             StartNani.Instance.ispay = true;
+            // ✅ 登入成功後取得 SaveData，再初始化 StartNani
+            SaveData? saveData = await Load();
+            if (saveData != null)
+            {
+                await StartNani.Instance.InitAfterLogin(saveData);
+            }
         }
         catch (Exception ex)
         {
@@ -517,7 +502,20 @@ public class ServerManager : MonoBehaviour
     private async UniTask HandleTapDBLoginAsync()
     {
         var tcs = new UniTaskCompletionSource<bool>();
-
+        // Step 0: 解析 config.text 取得 game_id
+        int parsedGameId = 1; // 預設值
+        try
+        {
+            var cfgJson = JObject.Parse(config.text);
+            if (cfgJson["game_id"] != null)
+            {
+                parsedGameId = cfgJson["game_id"].Value<int>();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogWarning($"解析 config.text 失敗，使用預設 gameId=1: {ex.Message}");
+        }
         // Step 1: 初始化 SDK
         NativeSDK.Instance.bindEvent((ret) =>
         {
@@ -537,7 +535,7 @@ public class ServerManager : MonoBehaviour
 
                 // Step 2: 開始登入
                 NativeSDK.Instance.login(
-                  async (loginRet) =>
+                    async (loginRet) =>
                     {
                         DiscordLogger.Log($"登入成功：{loginRet}");
                         string uid = loginRet["uid"]?.ToString();
@@ -552,7 +550,7 @@ public class ServerManager : MonoBehaviour
                                 platform = 4,
                                 language = "zh",
                                 version = Application.version,
-                                gameId = 1
+                                gameId = (uint)parsedGameId
                             };
 
                             await Login();

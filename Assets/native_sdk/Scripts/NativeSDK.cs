@@ -1,18 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public class NativeSDK : MonoBehaviour
 {
-    #region Internal
 
-#if UNITY_IOS
-    [DllImport("__Internal")]
-    private static extern void OnCall(string method, string paramString);
+#if UNITY_IOS && !UNITY_EDITOR
+    private const string LIBRARY_NAME = "__Internal";
+#else
+    private const string LIBRARY_NAME = "NativeSDK";
 #endif
 
-    #endregion
+    [DllImport(LIBRARY_NAME)]
+    private static extern void UnityNativeInterface_onCall(string method, string paramString);
 
     public delegate void CallbackDelegate(JObject ret);
     class CallbackInfo
@@ -34,18 +36,11 @@ public class NativeSDK : MonoBehaviour
     {
         _inst = this;
         DontDestroyOnLoad(gameObject);
-        Debug.Log("[NativeSDK]Awake");
-    }
-
-    void OnDestroy()
-    {
-        // 销毁时清理单例实例
-        _inst = null;
-        Debug.Log("[NativeSDK]OnDestroy");
+        Debug.Log("[NativeSDK Awake]");
     }
 
     private readonly JObject EPMTY_PARAM = new JObject();
-    private Dictionary<String, CallbackInfo> _map = new Dictionary<String, CallbackInfo>();
+    private Dictionary<string, CallbackInfo> _map = new Dictionary<string, CallbackInfo>();
 
     // 埋点：初始化
     public void logInit(string clientId, string clientToken, bool debug)
@@ -81,96 +76,94 @@ public class NativeSDK : MonoBehaviour
     public void bindEvent(CallbackDelegate success)
     {
         _map["sdk"] = new CallbackInfo(success, null);
-        Call("sdk", EPMTY_PARAM.ToString());
+        call("sdk", EPMTY_PARAM.ToString());
     }
 
     // 初始化
     public void init(JObject param, CallbackDelegate success, CallbackDelegate fail)
     {
         _map["init"] = new CallbackInfo(success, fail);
-        Call("init", param.ToString());
+        call("init", param.ToString());
     }
 
     // 打开登录界面
     public void login(CallbackDelegate success, CallbackDelegate fail)
     {
         _map["login"] = new CallbackInfo(success, fail);
-        Call("login", EPMTY_PARAM.ToString());
+        call("login", EPMTY_PARAM.ToString());
     }
 
     // 打开登出界面
     public void logout(JObject param, CallbackDelegate success, CallbackDelegate fail)
     {
         _map["logout"] = new CallbackInfo(success, fail);
-        Call("logout", param.ToString());
+        call("logout", param.ToString());
     }
 
     // 打开支付界面
     public void pay(JObject param)
     {
         _map["pay"] = new CallbackInfo(null, null);
-        Call("pay", param.ToString());
+        call("pay", param.ToString());
     }
 
-    // 打开平台币充值界面
+    // 打开充值界面
     public void ptbpay()
     {
         _map["ptbpay"] = new CallbackInfo(null, null);
-        Call("ptbpay", EPMTY_PARAM.ToString());
+        call("ptbpay", EPMTY_PARAM.ToString());
     }
 
     // 打开账单界面
     public void bill()
     {
         _map["bill"] = new CallbackInfo(null, null);
-        Call("bill", EPMTY_PARAM.ToString());
+        call("bill", EPMTY_PARAM.ToString());
     }
 
     // 打开客服界面
     public void chat()
     {
         _map["chat"] = new CallbackInfo(null, null);
-        Call("chat", EPMTY_PARAM.ToString());
+        call("chat", EPMTY_PARAM.ToString());
     }
 
     // 打开客服界面（未初始化时可用）
     public void chat2(JObject param)
     {
         _map["chat"] = new CallbackInfo(null, null);
-        Call("chat", param.ToString());
+        call("chat", param.ToString());
     }
 
     // 获取用户信息
     public void user(CallbackDelegate success, CallbackDelegate fail)
     {
         _map["user"] = new CallbackInfo(success, fail);
-        Call("user", EPMTY_PARAM.ToString());
+        call("user", EPMTY_PARAM.ToString());
     }
 
     // 上报角色信息
-    public void uploadRole(JObject param)
+    public void uploadRole(JObject param, CallbackDelegate success, CallbackDelegate fail)
     {
-        _map["uploadRole"] = new CallbackInfo(null, null);
-        Call("uploadRole", param.ToString());
+        _map["uploadRole"] = new CallbackInfo(success, fail);
+        call("uploadRole", param.ToString());
     }
 
-    void Call(string method, string paramString)
+
+    void call(string method, string paramString)
     {
-        Debug.Log(String.Format("[Unity Call]{0}:{1}", method, paramString));
-#if UNITY_EDITOR
-        // Editor 模擬回調或直接跳過
-        Debug.Log("[NativeSDK] Editor environment - skipping native call.");
-#elif UNITY_IOS
-    OnCall(method, paramString);
+        Debug.Log($"[NativeSDK::call]{method}:{paramString}");
+#if UNITY_IOS
+        UnityNativeInterface_onCall(method, paramString);
 #elif UNITY_ANDROID
-    AndroidJavaObject jo = new AndroidJavaObject("com.external.UnityNativeInterface");
-    jo.CallStatic("OnCall", method, paramString);
+        AndroidJavaObject jo = new AndroidJavaObject("com.external.UnityNativeInterface");
+        jo.CallStatic("onCall", method, paramString);
 #endif
     }
 
-    void OnCall(string retString)
+    void onCall(string retString)
     {
-        Debug.Log(String.Format("[Unity OnCall]{0}", retString));
+        Debug.Log($"[Unity onCall]{retString}");
         JObject ret = ToJson(retString);
         string methodString = (string)ret["method"];
         string[] parts = methodString.Split(new char[] { ':' });
@@ -201,7 +194,7 @@ public class NativeSDK : MonoBehaviour
         }
         catch (Exception)
         {
-            Debug.Log("[ToJson]失败:" + str);
+            Debug.Log($"[ToJson]失败:{str}");
         }
         return json;
     }

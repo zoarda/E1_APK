@@ -120,6 +120,31 @@ public class StartNani : MonoBehaviour
         Init();
         await subtitlesManager.Init();
     }
+    private bool hasInitialized = false;
+
+    public async UniTask InitAfterLogin(ServerManager.SaveData saveData)
+    {
+        if (hasInitialized)
+        {
+            Debug.Log("InitAfterLogin 已經執行過，跳過");
+            return;
+        }
+
+        if (saveData == null)
+        {
+            Debug.LogWarning("InitAfterLogin 傳入 SaveData 為 null，跳過初始化");
+            return;
+        }
+
+        hasInitialized = true; // ✅ 確保只跑一次
+
+        saveData.friendship = allFriendship();
+        var varManager = Engine.GetService<ICustomVariableManager>();
+        varManager.TrySetVariableValue("friendship", saveData.friendship);
+        friednshipList.Add(saveData.friendship);
+
+        await SelectOptionSwtich(saveData);
+    }
     public async UniTask StartPlayVideo()
     {
         // OpenPage.SetActive(true);
