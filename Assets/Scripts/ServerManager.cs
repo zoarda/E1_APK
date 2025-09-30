@@ -396,7 +396,7 @@ public class ServerManager : MonoBehaviour
             }
 
             // 若返回的数据为空，创建默认的 SaveData 并上传
-            if (saveData == null)
+            if (wrapper.data == null)
             {
                 Debug.LogWarning("No SaveData found. Creating default save...");
 
@@ -429,7 +429,7 @@ public class ServerManager : MonoBehaviour
     public async UniTask SaveByToken(SaveData saveData)
     {
         string url = $"{serverUrl}/api/a/Player/Save";
-
+        Debug.Log($"[Save] Friendship before serialize: {saveData.friendship}");
         // 將 SaveData 轉為 JSON 字串
         string saveJson = JsonUtility.ToJson(saveData);
         Debug.Log($"Serialized SaveData: {saveJson}");
@@ -553,6 +553,11 @@ public class ServerManager : MonoBehaviour
                                 gameId = (uint)parsedGameId
                             };
 
+                            StartNani startNani = StartNani.Instance;
+                            if (startNani != null)
+                            {
+                                startNani.isLoggedIn = true;
+                            }
                             await Login();
                             tcs.TrySetResult(true);
                         }

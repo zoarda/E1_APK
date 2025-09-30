@@ -63,7 +63,7 @@
 @forcedChoice choiceTime:7
 @waitMovie choiceTime:7
 @speedButtonDisable
-@choiceDLC PackId47 goto:.C4_S2_P1 do:"@friendship mode:Set friendship:-1"
+@choiceDLC PackId47 goto:.C4_S2_P1
 @choiceDLC PackId48 goto:.C4_S2_P2 do:"@friendship mode:Set friendship:1"
 @reBuildChoice
 @stop

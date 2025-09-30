@@ -94,7 +94,7 @@ public class StartNani : MonoBehaviour
 
             if (saveData != null)
             {
-                saveData.friendship = allFriendship();
+                // saveData.friendship = allFriendship();
                 var varManager = Engine.GetService<ICustomVariableManager>();
                 varManager.TrySetVariableValue("friendship", saveData.friendship);
                 friednshipList.Add(saveData.friendship);
@@ -115,6 +115,10 @@ public class StartNani : MonoBehaviour
             if (DownloadPage.Instance != null)
                 await DownloadPage.Instance.ShowAndDownloadAsync();
             Debug.Log("nologinmode");
+            // var varManager = Engine.GetService<ICustomVariableManager>();
+            // varManager.TrySetVariableValue("friendship", 5);
+            // friednshipList.Add(5);
+            // Debug.Log($"varmangerInt: {varManager.GetVariableValue("friendship")}");
         }
 
         Init();
@@ -138,7 +142,7 @@ public class StartNani : MonoBehaviour
 
         hasInitialized = true; // ✅ 確保只跑一次
 
-        saveData.friendship = allFriendship();
+        // saveData.friendship = allFriendship();
         var varManager = Engine.GetService<ICustomVariableManager>();
         varManager.TrySetVariableValue("friendship", saveData.friendship);
         friednshipList.Add(saveData.friendship);
@@ -217,23 +221,6 @@ public class StartNani : MonoBehaviour
         }
         if (!camera.UICamera.gameObject.TryGetComponent(out AspectRatioControl arc2))
             camera.UICamera.gameObject.AddComponent<AspectRatioControl>();
-        // //尋找存檔紀錄
-        // // SaveData saveData = await YamlLoader.LoadYaml<SaveData>(Application.persistentDataPath + "/SaveData.yaml");
-        // ServerManager serverManager = ServerManager.Instance;
-        // if (isLoggedIn)
-        // {
-        //     ServerManager.SaveData saveData = await ServerManager.Instance.Load();
-        //     saveData.friendship = allFriendship();
-        //     // 將設置好的友誼值存入Manager變數
-        //     var varManager = Engine.GetService<ICustomVariableManager>();
-        //     varManager.TrySetVariableValue("friendship", saveData.friendship);
-        //     friednshipList.Add(saveData.friendship);
-        //     await SelectOptionSwtich(saveData);
-        // }
-        // else
-        // {
-        //     Debug.Log("nologinmode");
-        // }
         //初始化語言 並設置語言
         await LanguageManager.Init();
         var Player = Engine.GetService<IScriptPlayer>();
@@ -744,7 +731,7 @@ public class StartNani : MonoBehaviour
     //新增友誼值
     public void SetfriendshipList(float intFriend)
     {
-        // Debug.Log($"SetfriendshipList" + intFriend);
+        Debug.Log($"SetfriendshipList" + intFriend);
         friednshipList.Add(intFriend);
     }
     //計算總友誼值
@@ -756,7 +743,7 @@ public class StartNani : MonoBehaviour
         {
             sum += data;
         }
-        // Debug.Log("allFriendship:" + sum);
+        Debug.Log("allFriendship:" + sum);
         return sum;
     }
     //選擇章節顯示切換

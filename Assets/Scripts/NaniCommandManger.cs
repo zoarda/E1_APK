@@ -99,14 +99,6 @@ public class NaniCommandManger : MonoBehaviour
 
         StopSlider();
         corSlider = StartCoroutine(StartSliderCor());
-
-        // @back C2_S1_P1 id:VideoBackground time:0.5
-        // new Naninovel.Commands.ModifyBackground()
-        // {
-        //     AppearanceAndTransition = new NamedString("C2_S1_P1", "Id"),
-        //     Id = "VideoBackground",
-        //     Duration = 0.5f
-        // }.ExecuteAsync().Forget();
     }
 
     public void StopSlider()
@@ -137,15 +129,12 @@ public class NaniCommandManger : MonoBehaviour
     }
     public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type)
     {
-        // varManager.TrySetVariableValue("friendship", saveData.friendship);
-        // friednshipList.Add(saveData.friendship);
 
         var player = Engine.GetService<IScriptPlayer>();
         var script = Engine.GetService<IScriptPlayer>();
         GameObject objCum = lovePlayPage.NextVideoButtonPrefab;
         GameObject objHidenCum = lovePlayPage.HidenVideoButtonPrefab;
         GameObject objSetting = lovePlayPage.SettingButtonPrefab;
-        // var startLineIndex = script.PlayedScript.GetLineIndexForLabel(label);
         //生成choice按钮
         GameObject objChoice = Instantiate(btnObject, lovePlayPage.ChoiceButtonParent.transform);
         Button choiceButton = objChoice.GetComponent<Button>();
@@ -161,19 +150,6 @@ public class NaniCommandManger : MonoBehaviour
         imaChoice.SetNativeSize();
         objChoice.AddComponent<MouseHover>();
         ChoiceButtonList.Add(objChoice);
-
-        // //生成replay按钮
-        // GameObject objReplay = Instantiate(btnObject, lovePlayPage.ReplayButtonContent.transform);
-        // Button replayButton = objReplay.GetComponent<Button>();
-        // LovePlayPageButton lovePlayPageButtonReplay = objReplay.GetComponent<LovePlayPageButton>();
-        // Image imaReplay = lovePlayPageButtonReplay.ImaIcon;
-        // Image sdReplay = lovePlayPageButtonReplay.ImaSlider;
-
-        // sdReplay.fillAmount = 0;
-        // lovePlayPageButtonReplay.scriptLabel = label;
-        // imaReplay.sprite = null;
-        // imaReplay.AddComponent<MouseHover>();
-        // ReplayButtonList.Add(objReplay);
 
         //设置choice按钮的label
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
@@ -237,37 +213,7 @@ public class NaniCommandManger : MonoBehaviour
                     lovePlayPage.HidenVideoButtonLock.SetActive(false);
                 }
             }
-            // btnCum.interactable = true;
-            // for (int i = 0; i < ReplayButtonList.Count; i++)
-            // {
-            //     Image imaReplayTemp = ReplayButtonList[i].GetComponentInChildren<Image>();
-            //     Button replayButtonTemp = ReplayButtonList[i].GetComponent<Button>();
-            //     LovePlayPageButton lovePlayPageButtonReplayTemp = ReplayButtonList[i].GetComponent<LovePlayPageButton>();
-            //     if (replayButtonTemp.interactable == false)
-            //     {
-            //         // 更新 Replay 按钮的图像和点击事件
-            //         imaReplayTemp.sprite = imaChoice.sprite;
-            //         imaReplayTemp.SetNativeSize();
-            //         replayButtonTemp.interactable = true;
-            //         replayButtonTemp.onClick.RemoveAllListeners();
-            //         replayButtonTemp.onClick.AddListener(async () =>
-            //         {
-            //             await player.PreloadAndPlayAsync(script.PlayedScript.Name, label: label);
-            //             isLooping = false;
-            //         });
-            //         break;
-            //     }
-            // }
         });
-        // btnCum.onClick.RemoveAllListeners();
-        // btnCum.onClick.AddListener(async () =>
-        // {
-        //     var Spawnobj = Engine.GetService<ISpawnManager>();
-        //     Spawnobj.DestroySpawned("LovePlayPage");
-        //     await player.PreloadAndPlayAsync(script.PlayedScript.Name, label: cumLabel);
-        //     isLooping = false;
-        // });
-
     }
     public void ClearLovePlayPage()
     {
@@ -608,25 +554,6 @@ public class NaniCommandManger : MonoBehaviour
             await webGLStreamController.SeekTime((long)SetSLT * 1000);
             await SubtitlesManager.Instance.LoadSubtitles();
         }
-        // if (currentVideo == null)
-        //     return;
-        // if (currentVideo.time >= SetELT && videoSeekDone == true)
-        // {
-        //     currentVideo.time = SetSLT;
-        //     currentVideo.Pause();
-        //     currentVideo.targetTexture = null;
-        //     currentVideo = currentVideo == video ? CloneVideo : video;
-
-        //     currentVideo.targetTexture = CurrentRenderTexture;
-        //     currentVideo.Play();
-        //     videoSeekDone = false;
-
-        //     // SubtitlesManager subtitlesManager = GameObject.Find("SubtitlesManager")?.GetComponent<SubtitlesManager>();
-        //     SubtitlesManager subtitlesManager = SubtitlesManager.Instance;
-        //     subtitlesManager.videoPlayer = currentVideo;
-        //     CheckAndFixPlaybackSpeedLoop(currentVideo);
-        //     await subtitlesManager.LoadSubtitles();
-        // }
     }
     void UpdateSlider()
     {
