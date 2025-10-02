@@ -44,11 +44,25 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask<SaveData?> InitializeUrlQueryAndLoadAsync()
     {
-        bool loginOk = await InitializeUrlQueryAsync(); // ✅ 只做登入，不要 Load
+        bool loginOk = await InitializeUrlQueryAsync();
         if (!loginOk)
             return null;
 
-        return await Load(); // ✅ 成功登入後才 Load
+        // 先登入
+        bool isPaid = await LoginByToken();
+
+        if (!isPaid)
+        {
+            Debug.Log("玩家尚未購買，不能進入遊戲。");
+            return null;
+        }
+
+        // ✅ 只在 ispay = true 的情況下才 Load
+        var saveData = await Load();
+        if (saveData != null)
+            await StartNani.Instance.InitAfterLogin(saveData);
+
+        return saveData;
     }
 
     public async UniTask<bool> InitializeUrlQueryAsync()
@@ -265,7 +279,7 @@ public class ServerManager : MonoBehaviour
             Debug.Log($"UID Login Exception: {ex.Message}");
         }
     }
-    public async UniTask LoginByToken()
+    public async UniTask<bool> LoginByToken()
     {
         var url = $"{serverUrl}/api/o/Player/Create";
         Debug.Log($"LoginByToken with url: {url}");
@@ -285,7 +299,7 @@ public class ServerManager : MonoBehaviour
             if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
             {
                 Debug.LogError($"Token Login Error: {request.error}");
-                return;
+                return false; // 回傳 false
             }
 
             string responseBody = request.downloadHandler.text;
@@ -297,7 +311,7 @@ public class ServerManager : MonoBehaviour
             if (!success)
             {
                 Debug.Log($"Token Login Failed");
-                return;
+                return false;
             }
 
             // data 是個 JSON string，要 parse 第二次
@@ -305,7 +319,7 @@ public class ServerManager : MonoBehaviour
             if (string.IsNullOrEmpty(dataStr))
             {
                 Debug.Log($"Token Login Missing Data");
-                return;
+                return false;
             }
             Debug.Log($"Raw dataStr: {dataStr}");
             var dataJson = JObject.Parse(dataStr);
@@ -320,27 +334,23 @@ public class ServerManager : MonoBehaviour
 
                 // 新增訊息紀錄
                 DiscordLogger.Log($"[TokenLogin] UserId={dataJson["PlayerId"]}, IsPay=0, 禁止進入遊戲");
-                DiscordLogger.Log($"TapVerifyData: code={dataJson["TapVerify"]?["code"]}, msg={dataJson["TapVerify"]?["msg"]}, user_id={dataJson["TapVerify"]?["user_id"]}");
-
                 Debug.LogWarning("用戶未購買，禁止進入遊戲");
-                return;
+                return false; //  不能進入遊戲
             }
 
-            // 已購買：取得 JwtToken
+            //  已購買：取得 JwtToken
             string jwtToken = dataJson["JwtToken"]?.Value<string>();
             Debug.Log($"curToken (from token): {jwtToken}");
             curToken = jwtToken;
             StartNani.Instance.ispay = true;
-            // ✅ 登入成功後取得 SaveData，再初始化 StartNani
-            SaveData? saveData = await Load();
-            if (saveData != null)
-            {
-                await StartNani.Instance.InitAfterLogin(saveData);
-            }
+
+            //  注意：這裡不要直接 Load，讓外部去決定什麼時候 Load
+            return true; //  登入成功且已購買
         }
         catch (Exception ex)
         {
-            Debug.Log($"Token Login Exception: {ex.Message}");
+            Debug.LogError($"Token Login Exception: {ex.Message}");
+            return false; //  發生例外 → 回傳 false
         }
     }
     public async UniTask<SaveData?> Load()
