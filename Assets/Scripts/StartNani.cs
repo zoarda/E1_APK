@@ -33,7 +33,6 @@ public class StartNani : MonoBehaviour
     // ChapterPage chapterPage;
     public GameObject VideoImage, ErrorPage, ChapterPage, LoginPage;
 
-    //暫時修改成tap不登入使用
     public bool isLoggedIn = false; // 預設為未登入
 
     public bool ispay = true;
@@ -84,8 +83,8 @@ public class StartNani : MonoBehaviour
     }
     async void Start()
     {
-        if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WebGLPlayer)
-        {
+        // if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WebGLPlayer)
+        // {
             LoginPage.SetActive(true);
 
             // ✅ 登入並自動 Load
@@ -109,11 +108,11 @@ public class StartNani : MonoBehaviour
             {
                 Debug.LogWarning("Load SaveData 失敗或未登入！");
             }
-        }
-        else
-        {
-            Debug.Log("nologinmode");
-        }
+        // }
+        // else
+        // {
+        //     Debug.Log("nologinmode");
+        // }
         Init();
         await subtitlesManager.Init();
     }

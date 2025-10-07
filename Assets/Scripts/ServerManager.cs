@@ -1,15 +1,20 @@
 using UnityEngine;
 using System;
 using Cysharp.Threading.Tasks;
-// using System.Net.Http;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 using Newtonsoft.Json.Linq;
-// using Unity.VisualScripting;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
+using Erolabs.Sdk.Unity;
+using Unity.VisualScripting;
+
 
 public class ServerManager : MonoBehaviour
 {
+    private static string erolabsApiUrl = "https://sadpki-portal.ebuajk.com"; // Erolabs 平台 API Host
+
     // const string serverUrl = "https://game-1005.6party.com";
     const string serverUrl = "https://av1-api-dev.funplaytech.com";
     // const string serverUrl = "https://user.love6.tv";
@@ -25,7 +30,13 @@ public class ServerManager : MonoBehaviour
     public TokenData tokenData = new TokenData();
 
     string curToken;
-    public bool isTapMode = true; // ✅ 若你想寫死 Tap 模式（後續可改成 config 設定）
+    string game_id = "166";
+    string game_account = "game_001";
+
+    // 設定目前的平台（預設先用 TapDB）
+    [SerializeField]
+    private PlatformType currentPlatform = PlatformType.Erolabs;
+    // public bool isTapMode = true; // ✅ 若你想寫死 Tap 模式（後續可改成 config 設定）
     [SerializeField]
     TextAsset config;
 
@@ -43,50 +54,79 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask<SaveData?> InitializeUrlQueryAndLoadAsync()
     {
-        await InitializeUrlQueryAsync();
-        return await Load();
-    }
-    /// <summary>
-    /// 初始化 URL 查詢數據
-    /// </summary>
-    public async UniTask<SaveData?> InitializeUrlQueryAsync()
-    {
-        StartNani startNani = StartNani.Instance;
-
-        if (IsTapPlatform()) // ✅ 改這裡判斷是否為 TAP
+        switch (currentPlatform)
         {
-            Debug.Log("TAP 平台登入流程開始");
-            await HandleTapDBLoginAsync();
-            DiscordLogger.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
+            case PlatformType.TapDB:
+                Debug.Log("TAP 平台登入流程開始");
+                await HandleTapDBLoginAsync();
+                DiscordLogger.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
+                if (string.IsNullOrEmpty(curToken))
+                {
+                    Debug.LogError($"curToken is null after {currentPlatform} login!");
+                    return null;
+                }
 
-            if (string.IsNullOrEmpty(curToken))
-            {
-                Debug.LogError("curToken is null after Tap login!");
-                return null;
-            }
-            if (StartNani.Instance != null)
-                StartNani.Instance.isLoggedIn = true;
-            // 登入成功後才 Load
-            return await Load();
+                if (StartNani.Instance != null)
+                    StartNani.Instance.isLoggedIn = true;
+                break;
+
+            case PlatformType.Love6:
+                Debug.Log("Love6 平台登入流程開始");
+                await SetUrlQueryAsync();
+                break;
+
+            case PlatformType.SixParty:
+                Debug.Log("SixParty 平台登入流程開始");
+                await SetUrlQueryAsync();
+                break;
+
+            case PlatformType.Erolabs:
+                Debug.Log("Erolabs 平台登入流程開始");
+                await HandleErolabsLoginAsync();
+                break;
+
+            case PlatformType.LocalDev:
+                Debug.Log("本地測試模式，使用 localhost");
+                curToken = "dev-token"; // 測試用
+                break;
         }
 
-        // ✅ 非 TAP 模式
-        Debug.Log("非 TAP 平台，開始網址解析 + 登入");
-        await SetUrlQueryAsync();
-
-        Debug.Log($"curToken after SetUrlQueryAsync: {curToken}");
-        if (string.IsNullOrEmpty(curToken))
-        {
-            Debug.LogError("curToken is null after non-Tap login!");
-            return null;
-        }
-
         return await Load();
     }
-    private bool IsTapPlatform()
-    {
-        return isTapMode;
-    }
+
+    // /// <summary>
+    // /// 初始化 URL 查詢數據
+    // /// </summary>
+    // public async UniTask<SaveData?> InitializeUrlQueryAsync()
+    // {
+    //     Debug.Log("TAP 平台登入流程開始");
+    //     await HandleTapDBLoginAsync();
+    //     DiscordLogger.Log($"curToken after HandleTapDBLoginAsync: {curToken}");
+
+    //     if (string.IsNullOrEmpty(curToken))
+    //     {
+    //         Debug.LogError("curToken is null after Tap login!");
+    //         return null;
+    //     }
+    //     if (StartNani.Instance != null)
+    //         StartNani.Instance.isLoggedIn = true;
+    //     // 登入成功後才 Load
+    //     return await Load();
+
+
+    //     // ✅ 非 TAP 模式
+    //     // Debug.Log("非 TAP 平台，開始網址解析 + 登入");
+    //     // await SetUrlQueryAsync();
+
+    //     // Debug.Log($"curToken after SetUrlQueryAsync: {curToken}");
+    //     // if (string.IsNullOrEmpty(curToken))
+    //     // {
+    //     //     Debug.LogError("curToken is null after non-Tap login!");
+    //     //     return null;
+    //     // }
+
+    //     // return await Load();
+    // }
     private async UniTask SetUrlQueryAsync()
     {
         StartNani startNani = StartNani.Instance;
@@ -355,145 +395,268 @@ public class ServerManager : MonoBehaviour
     }
     public async UniTask<SaveData?> Load()
     {
-        if (string.IsNullOrEmpty(curToken))
+
+        SaveData? saveData = null;
+
+        switch (currentPlatform)
         {
-            Debug.LogError("curToken is null or empty before Load!");
-            return null;
+            case PlatformType.TapDB:
+                {
+                    if (string.IsNullOrEmpty(curToken))
+                    {
+                        Debug.LogError("curToken is null or empty before Load!");
+                        return null;
+                    }
+                    string url = $"{serverUrl}/api/a/Player/Load";
+                    LoadRequest requestData = new LoadRequest
+                    {
+                        PlatformName = "4",      // 替換為實際平台
+                        GameIdentifier = "1"     // 替換為實際遊戲ID
+                    };
+
+                    string json = JsonUtility.ToJson(requestData);
+                    Debug.Log("Sending TapDB Load JSON: " + json);
+
+                    using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+                    {
+                        byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+                        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                        request.downloadHandler = new DownloadHandlerBuffer();
+                        request.SetRequestHeader("Authorization", $"Bearer {curToken}");
+                        request.SetRequestHeader("Content-Type", "application/json");
+
+                        await request.SendWebRequest().ToUniTask();
+
+                        if (request.result == UnityWebRequest.Result.ConnectionError ||
+                            request.result == UnityWebRequest.Result.ProtocolError)
+                        {
+                            Debug.LogError($"TapDB Load Request Failed: {request.error}");
+                            return null;
+                        }
+
+                        string responseText = request.downloadHandler.text;
+                        Debug.Log("TapDB Response Body: " + responseText);
+
+                        var wrapper = JsonUtility.FromJson<SaveDataResponse>(responseText);
+
+                        if (!string.IsNullOrEmpty(wrapper.data))
+                        {
+                            saveData = JsonUtility.FromJson<SaveData>(wrapper.data);
+                        }
+                    }
+                    break;
+                }
+            case PlatformType.Erolabs:
+                {
+                    string url = $"{serverUrl}/api/o/Player/ErolabsLoad";
+
+                    // 構建請求體
+                    ErolabsLoadRequest erolabsRequest = new ErolabsLoadRequest()
+                    {
+                        Account = game_account,
+                        Game = EnumGame.E1
+                    };
+                    string jsonPayload = JsonUtility.ToJson(erolabsRequest);
+                    Debug.Log("Sending Erolabs Load JSON: " + jsonPayload);
+
+                    using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+                    {
+                        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
+                        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                        request.downloadHandler = new DownloadHandlerBuffer();
+                        request.SetRequestHeader("Content-Type", "application/json");
+
+                        // 不設置 Authorization header
+                        // request.SetRequestHeader("Authorization", $"Bearer {curToken}");
+
+                        await request.SendWebRequest().ToUniTask();
+
+                        if (request.result == UnityWebRequest.Result.ConnectionError ||
+                            request.result == UnityWebRequest.Result.ProtocolError)
+                        {
+                            Debug.LogError($"Erolabs Load Request Failed: {request.error}");
+                            return null;
+                        }
+
+                        string responseText = request.downloadHandler.text;
+                        Debug.Log("Erolabs Response Body: " + responseText);
+
+                        var apiResponse = JsonUtility.FromJson<ApiResponse>(responseText);
+
+                        if (apiResponse.success == true && !string.IsNullOrEmpty(apiResponse.data))
+                        {
+                            saveData = JsonUtility.FromJson<SaveData>(apiResponse.data);
+                        }
+                    }
+                    break;
+                }
+            case PlatformType.Love6:
+            case PlatformType.SixParty:
+            case PlatformType.LocalDev:
+                Debug.LogWarning($"{currentPlatform} Load not implemented, returning default SaveData.");
+                break;
         }
 
-        string url = $"{serverUrl}/api/a/Player/Load";
-        Debug.Log("curToken before Load: " + curToken);
-        LoadRequest requestData = new LoadRequest
+        // 如果沒有讀到任何存檔，初始化預設 SaveData
+        if (saveData == null)
         {
-            PlatformName = "4",      // 替换为实际的 platform name
-            GameIdentifier = "1"     // 替换为实际的 game identifier
-        };
+            Debug.LogWarning("No SaveData found. Creating default save...");
 
-        string json = JsonUtility.ToJson(requestData);
-        Debug.Log("Sending JSON: " + json);
-
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Authorization", $"Bearer {curToken}");
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            await request.SendWebRequest().ToUniTask();
-
-            if (request.result == UnityWebRequest.Result.ConnectionError ||
-                request.result == UnityWebRequest.Result.ProtocolError)
+            saveData = new SaveData
             {
-                Debug.LogError($"Request Failed: {request.error}");
-                Debug.LogError($"Response: {request.downloadHandler.text}");
-                return null;
-            }
+                friendship = 0,
+                scriptName = new List<string> { "C1_VB" },
+                // 根據實際需求初始化其他字段
+            };
 
-            Debug.Log($"Request Success: {request.result}");
+            await Save(saveData);
 
-            string responseText = request.downloadHandler.text;
-            Debug.Log("Response Body: " + responseText);
-
-            // 反序列化响应体
-            SaveDataResponse wrapper = JsonUtility.FromJson<SaveDataResponse>(responseText);
-
-            // 判断返回的 data 是否为空
-            SaveData? saveData = null;
-            if (!string.IsNullOrEmpty(wrapper.data))
-            {
-                saveData = JsonUtility.FromJson<SaveData>(wrapper.data);
-            }
-
-            // 若返回的数据为空，创建默认的 SaveData 并上传
-            if (saveData == null)
-            {
-                Debug.LogWarning("No SaveData found. Creating default save...");
-
-                saveData = new SaveData
-                {
-                    friendship = 0,
-                    scriptName = new List<string>
-                {
-                    "C1_VB",  // 示例，实际可根据需求初始化
-                },
-                    // 根据实际情况初始化其他字段
-                };
-
-                // 调用 Save 方法保存数据
-                await Save(saveData);
-
-                // 然后重新调用 Load 方法获取新的数据
-                return await Load();
-            }
-
-            Debug.Log($"Parsed SaveData: friendship={saveData.friendship}, scripts={string.Join(",", saveData.scriptName)}");
-
-            return saveData;
+            // 重新讀取
+            return await Load();
         }
+
+        Debug.Log($"Parsed SaveData: friendship={saveData.friendship}, scripts={string.Join(",", saveData.scriptName)}");
+        return saveData;
     }
+
     public async UniTask Save(SaveData saveData)
     {
         await SaveByToken(saveData);
     }
     public async UniTask SaveByToken(SaveData saveData)
     {
-        string url = $"{serverUrl}/api/a/Player/Save";
-
-        // 將 SaveData 轉為 JSON 字串
-        string saveJson = JsonUtility.ToJson(saveData);
-        Debug.Log($"Serialized SaveData: {saveJson}");
-
-        // 包裝成 SaveRequest 結構
-        SaveRequest saveRequest = new SaveRequest()
+        switch (currentPlatform)
         {
-            Data = saveJson,
-            PlatformName = "4",         // 替換為你的實際 platform
-            GameIdentifier = "1"        // 替換為你的實際 gameId
-        };
+            case PlatformType.TapDB:
+                Debug.Log("TapDB 平台 SaveByToken");
+                string url = $"{serverUrl}/api/a/Player/Save";
 
-        // 將整個 SaveRequest 序列化為 JSON
-        string jsonPayload = JsonUtility.ToJson(saveRequest);
-        Debug.Log($"Final JSON Payload: {jsonPayload}");
+                // 將 SaveData 轉為 JSON 字串
+                string saveJson = JsonUtility.ToJson(saveData);
+                Debug.Log($"Serialized SaveData: {saveJson}");
 
-        // 建立 POST 請求
-        using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
-        {
-            byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-
-            request.SetRequestHeader("Authorization", $"Bearer {curToken}");
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            await request.SendWebRequest().ToUniTask();
-
-            if (request.result == UnityWebRequest.Result.ConnectionError ||
-                request.result == UnityWebRequest.Result.ProtocolError)
-            {
-                Debug.LogError($"Save Request Failed: {request.error}\nResponse: {request.downloadHandler.text}");
-                return;
-            }
-
-            Debug.Log("Save request success!");
-
-            try
-            {
-                string responseText = request.downloadHandler.text;
-                var apiResponse = JsonUtility.FromJson<ApiResponse>(responseText);
-
-                if (apiResponse.success == false || apiResponse.success == null)
+                // 包裝成 SaveRequest 結構
+                SaveRequest saveRequest = new SaveRequest()
                 {
-                    Debug.LogError($"Server Save Failed: {apiResponse.message}");
-                    return;
-                }
+                    Data = saveJson,
+                    PlatformName = "4",         // 替換為你的實際 platform
+                    GameIdentifier = "1"        // 替換為你的實際 gameId
+                };
 
-                Debug.Log($"Save completed: {apiResponse.message}");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Error parsing response: {e.Message}\n{e.StackTrace}");
-            }
+                // 將整個 SaveRequest 序列化為 JSON
+                string jsonPayload = JsonUtility.ToJson(saveRequest);
+                Debug.Log($"Final JSON Payload: {jsonPayload}");
+
+                // 建立 POST 請求
+                using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
+                {
+                    byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
+                    request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                    request.downloadHandler = new DownloadHandlerBuffer();
+
+                    request.SetRequestHeader("Authorization", $"Bearer {curToken}");
+                    request.SetRequestHeader("Content-Type", "application/json");
+
+                    await request.SendWebRequest().ToUniTask();
+
+                    if (request.result == UnityWebRequest.Result.ConnectionError ||
+                        request.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        Debug.LogError($"Save Request Failed: {request.error}\nResponse: {request.downloadHandler.text}");
+                        return;
+                    }
+
+                    Debug.Log("Save request success!");
+
+                    try
+                    {
+                        string responseText = request.downloadHandler.text;
+                        var apiResponse = JsonUtility.FromJson<ApiResponse>(responseText);
+
+                        if (apiResponse.success == false || apiResponse.success == null)
+                        {
+                            Debug.LogError($"Server Save Failed: {apiResponse.message}");
+                            return;
+                        }
+
+                        Debug.Log($"Save completed: {apiResponse.message}");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"Error parsing response: {e.Message}\n{e.StackTrace}");
+                    }
+                }
+                break;
+            case PlatformType.Love6:
+                Debug.Log("Love6 平台 SaveByToken");
+                break;
+            case PlatformType.SixParty:
+                Debug.Log("SixParty 平台 SaveByToken");
+                break;
+            case PlatformType.Erolabs:
+                Debug.Log("Erolabs 平台 SaveByToken (無 Token)");
+
+                string erolabsUrl = $"{serverUrl}/api/o/Player/ErolabsSave";
+
+                // 將 SaveData 轉為 JSON 字串
+                string erolabsJson = JsonUtility.ToJson(saveData);
+                Debug.Log($"Serialized SaveData for Erolabs: {erolabsJson}");
+
+                // 包裝成 ErolabsSaveRequest 結構
+                ErolabsSaveRequest erolabsRequest = new ErolabsSaveRequest()
+                {
+                    Account = game_account,
+                    Data = erolabsJson,
+                    Game = EnumGame.E1
+                };
+
+                // 將整個請求序列化為 JSON
+                string erolabsPayload = JsonUtility.ToJson(erolabsRequest);
+                Debug.Log($"Final JSON Payload for Erolabs: {erolabsPayload}");
+
+                using (UnityWebRequest request = new UnityWebRequest(erolabsUrl, "POST"))
+                {
+                    byte[] bodyRaw = Encoding.UTF8.GetBytes(erolabsPayload);
+                    request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+                    request.downloadHandler = new DownloadHandlerBuffer();
+
+                    // 不設置 Authorization header
+                    // request.SetRequestHeader("Authorization", $"Bearer {curToken}");
+                    request.SetRequestHeader("Content-Type", "application/json");
+
+                    await request.SendWebRequest().ToUniTask();
+
+                    if (request.result == UnityWebRequest.Result.ConnectionError ||
+                        request.result == UnityWebRequest.Result.ProtocolError)
+                    {
+                        Debug.LogError($"Erolabs Save Request Failed: {request.error}\nResponse: {request.downloadHandler.text}");
+                        return;
+                    }
+
+                    Debug.Log("Erolabs Save request success!");
+
+                    try
+                    {
+                        string responseText = request.downloadHandler.text;
+                        var apiResponse = JsonUtility.FromJson<ApiResponse>(responseText);
+
+                        if (apiResponse.success == false || apiResponse.success == null)
+                        {
+                            Debug.LogError($"Erolabs Save Failed: {apiResponse.message}");
+                            return;
+                        }
+
+                        Debug.Log($"Erolabs Save completed: {apiResponse.message}");
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"Error parsing Erolabs response: {e.Message}\n{e.StackTrace}");
+                    }
+                }
+                break;
+            case PlatformType.LocalDev:
+                Debug.Log("本地測試模式 SaveByToken");
+                break;
         }
     }
     //     // 加一個方法提示 & 關閉
@@ -576,6 +739,219 @@ public class ServerManager : MonoBehaviour
         await tcs.Task;
     }
 
+    private async UniTask HandleErolabsLoginAsync()
+    {
+        await ErolabsSDK.Initialize();
+        Debug.Log("Erolabs SDK initialized");
+
+        bool loginCompleted = false;
+
+        while (!loginCompleted)
+        {
+            var tcs = new UniTaskCompletionSource<bool>();
+
+            void CallbackWrapper(Games.Coresdk.Unity.ProfileResult result)
+            {
+                // 使用 async lambda 搭配 Forget() 來處理警告
+                _ = HandleCallbackAsync(result, tcs);
+            }
+
+            ErolabsSDK.OpenLogin(game_id, CallbackWrapper);
+
+            loginCompleted = await tcs.Task;
+        }
+
+        Debug.Log("HandleErolabsLoginAsync 完成（登入成功）");
+
+    }
+    // 將 OnLoginCallback 改成這個方法，傳入 tcs
+    private async UniTask HandleCallbackAsync(Games.Coresdk.Unity.ProfileResult result, UniTaskCompletionSource<bool> tcs)
+    {
+        bool loginSuccess = await OnLoginCallback(result);
+        tcs.TrySetResult(loginSuccess);
+    }
+    private async UniTask<bool> OnLoginCallback(Games.Coresdk.Unity.ProfileResult result)
+    {
+        Exception exception = result.Exception;
+        if (exception != null)
+        {
+            Debug.LogError("[Erolabs] Login exception: " + exception);
+            return false;
+        }
+
+        string erolabsToken = ErolabsSDK.Token;
+        string userId = result.Data.user_info.user_id;
+        string account = result.Data.user_info.account;
+        game_account = account; // 更新遊戲帳號
+
+        Debug.Log($"user_id: {userId}\naccount: {account}\ntoken: {erolabsToken}");
+
+        if (string.IsNullOrEmpty(erolabsToken))
+        {
+            Debug.LogError("[Erolabs] Token is null or empty");
+            return false;
+        }
+
+        // 1️⃣ 檢查是否購買
+        bool purchased = await CheckPurchase(game_id, erolabsToken);
+        if (!purchased)
+        {
+            Debug.LogWarning("[Erolabs] 尚未購買，請先購買遊戲");
+            return false;
+        }
+
+        // 2️⃣ 呼叫後端儲存玩家資料
+        var apiResp = await BindAccountToBackend(erolabsToken, game_account, purchased);
+
+        if (apiResp != null && apiResp.success == false && apiResp.error == "E1001")
+        {
+            Debug.LogWarning("[Erolabs] Token 過期，自動重新登入");
+            return false; // 需要重試
+        }
+
+        return true; // 登入成功
+    }
+    /// <summary>
+    /// 檢查是否購買過遊戲，回傳 true/false
+    /// </summary>
+    private async UniTask<bool> CheckPurchase(string gameId, string jwt)
+    {
+        string path = $"/api/v2/game/{gameId}/purchase/state?jwt={jwt}";
+        string response = await Get(path);
+
+        if (string.IsNullOrEmpty(response))
+        {
+            Debug.LogError("[Purchase] Empty response");
+            return false;
+        }
+
+        Debug.Log("[Purchase] Raw Response = " + response);
+
+        var result = JsonConvert.DeserializeObject<PurchaseResponse>(response);
+        if (result.status == "SUCCESS")
+        {
+            if (result.data.purchased)
+            {
+                Debug.Log("[Purchase] 已購買 → 可以遊玩");
+                StartNani.Instance.isLoggedIn = true;
+                return true;
+            }
+            else
+            {
+                Debug.Log("[Purchase] 未購買 → 導向購買頁面");
+                Application.OpenURL("https://l.hyenadata.com/s/1TrEoJ");
+                return false;
+            }
+        }
+        else
+        {
+            Debug.LogError($"[Purchase] FAIL: {result.message}");
+            return false;
+        }
+    }
+    /// <summary>
+    /// 將 Erolabs 資料送到後端遊戲 API
+    /// </summary>
+    /// <param name="erolabsToken">Erolabs 平台 Token</param>
+    /// <param name="gameAccount">遊戲帳號</param>
+    /// <param name="purchased">是否購買</param>
+    /// <returns>後端回傳結果</returns>
+    public async Task<ApiResponse> BindAccountToBackend(string erolabsToken, string gameAccount, bool purchased)
+    {
+        // var bindReq = new
+        // {
+        //     Token = erolabsToken,
+        //     Account = gameAccount,
+        //     Purchased = purchased,
+        //     Game = 1
+        // };
+        ErolabsEntity bindReq = new ErolabsEntity
+        {
+            Token = erolabsToken,
+            Account = gameAccount,
+            Purchased = purchased,
+            Game = EnumGame.E1
+        };
+
+        string bindJson = JsonConvert.SerializeObject(bindReq);
+        string bindResp = await PostJson("/api/o/player/ErolabsAccount", bindJson);
+        Debug.Log($"BindErolabsAccount Resp={bindResp}");
+
+        if (string.IsNullOrEmpty(bindResp))
+            return new ApiResponse
+            {
+                success = false,
+                message = "No response from server",
+                error = "NoResponse"
+            };
+
+        var apiResp = JsonConvert.DeserializeObject<ApiResponse>(bindResp);
+        return apiResp;
+    }
+    public static async Task<string> PostJson(string path, string json, string token = null)
+    {
+        string url = $"{serverUrl}{path}";
+
+        Debug.Log($"[ApiClient] >>> POST {url}");
+        Debug.Log($"[ApiClient] >>> Body JSON: {json}");
+        if (!string.IsNullOrEmpty(token))
+            Debug.Log($"[ApiClient] >>> Authorization: Bearer {token}");
+
+        using (var request = new UnityWebRequest(url, "POST"))
+        {
+            byte[] bodyRaw = Encoding.UTF8.GetBytes(json);
+            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type", "application/json");
+
+            if (!string.IsNullOrEmpty(token))
+                request.SetRequestHeader("Authorization", $"Bearer {token}");
+
+            var operation = request.SendWebRequest();
+
+            while (!operation.isDone)
+                await Task.Yield();
+
+#if UNITY_2020_1_OR_NEWER
+            if (request.result != UnityWebRequest.Result.Success)
+#else
+            if (request.isNetworkError || request.isHttpError)
+#endif
+            {
+                Debug.LogError($"[ApiClient] <<< Error: {request.error}");
+                Debug.LogError($"[ApiClient] <<< Response: {request.downloadHandler.text}");
+                return null;
+            }
+
+            string resp = request.downloadHandler.text;
+            Debug.Log($"[ApiClient] <<< Response: {resp}");
+            return resp;
+        }
+    }
+    public static async Task<string> Get(string path)
+    {
+        using (var request = UnityWebRequest.Get($"{erolabsApiUrl}{path}"))
+        {
+            request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.SetRequestHeader("Accept", "application/json");
+
+            var operation = request.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
+
+#if UNITY_2020_1_OR_NEWER
+            if (request.result != UnityWebRequest.Result.Success)
+#else
+            if (request.isNetworkError || request.isHttpError)
+#endif
+            {
+                Debug.LogError($"[ApiClient] GET Error: {request.error}");
+                return null;
+            }
+
+            return request.downloadHandler.text;
+        }
+    }
     [Serializable]
     public class ApiResponse
     {
@@ -675,5 +1051,83 @@ public class ServerManager : MonoBehaviour
         public int code;
         public string msg;
         public string user_id;
+    }
+    public enum PlatformType
+    {
+        TapDB,
+        Love6,
+        SixParty,
+        Erolabs,
+        LocalDev
+    }
+    [Serializable]
+    public class PurchaseResponse
+    {
+        public string status;
+        public string message;
+        public PurchaseData data;
+    }
+
+    [Serializable]
+    public class PurchaseData
+    {
+        public bool purchased;
+    }
+    [Serializable]
+    public class ErolabsSaveRequest
+    {
+        public string Account;
+        public string Data;
+        public EnumGame Game;
+    }
+    [Serializable]
+    private class ErolabsLoadRequest
+    {
+        public string Account;
+        public EnumGame Game;
+    }
+    /// <summary>
+    /// 遊戲枚舉
+    /// </summary>
+    public enum EnumGame
+    {
+        /// <summary>
+        /// should not exist, is incorrect status
+        /// </summary>
+        Default = 0,
+        /// <summary>
+        /// E1
+        /// </summary>
+        E1 = 1,
+        /// <summary>
+        /// E2
+        /// </summary>
+        E2 = 2,
+        /// <summary>
+        /// E3
+        /// </summary>
+        E3 = 3,
+        /// <summary>
+        /// E4
+        /// </summary>
+        E4 = 4,
+        /// <summary>
+        /// E5
+        /// </summary>
+        E5 = 5,
+    }
+    public class ErolabsEntity
+    {
+        // var bindReq = new
+        // {
+        //     Token = erolabsToken,
+        //     Account = gameAccount,
+        //     Purchased = purchased,
+        //     Game = 1
+        // };
+        public string Token;
+        public string Account;
+        public bool Purchased;
+        public EnumGame Game;
     }
 }
