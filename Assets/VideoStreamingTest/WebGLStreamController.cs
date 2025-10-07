@@ -59,8 +59,56 @@ public class WebGLStreamController : HISPlayerManager
         SetUpPlayer();
         LoadYaml().Forget();
         StartLoggingLoop().Forget();
-    }
 
+    }
+    //    Android 黑屏修復
+#if !UNITY_EDITOR && UNITY_ANDROID
+private bool wasPaused = false;
+void OnApplicationPause(bool pause)
+{
+    if (pause)
+    {
+        wasPaused = true;
+        Debug.Log("[WebGLStreamController] App paused → pausing HISPlayer");
+        try
+        {
+            Pause(0); // 暫停播放
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning("[WebGLStreamController] Pause failed: " + e);
+        }
+    }
+    else
+    {
+        if (wasPaused)
+        {
+            wasPaused = false;
+            Debug.Log("[WebGLStreamController] App resumed → restoring HISPlayer");
+            RestoreAfterResume().Forget();
+        }
+    }
+}
+
+private async UniTaskVoid RestoreAfterResume()
+{
+    // 等待 GPU surface 重建完成
+    await UniTask.Delay(500);
+
+    try
+    {
+        Debug.Log("[WebGLStreamController] Restarting video to restore surface...");
+        Stop(0);                    // 強制釋放 Surface
+        await UniTask.Delay(300);   // 等待底層釋放完成
+        Play(0);                    // 重新播放 → SDK 會自動重建 Surface
+    }
+    catch (Exception e)
+    {
+        Debug.LogWarning("[WebGLStreamController] Resume video failed: " + e);
+    }
+}
+#endif
+    // 
     void OnDestroy()
     {
         Debug.Log("[WebGLStreamController] Release player");
@@ -205,7 +253,7 @@ public class WebGLStreamController : HISPlayerManager
 
         // 重置旗標，讓下一段/下一輪可以再次 Ready→Play
         hasPlayedOnce = false;
-        startedOnce   = false;
+        startedOnce = false;
 
         SetState(PlayerState.Ended);
     }
@@ -230,7 +278,7 @@ public class WebGLStreamController : HISPlayerManager
 
         // 與 EndOfContent 同步重置
         hasPlayedOnce = false;
-        startedOnce   = false;
+        startedOnce = false;
 
         SetState(PlayerState.Ended);
     }
@@ -284,10 +332,10 @@ public class WebGLStreamController : HISPlayerManager
 
         // ========= 關鍵重置（每次切新片以前）=========
         // 讓下一段 Ready 事件可以再次觸發 Play()
-        EndPlay        = false;
-        waitready      = false;
-        startedOnce    = false;
-        hasPlayedOnce  = false;
+        EndPlay = false;
+        waitready = false;
+        startedOnce = false;
+        hasPlayedOnce = false;
         // =============================================
 
         // UI：隱藏遮罩、把影片容器顯示

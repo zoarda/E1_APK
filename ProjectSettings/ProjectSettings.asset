@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: TAP_DB
+  companyName: Erolabs
   productName: "\u5B8C\u86CB\u6211\u8981\u6210\u70BAAV\u5C0E\u6F14"
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -162,7 +162,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Android: com.TAP_DB.AV
+    Android: com.Erolabs.AV
   buildNumber:
     Standalone: 0
     VisionOS: 0
