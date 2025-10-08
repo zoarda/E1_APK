@@ -13,5 +13,9 @@ MonoBehaviour:
   m_Name: CustomVariablesConfiguration
   m_EditorClassIdentifier: 
   PredefinedVariables:
-  - name: friendship
+  - name: friendship_CiciXie
+    value: 0
+  - name: friendship_RosieLin
+    value: 0
+  - name: friendship_CherryZhao
     value: 0

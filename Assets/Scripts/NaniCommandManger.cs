@@ -127,7 +127,7 @@ public class NaniCommandManger : MonoBehaviour
             Debug.Log($"Clear fail {e}");
         }
     }
-    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type)
+    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type,string Character)
     {
 
         var player = Engine.GetService<IScriptPlayer>();
@@ -154,7 +154,10 @@ public class NaniCommandManger : MonoBehaviour
         //设置choice按钮的label
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
         var varManager = Engine.GetService<ICustomVariableManager>();
-        var myValue = varManager.GetVariableValue("friendship");
+        // var myValue = varManager.GetVariableValue("friendship");
+        var myValue = Character == "CiciXie" ? varManager.GetVariableValue("friendship_CiciXie") :
+                      Character == "RosieLin" ? varManager.GetVariableValue("friendship_RosieLin") :
+                      Character == "CherryZhao" ? varManager.GetVariableValue("friendship_CherryZhao") : null;
         float a;
         if (!string.IsNullOrEmpty(myValue))
         {

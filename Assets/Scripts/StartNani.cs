@@ -12,7 +12,9 @@ public class StartNani : MonoBehaviour
     [Header("Scripts")]
     public Button buttonController;
     public GameObject StartGamePage, GalleryPage, OpenCheck, videoManager;
-    public List<float> friednshipList;
+    public List<float> friednshipList_CiciXie;
+    public List<float> friednshipList_RosieLin;
+    public List<float> friednshipList_CherryZhao;
     [SerializeField] private SubtitlesManager subtitlesManager;
     // [SerializeField] private NaniCommandManger naniCommandManger;
     [SerializeField] private LanguageManager LanguageManager;
@@ -94,10 +96,18 @@ public class StartNani : MonoBehaviour
 
             if (saveData != null)
             {
-                // saveData.friendship = allFriendship();
                 var varManager = Engine.GetService<ICustomVariableManager>();
-                varManager.TrySetVariableValue("friendship", saveData.friendship);
-                friednshipList.Add(saveData.friendship);
+                // varManager.TrySetVariableValue("friendship", saveData.friendship);
+                varManager.TrySetVariableValue("friendship_CiciXie", saveData.friendship_CiciXie); // 筱希
+                varManager.TrySetVariableValue("friendship_RosieLin", saveData.friendship_RosieLin); // 林香
+                varManager.TrySetVariableValue("friendship_CherryZhao", saveData.friendship_CherryZhao); // 紫涵
+                // friednshipList.Add(saveData.friendship);
+                friednshipList_CiciXie.Clear();
+                friednshipList_RosieLin.Clear();
+                friednshipList_CherryZhao.Clear();
+                friednshipList_CiciXie.Add(saveData.friendship_CiciXie); // 筱希
+                friednshipList_RosieLin.Add(saveData.friendship_RosieLin); // 林香
+                friednshipList_CherryZhao.Add(saveData.friendship_CherryZhao); // 紫涵
                 await SelectOptionSwtich(saveData);
             }
             else
@@ -144,8 +154,17 @@ public class StartNani : MonoBehaviour
 
         // saveData.friendship = allFriendship();
         var varManager = Engine.GetService<ICustomVariableManager>();
-        varManager.TrySetVariableValue("friendship", saveData.friendship);
-        friednshipList.Add(saveData.friendship);
+        // varManager.TrySetVariableValue("friendship", saveData.friendship);
+        varManager.TrySetVariableValue("friendship_CiciXie", saveData.friendship_CiciXie); // 筱希
+        varManager.TrySetVariableValue("friendship_RosieLin", saveData.friendship_RosieLin); // 林香
+        varManager.TrySetVariableValue("friendship_CherryZhao", saveData.friendship_CherryZhao); // 紫涵
+        // friednshipList.Add(saveData.friendship);
+        friednshipList_CiciXie.Clear();
+        friednshipList_RosieLin.Clear();
+        friednshipList_CherryZhao.Clear();
+        friednshipList_CiciXie.Add(saveData.friendship_CiciXie); // 筱希
+        friednshipList_RosieLin.Add(saveData.friendship_RosieLin); // 林香
+        friednshipList_CherryZhao.Add(saveData.friendship_CherryZhao); // 紫涵
 
         await SelectOptionSwtich(saveData);
     }
@@ -321,10 +340,13 @@ public class StartNani : MonoBehaviour
             GalleryPage.SetActive(!GalleryPage.activeSelf);
         });
         //開始頁面選項
-        Btn_StartSelect.onClick.AddListener(() =>
+        Btn_StartSelect.onClick.AddListener(async() =>
         {
             // StartGamePage.SetActive(!StartGamePage.activeSelf);
             SelectOption.SetActive(!SelectOption.activeSelf);
+            //  在開啟前做一次資料讀取
+            ServerManager.SaveData saveData = await ServerManager.Instance.Load();
+            await SelectOptionSwtich(saveData);
             EventSystem.current.SetSelectedGameObject(Btn_C1_VB.gameObject);
         });
         //開始遊戲
@@ -728,22 +750,82 @@ public class StartNani : MonoBehaviour
     //     // OptionPage.SetActive(false);
     //     Debug.Log("setFalse");
     // }
-    //新增友誼值
-    public void SetfriendshipList(float intFriend)
-    {
-        Debug.Log($"SetfriendshipList" + intFriend);
-        friednshipList.Add(intFriend);
-    }
+    // //新增友誼值
+    // public void SetfriendshipList(float intFriend)
+    // {
+    //     Debug.Log($"SetfriendshipList" + intFriend);
+    //     friednshipList.Add(intFriend);
+    // }
+    // //新增林香友誼值
+    // public void SetfriendshipList_RosieLin(float intFriend)
+    // {
+    //     Debug.Log($"SetfriendshipList_RosieLin" + intFriend);
+    //     friednshipList_RosieLin.Add(intFriend);
+    // }
+    // //新增紫涵友誼值
+    // public void SetfriendshipList_CherryZhao(float intFriend)
+    // {
+    //     Debug.Log($"SetfriendshipList_CherryZhao" + intFriend);
+    //     friednshipList_CherryZhao.Add(intFriend);
+    // }
+    // //新增筱希友誼值
+    // public void SetfriendshipList_CiciXie(float intFriend)
+    // {
+    //     Debug.Log($"SetfriendshipList_CiciXie" + intFriend);
+    //     friednshipList_CiciXie.Add(intFriend);
+    // }
     //計算總友誼值
-    public float allFriendship()
+    // public float allFriendship()
+    // {
+    //     // Debug.Log("allFriendship:" + friednshipList.Count);
+    //     float sum = 0;
+    //     foreach (var data in friednshipList)
+    //     {
+    //         sum += data;
+    //     }
+    //     Debug.Log("allFriendship:" + sum);
+    //     return sum;
+    // }
+    //計算總筱希友誼值
+    public float allFriendship_CiciXie()
     {
         // Debug.Log("allFriendship:" + friednshipList.Count);
         float sum = 0;
-        foreach (var data in friednshipList)
+        foreach (var data in friednshipList_CiciXie)
         {
             sum += data;
         }
-        Debug.Log("allFriendship:" + sum);
+        Debug.Log("allFriendship_CiciXie:" + sum);
+        var varManager = Engine.GetService<ICustomVariableManager>();
+        varManager.TrySetVariableValue("friendship_CiciXie", sum); //
+        return sum;
+    }
+    //計算總林香友誼值
+    public float allFriendship_RosieLin()
+    {
+        // Debug.Log("allFriendship:" + friednshipList.Count);
+        float sum = 0;
+        foreach (var data in friednshipList_RosieLin)
+        {
+            sum += data;
+        }
+        Debug.Log("allFriendship_RosieLin:" + sum);
+        var varManager = Engine.GetService<ICustomVariableManager>();
+        varManager.TrySetVariableValue("friendship_RosieLin", sum); // 林
+        return sum;
+    }
+    //計算總紫涵友誼值
+    public float allFriendship_CherryZhao()
+    {
+        // Debug.Log("allFriendship:" + friednshipList.Count);
+        float sum = 0;
+        foreach (var data in friednshipList_CherryZhao)
+        {
+            sum += data;
+        }
+        Debug.Log("allFriendship_CherryZhao:" + sum);
+        var varManager = Engine.GetService<ICustomVariableManager>();
+        varManager.TrySetVariableValue("friendship_CherryZhao", sum); // 紫涵
         return sum;
     }
     //選擇章節顯示切換
@@ -760,7 +842,8 @@ public class StartNani : MonoBehaviour
         // {
         //     saveData = await ServerManager.Instance.Load(token);
         // }
-        saveData.friendship = allFriendship();
+        // saveData.friendship = allFriendship();
+
         SelectButton C1 = Btn_C1_VB.GetComponent<SelectButton>();
         SelectButton C2 = Btn_C2_VB.GetComponent<SelectButton>();
         SelectButton C3 = Btn_C3_VB.GetComponent<SelectButton>();
@@ -814,7 +897,10 @@ public class StartNani : MonoBehaviour
             if (saveData.scriptName == null)
                 saveData.scriptName = new List<string>();
 
-            saveData.friendship = allFriendship();
+            // saveData.friendship = allFriendship();
+            saveData.friendship_CiciXie = allFriendship_CiciXie(); // 筱希
+            saveData.friendship_RosieLin = allFriendship_RosieLin(); // 林香
+            saveData.friendship_CherryZhao = allFriendship_CherryZhao(); // 紫涵
 
             if (!saveData.scriptName.Contains(scriptName))
                 saveData.scriptName.Add(scriptName);

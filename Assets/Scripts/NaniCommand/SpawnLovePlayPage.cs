@@ -14,13 +14,16 @@ public class SpawnLovePlayPage : Command
     public StringParameter HidenCumLabel;
     [ParameterAlias("Type")]
     public StringParameter Type;
+    [ParameterAlias("Character")]
+    public StringParameter Character;
+
 
     public override async UniTask ExecuteAsync(AsyncToken asyncToken = default)
     {
-        await SetLovePlayPageAsync(PoseName, Label, CumLabel, Type, asyncToken);
+        await SetLovePlayPageAsync(PoseName, Label, CumLabel, Type, Character, asyncToken);
         await SetCumButtonAsync(CumLabel, HidenCumLabel, Type, asyncToken);
     }
-    public static async UniTask SetLovePlayPageAsync(List<string> poseName, List<string> label, string cumLabel, string type, AsyncToken asyncToken)
+    public static async UniTask SetLovePlayPageAsync(List<string> poseName, List<string> label, string cumLabel, string type, string Character, AsyncToken asyncToken)
     {
         ISpawnManager spawnManager = Engine.GetService<ISpawnManager>();
         var lovePlayPagePrefab = spawnManager.GetSpawned("LovePlayPage");
@@ -29,7 +32,7 @@ public class SpawnLovePlayPage : Command
         NaniCommandManger.Instance.ClearLovePlayPage();
         for (int i = 0; i < poseName.Count; i++)
         {
-            NaniCommandManger.Instance.SpawnLovePlayPageButton(lovePlayPage, lovePlayPage.buttonPrefab, poseName[i], label[i], type);
+            NaniCommandManger.Instance.SpawnLovePlayPageButton(lovePlayPage, lovePlayPage.buttonPrefab, poseName[i], label[i], type, Character);
         }
         await UniTask.CompletedTask;
     }

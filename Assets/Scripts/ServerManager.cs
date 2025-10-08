@@ -406,13 +406,16 @@ public class ServerManager : MonoBehaviour
             }
 
             // 若返回的数据为空，创建默认的 SaveData 并上传
-            if (wrapper.data == null)
+            if (saveData == null)
             {
                 Debug.LogWarning("No SaveData found. Creating default save...");
 
                 saveData = new SaveData
                 {
-                    friendship = 0,
+                    // friendship = 0,
+                    friendship_CiciXie = 0, // 筱希
+                    friendship_RosieLin = 0, // 林香
+                    friendship_CherryZhao = 0, // 紫涵
                     scriptName = new List<string>
                 {
                     "C1_VB",  // 示例，实际可根据需求初始化
@@ -427,7 +430,8 @@ public class ServerManager : MonoBehaviour
                 return await Load();
             }
 
-            Debug.Log($"Parsed SaveData: friendship={saveData.friendship}, scripts={string.Join(",", saveData.scriptName)}");
+            // Debug.Log($"Parsed SaveData: friendship={saveData.friendship}, scripts={string.Join(",", saveData.scriptName)}");
+            Debug.Log($"Parsed SaveData: friendship_CiciXie={saveData.friendship_CiciXie}, friendship_RosieLin={saveData.friendship_RosieLin}, friendship_CherryZhao={saveData.friendship_CherryZhao}, scripts={string.Join(",", saveData.scriptName)}");
 
             return saveData;
         }
@@ -439,7 +443,7 @@ public class ServerManager : MonoBehaviour
     public async UniTask SaveByToken(SaveData saveData)
     {
         string url = $"{serverUrl}/api/a/Player/Save";
-        Debug.Log($"[Save] Friendship before serialize: {saveData.friendship}");
+        // Debug.Log($"[Save] Friendship before serialize: {saveData.friendship}");
         // 將 SaveData 轉為 JSON 字串
         string saveJson = JsonUtility.ToJson(saveData);
         Debug.Log($"Serialized SaveData: {saveJson}");
@@ -670,7 +674,12 @@ public class ServerManager : MonoBehaviour
     /// </summary>
     public class SaveData
     {
-        public float friendship;
+        //新增區分成3種好感度
+        // public float friendship;
+
+        public float friendship_CiciXie; // 筱希
+        public float friendship_RosieLin; // 林香
+        public float friendship_CherryZhao; // 紫涵
         public List<string> scriptName;
 
         public string PlatformName;

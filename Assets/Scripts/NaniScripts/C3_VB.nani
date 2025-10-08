@@ -27,8 +27,8 @@
 @forcedChoice choiceTime:10
 @waitMovie choiceTime:10
 @speedButtonDisable
-@choiceDLC PackId32 goto:.C3_S1_P1 do:"@friendship mode:Set friendship:1"
-@choiceDLC PackId33 goto:.C3_S1_P2 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId32 goto:.C3_S1_P1 do:"@friendship mode:Set friendship:1 character:CiciXie"
+@choiceDLC PackId33 goto:.C3_S1_P2 do:"@friendship mode:Set friendship:1 character:CiciXie"
 @reBuildChoice
 @stop
 @clearChoice
@@ -47,7 +47,7 @@
 @waitMovie choiceTime:10
 @speedButtonDisable
 @choiceDLC PackId34 goto:.C3_S1_P1-1
-@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1 character:CiciXie"
 @reBuildChoice
 @stop
 @clearChoice
@@ -66,7 +66,7 @@
 @waitMovie choiceTime:10
 @speedButtonDisable
 @choiceDLC PackId34 goto:.C3_S1_P1-1
-@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId35 goto:.C3_S1_P1-2 do:"@friendship mode:Set friendship:1 character:CiciXie"
 @reBuildChoice
 @stop
 @clearChoice
@@ -102,7 +102,7 @@
 @forcedChoice choiceTime:12
 @waitMovie choiceTime:12
 @speedButtonDisable
-@choiceDLC PackId36 goto:.C3_S2_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId36 goto:.C3_S2_P1 do:"@friendship mode:Set friendship:1 character:RosieLin"
 @choiceDLC PackId37 goto:.C3_S2_P2
 @reBuildChoice
 @stop

@@ -32,7 +32,7 @@
 @videoControll startLoopTime:264 endLoopTime:270 isLooping:true
 @forcedChoice choiceTime:30
 @waitMovie choiceTime:30
-@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6 Character:CiciXie"
 @choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S2
 @choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
 @reBuildChoice
@@ -54,7 +54,7 @@
 @videoControll startLoopTime:264 endLoopTime:270 isLooping:true
 @forcedChoice choiceTime:30
 @waitMovie choiceTime:30
-@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton  do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton  do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6 Character:CiciXie"
 @choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton  goto:.C5_S2
 @choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
 @reBuildChoice
@@ -78,8 +78,8 @@
 @forcedChoice choiceTime:30
 @waitMovie choiceTime:30
 @speedButtonDisable
-; @choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6"
-@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S1
+@choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton do:"@friendship mode:Get scriptName:C5_VB goodfriendship:C5_S1 badFriendship:C5_S1_S6 Character:CiciXie"
+; @choiceDLC PackId54 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S1
 @choiceDLC PackId55 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S2
 @choiceDLC PackId56 handler:AvBoxButtonList button:AvBoxChoiceButton goto:.C5_S3
 @reBuildChoice
@@ -252,7 +252,7 @@
 # C5_S2_S1_noLoop
 @spawn LovePlayPage
 @NaniSaveData ScriptName:C5_S2_S1_noLoop
-@spawnLovePlayPage poseName:sex_D_02,sex_G_02,sex_A_02,sex_C_02,sex_E_02,sex_F_02 label:C5_S2_S1,C5_S2_S2,C5_S2_S3,C5_S2_S4,C5_S2_S5,C5_S2_S6 cumLabel:C5_S2_S6_cum hidenCumLabel:C5_S2_S7_cuminside type:hidesex
+@spawnLovePlayPage poseName:sex_D_02,sex_G_02,sex_A_02,sex_C_02,sex_E_02,sex_F_02 label:C5_S2_S1,C5_S2_S2,C5_S2_S3,C5_S2_S4,C5_S2_S5,C5_S2_S6 cumLabel:C5_S2_S6_cum hidenCumLabel:C5_S2_S7_cuminside type:hidesex Character:RosieLin
 @streamingPlay "C5_S2_S1"
 @speedButtonDisable
 @videoControll startLoopTime:180 endLoopTime:200 isLooping:true
@@ -370,7 +370,7 @@
 # C5_S3_S1_noLoop
 @spawn LovePlayPage
 @NaniSaveData ScriptName:C5_S3_S1_noLoop
-@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C5_S3_S1,C5_S3_S2,C5_S3_S3,C5_S3_S5 cumLabel:C5_S3_S7_cum hidenCumLabel:C5_S3_S6_cuminside type:hidesex
+@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C5_S3_S1,C5_S3_S2,C5_S3_S3,C5_S3_S5 cumLabel:C5_S3_S7_cum hidenCumLabel:C5_S3_S6_cuminside type:hidesex Character:CherryZhao
 @streamingPlay "C5_S3_S1"
 @speedButtonDisable
 @videoControll startLoopTime:560 endLoopTime:600 isLooping:true

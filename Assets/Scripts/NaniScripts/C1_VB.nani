@@ -142,7 +142,7 @@
 @forcedChoice choiceTime:10
 @waitMovie choiceTime:10
 @speedButtonDisable
-@choiceDLC PackId6 goto:.C1_S2_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId6 goto:.C1_S2_P1 do:"@friendship mode:Set friendship:1 character:RosieLin"
 @choiceDLC PackId7 goto:.C1_S2_P2
 @reBuildChoice
 @stop
@@ -194,7 +194,7 @@
 @forcedChoice choiceTime:9
 @waitMovie choiceTime:9
 @speedButtonDisable
-@choiceDLC PackId8 goto:.C1_S3_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId8 goto:.C1_S3_P1 do:"@friendship mode:Set friendship:1 character:CherryZhao"
 @choiceDLC PackId9 goto:.C1_S3_P2
 @reBuildChoice
 @stop
@@ -226,7 +226,7 @@
 @waitMovie choiceTime:4
 @speedButtonDisable
 @choiceDLC PackId10 goto:.C1_S3_P2-1
-@choiceDLC PackId11 goto:.C1_S3_P2-2 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId11 goto:.C1_S3_P2-2 do:"@friendship mode:Set friendship:1 character:CherryZhao"
 @reBuildChoice
 @stop
 
@@ -266,4 +266,3 @@
 ; @wait 2
 ; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
-@sto
