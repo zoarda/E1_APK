@@ -142,8 +142,8 @@
 @forcedChoice choiceTime:12
 @waitMovie choiceTime:12
 @speedButtonDisable
-@choiceDLC PackId38 goto:.C3_S3_P1
-@choiceDLC PackId39 goto:.C3_S3_P2
+@choiceDLC PackId38 goto:.C3_S3_P1 
+@choiceDLC PackId39 goto:.C3_S3_P2 do:"@friendship mode:Set friendship:1 character:CherryZhao"
 @reBuildChoice
 @stop
 @clearChoice
