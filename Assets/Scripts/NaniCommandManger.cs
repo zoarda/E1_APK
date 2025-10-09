@@ -135,7 +135,7 @@ public class NaniCommandManger : MonoBehaviour
             Debug.Log($"Clear fail {e}");
         }
     }
-    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type)
+    public void SpawnLovePlayPageButton(LovePlayPage lovePlayPage, GameObject btnObject, string poseName, string label, string type,string Character)
     {
         // varManager.TrySetVariableValue("friendship", saveData.friendship);
         // friednshipList.Add(saveData.friendship);
@@ -162,23 +162,13 @@ public class NaniCommandManger : MonoBehaviour
         objChoice.AddComponent<MouseHover>();
         ChoiceButtonList.Add(objChoice);
 
-        // //生成replay按钮
-        // GameObject objReplay = Instantiate(btnObject, lovePlayPage.ReplayButtonContent.transform);
-        // Button replayButton = objReplay.GetComponent<Button>();
-        // LovePlayPageButton lovePlayPageButtonReplay = objReplay.GetComponent<LovePlayPageButton>();
-        // Image imaReplay = lovePlayPageButtonReplay.ImaIcon;
-        // Image sdReplay = lovePlayPageButtonReplay.ImaSlider;
-
-        // sdReplay.fillAmount = 0;
-        // lovePlayPageButtonReplay.scriptLabel = label;
-        // imaReplay.sprite = null;
-        // imaReplay.AddComponent<MouseHover>();
-        // ReplayButtonList.Add(objReplay);
-
         //设置choice按钮的label
         StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
         var varManager = Engine.GetService<ICustomVariableManager>();
-        var myValue = varManager.GetVariableValue("friendship");
+        // var myValue = varManager.GetVariableValue("friendship");
+        var myValue = Character == "CiciXie" ? varManager.GetVariableValue("friendship_CiciXie") :
+                      Character == "RosieLin" ? varManager.GetVariableValue("friendship_RosieLin") :
+                      Character == "CherryZhao" ? varManager.GetVariableValue("friendship_CherryZhao") : null;
         float a;
         if (!string.IsNullOrEmpty(myValue))
         {
@@ -495,7 +485,7 @@ public class NaniCommandManger : MonoBehaviour
             objCum.SetActive(true);
             objHidenCum.SetActive(false);
             objSetting.SetActive(true);
-            imaCum.sprite = Resources.Load<Sprite>("LovePlayPage/sex_P_02");
+            imaCum.sprite = Resources.Load<Sprite>("LovePlayPage/sex_N_02");
             imaCum.SetNativeSize();
             objHidenCum.GetComponent<Image>().sprite = Resources.Load<Sprite>("LovePlayPage/sex_O_02");
             objHidenCum.GetComponent<Image>().SetNativeSize();

@@ -15,6 +15,8 @@ public class Friendship : Command
     public StringParameter Goodfriendship;
     [ParameterAlias("BadFriendship")]
     public StringParameter BadFriendship;
+    [ParameterAlias("Character")]
+    public StringParameter Character;
 
     protected virtual string scriptName => ScriptName;
     protected virtual string good => Goodfriendship;
@@ -24,15 +26,51 @@ public class Friendship : Command
         if (Mode == "Set")
         {
             StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-            startNani.SetfriendshipList(friendship);
+            if (Character == "CiciXie") // 筱希
+            {
+                startNani.friednshipList_CiciXie.Add(friendship);
+            }
+            else if (Character == "RosieLin") // 林香
+            {
+                startNani.friednshipList_RosieLin.Add(friendship);
+            }
+            else if (Character == "CherryZhao") // 紫涵
+            {
+                startNani.friednshipList_CherryZhao.Add(friendship);
+            }
+            else
+            {
+                Debug.LogError("Character name is incorrect. Please use 'CiciXie', 'RosieLin', or 'CherryZhao'.");
+            }
+            // startNani.SetfriendshipList(friendship);
             await UniTask.CompletedTask;
         }
         else if (Mode == "Get")
         {
             StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
             var varManager = Engine.GetService<ICustomVariableManager>();
-            varManager.TrySetVariableValue("friendship", startNani.allFriendship());
-            var myValue = varManager.GetVariableValue("friendship");
+            //依照character來決定使用哪個好感度變數
+            if (Character == "CiciXie") // 筱希
+            {
+                varManager.TrySetVariableValue("friendship_CiciXie", startNani.allFriendship_CiciXie());
+            }
+            else if (Character == "RosieLin") // 林香
+            {
+                varManager.TrySetVariableValue("friendship_RosieLin", startNani.allFriendship_RosieLin());
+            }
+            else if (Character == "CherryZhao") // 紫涵
+            {
+                varManager.TrySetVariableValue("friendship_CherryZhao", startNani.allFriendship_CherryZhao());
+            }
+            else
+            {
+                Debug.LogError("Character name is incorrect. Please use 'CiciXie', 'RosieLin', or 'CherryZhao'.");
+            }
+            // varManager.TrySetVariableValue("friendship", startNani.allFriendship());
+            // var myValue = varManager.GetVariableValue("friendship");
+            var myValue = Character == "CiciXie" ? varManager.GetVariableValue("friendship_CiciXie") :
+                          Character == "RosieLin" ? varManager.GetVariableValue("friendship_RosieLin") :
+                          Character == "CherryZhao" ? varManager.GetVariableValue("friendship_CherryZhao") : null;
             Debug.Log($"GetFreindshipAsync: {myValue}");
             var a = float.Parse(myValue);
             var Player = Engine.GetService<IScriptPlayer>();
@@ -51,28 +89,4 @@ public class Friendship : Command
             }
         }
     }
-    // public static async UniTask SetFriendshipAsync(float friendship, AsyncToken asyncToken)
-    // {
-    //     StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-    //     startNani.SetfriendshipList(friendship);
-    //     await UniTask.CompletedTask;
-    // }
-    // public static async UniTask ChoiceStroy(AsyncToken asyncToken)
-    // {
-    //     StartNani startNani = GameObject.Find("StartNani").GetComponent<StartNani>();
-    //     var varManager = Engine.GetService<ICustomVariableManager>();
-    //     varManager.TrySetVariableValue("friendship", startNani.allFriendship());
-    //     var myValue = varManager.GetVariableValue("friendship");
-    //     Debug.Log($"GetFreindshipAsync: {myValue}");
-    //     int friendship = int.Parse(myValue);
-    //     var Player = Engine.GetService<IScriptPlayer>();
-    //     if (friendship >= 50)
-    //     {
-    //         await Player.PreloadAndPlayAsync($"{}");
-    //     }
-    //     else
-    //     {
-    //         await Player.PreloadAndPlayAsync("BadFriendship");
-    //     }
-    // }
 }

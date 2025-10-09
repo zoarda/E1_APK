@@ -504,7 +504,9 @@ public class ServerManager : MonoBehaviour
 
             saveData = new SaveData
             {
-                friendship = 0,
+                friendship_CiciXie = 0, // 筱希
+                friendship_RosieLin = 0, // 林香
+                friendship_CherryZhao = 0, // 紫涵
                 scriptName = new List<string> { "C1_VB" },
                 // 根據實際需求初始化其他字段
             };
@@ -515,7 +517,7 @@ public class ServerManager : MonoBehaviour
             return await Load();
         }
 
-        Debug.Log($"Parsed SaveData: friendship={saveData.friendship}, scripts={string.Join(",", saveData.scriptName)}");
+        Debug.Log($"Parsed SaveData: friendship_CiciXie={saveData.friendship_CiciXie}, friendship_RosieLin={saveData.friendship_RosieLin}, friendship_CherryZhao={saveData.friendship_CherryZhao}, scripts={string.Join(",", saveData.scriptName)}");
         return saveData;
     }
 
@@ -1028,7 +1030,12 @@ public class ServerManager : MonoBehaviour
     /// </summary>
     public class SaveData
     {
-        public float friendship;
+        //新增區分成3種好感度
+        // public float friendship;
+
+        public float friendship_CiciXie; // 筱希
+        public float friendship_RosieLin; // 林香
+        public float friendship_CherryZhao; // 紫涵
         public List<string> scriptName;
 
         public string PlatformName;
