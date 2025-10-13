@@ -2605,7 +2605,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: v1.7.7
+  m_Text: v1.7.8
 --- !u!222 &775214846
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6433,7 +6433,9 @@ MonoBehaviour:
   StartGamePage: {fileID: 762684562}
   GalleryPage: {fileID: 1576720252}
   OpenCheck: {fileID: 51888660}
-  friednshipList: []
+  friednshipList_CiciXie: []
+  friednshipList_RosieLin: []
+  friednshipList_CherryZhao: []
   subtitlesManager: {fileID: 253769918}
   LanguageManager: {fileID: 2040531984}
   Btn_SpeedViewBack: {fileID: 1235068712}

@@ -1,10 +1,10 @@
 # C0_S0
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C0_S0"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0
 @stop
 
@@ -12,6 +12,7 @@
 @NaniSaveData ScriptName:C1_VB
 @NaniSaveData ScriptName:C1_S0
 @stopSfx GameStart
+@speedButtonDisable
 @streamingPlay "C1_S0"
 @speedButtonEnable
 @videoControll StartLoopTime:80 EndLoopTime:82 isLooping:true
@@ -27,42 +28,42 @@
 
 # C1_S0-1P
 @clearChoice 
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S0-1P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
-
 # C1_S0-2P
 @clearChoice 
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S0-2P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
 
 # C1_S0-3P
 @clearChoice 
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S0-3P"
+@speedButtonEnable
 @videoControll StartLoopTime:0 EndLoopTime:10 isLooping:false
 @forcedChoice choiceTime:1
 @waitMovie choiceTime:1
-@EndMovie
 @goto .C1_S0_P1
 @stop
 
 # C1_S0_P1
 ; @rmMovie
 @NaniSaveData ScriptName:C1_S0_P1
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S0_P1"
+@speedButtonEnable
 @videoControll StartLoopTime:56 EndLoopTime:59 isLooping:true
 @despawn Descriptionbox
 @forcedChoice choiceTime:4
@@ -79,9 +80,10 @@
 @clearChoice 
 # C1_S1
 @despawn Descriptionbox
-@speedButtonEnable
 @NaniSaveData ScriptName:C1_S1
+@speedButtonDisable
 @streamingPlay "C1_S1"
+@speedButtonEnable
 @videoControll StartLoopTime:94 EndLoopTime:104 isLooping:true
 @forcedChoice choiceTime:9
 @waitMovie choiceTime:9
@@ -92,170 +94,175 @@
 @stop
 
 # C1_S1_P1
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S1_P1"
-@waitMovie choiceTime:8
+@speedButtonEnable
 @forcedChoice choiceTime:8
-@spawn FriendShipDown wait:false
+@waitMovie choiceTime:8
+; @spawn FriendShipDown wait:false
 ; @forcedChoice choiceTime:2
 @waitMovie choiceTime:5
-@despawn FriendShipDown
-@waitMovie choiceTime:0.1
+; @despawn FriendShipDown
+@waitMovie choiceTime:1
 ; ;串接過廠
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
 # C1_S1_P2
-@speedButtonEnable
 @NaniSaveData ScriptName:C1_S1_P2
+@speedButtonDisable
 @streamingPlay "C1_S1_P2"
-@waitMovie choiceTime:16
+@speedButtonEnable
 @forcedChoice choiceTime:16
-@spawn FriendShipUp wait:false
+@waitMovie choiceTime:16
+; @spawn FriendShipUp wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:13
-@despawn FriendShipUp
-@waitMovie choiceTime:1
-@EndMovie
+; @despawn FriendShipUp
+@waitMovie choiceTime:2
 ; ;串接過廠
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 ; @stop
 
 # C1_S2
 @despawn Descriptionbox
-@speedButtonEnable
 @NaniSaveData ScriptName:C1_S2
-@streamingPlay "C1_S2"
-@videoControll StartLoopTime:391 EndLoopTime:400 isLooping:true
-@waitMovie choiceTime:10
-@forcedChoice choiceTime:10
 @speedButtonDisable
-@choiceDLC PackId6 goto:.C1_S2_P1 do:"@friendship mode:Set friendship:1"
-@choiceDLC PackId7 goto:.C1_S2_P2 do:"@friendship mode:Set friendship:-1"
+@streamingPlay "C1_S2"
+@speedButtonEnable
+@videoControll StartLoopTime:391 EndLoopTime:400 isLooping:true
+@forcedChoice choiceTime:10
+@waitMovie choiceTime:10
+@speedButtonDisable
+@choiceDLC PackId6 goto:.C1_S2_P1 do:"@friendship mode:Set friendship:1 character:RosieLin"
+@choiceDLC PackId7 goto:.C1_S2_P2
 @reBuildChoice
 @stop
 
 # C1_S2_P1
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S2_P1"
-@waitMovie choiceTime:20
+@speedButtonEnable
 @forcedChoice choiceTime:20
-@spawn FriendShipUp wait:false
+@waitMovie choiceTime:20
+; @spawn FriendShipUp wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:17
-@despawn FriendShipUp
+; @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
 # C1_S2_P2
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S2_P2"
-@waitMovie choiceTime:8
+@speedButtonEnable
 @forcedChoice choiceTime:8
-@spawn FriendShipDown wait:false
+@waitMovie choiceTime:8
+; @spawn FriendShipDown wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:5
-@despawn FriendShipDown
+; @despawn FriendShipDown
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
 # C1_S3
 @despawn Descriptionbox
-@speedButtonEnable
 @NaniSaveData ScriptName:C1_S3
+@speedButtonDisable
 @streamingPlay "C1_S3"
+@speedButtonEnable
 @videoControll StartLoopTime:92 EndLoopTime:100 isLooping:true
 @forcedChoice choiceTime:9
 @waitMovie choiceTime:9
 @speedButtonDisable
-@choiceDLC PackId8 goto:.C1_S3_P1 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId8 goto:.C1_S3_P1 do:"@friendship mode:Set friendship:1 character:CherryZhao"
 @choiceDLC PackId9 goto:.C1_S3_P2
 @reBuildChoice
 @stop
-
 # C1_S3_P1
-@speedButtonEnable
 @NaniSaveData ScriptName:C1_S3_P1
+@speedButtonDisable
 @streamingPlay "C1_S3_P1"
-@waitMovie choiceTime:20
+@speedButtonEnable
 @forcedChoice choiceTime:20
-@spawn FriendShipUp wait:false
+@waitMovie choiceTime:20
+; @spawn FriendShipUp wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:17
-@despawn FriendShipUp
+; @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
 # C1_S3_P2
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S3_P2"
+@speedButtonEnable
 @videoControll StartLoopTime:47 EndLoopTime:55 isLooping:true
 @forcedChoice choiceTime:4
 @waitMovie choiceTime:4
 @speedButtonDisable
-@choiceDLC PackId10 goto:.C1_S3_P2-1 do:"@friendship mode:Set friendship:-1"
-@choiceDLC PackId11 goto:.C1_S3_P2-2 do:"@friendship mode:Set friendship:1"
+@choiceDLC PackId10 goto:.C1_S3_P2-1
+@choiceDLC PackId11 goto:.C1_S3_P2-2 do:"@friendship mode:Set friendship:1 character:CherryZhao"
 @reBuildChoice
 @stop
 
 # C1_S3_P2-1
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S3_P2-1"
-@waitMovie choiceTime:10
+@speedButtonEnable
 @forcedChoice choiceTime:10
-@spawn FriendShipDown wait:false
+@waitMovie choiceTime:10
+; @spawn FriendShipDown wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:7
-@despawn FriendShipDown
+; @despawn FriendShipDown
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; ; @wait 2
+; ; @back C1_S2_Change time:0.5 wait:true
+; ; @wait 2
+; ; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
 @stop
 
 # C1_S3_P2-2
-@speedButtonEnable
+@speedButtonDisable
 @streamingPlay "C1_S3_P2-2"
-@waitMovie choiceTime:10
+@speedButtonEnable
 @forcedChoice choiceTime:10
-@spawn FriendShipUp wait:false
+@waitMovie choiceTime:10
+; @spawn FriendShipUp wait:false
 @forcedChoice choiceTime:2
 @waitMovie choiceTime:7
-@despawn FriendShipUp
+; @despawn FriendShipUp
 @waitMovie choiceTime:1
-@EndMovie
-@wait 2
-@back C1_S2_Change time:0.5 wait:true
-@wait 2
-@back C1_S2_Change visible:false time:0.5 wait:true
+; @EndMovie
+; @wait 2
+; @back C1_S2_Change time:0.5 wait:true
+; @wait 2
+; @back C1_S2_Change visible:false time:0.5 wait:true
 @goto C2_VB
-@stop

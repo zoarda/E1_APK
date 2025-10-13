@@ -193,7 +193,7 @@
 # C2_S1_P1_noLoop
 @streamingPlay "C2_S1_P1"
 @spawn LovePlayPage
-@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C2_S1_P1,C2_S1_P3,C2_S1_P4,C2_S1_P5 cumLabel:C2_S1_P5_cum type:demoForPlay
+@spawnLovePlayPage poseName:sex_A_02,sex_D_02,sex_G_02,sex_F_02 label:C2_S1_P1,C2_S1_P3,C2_S1_P4,C2_S1_P5 cumLabel:C2_S1_P5_cum type:sex
 @videoControll StartLoopTime:105.12 EndLoopTime:230 isLooping:true
 @stop
 
