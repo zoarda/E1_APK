@@ -9,6 +9,7 @@ public class DownloadPage : MonoBehaviour
 
     [SerializeField] private Slider progressSlider;
     [SerializeField] private Text progressText;
+    private static DiscordLogger instance;
     bool haveVideoReady = false;
 
     private void Awake()
@@ -103,8 +104,14 @@ public class DownloadPage : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            progressText.text = $"下載失敗: {e.Message}";
-            Debug.LogError(e);
+            // 🔹 錯誤代碼 + 停止下載
+            string errorMessage = $"下載失敗 (錯誤代號: 001)\n原因: {e.Message}";
+            progressText.text = errorMessage;
+            Debug.LogError($"[DownloadPage] {errorMessage}");
+
+            // 🔹 傳送至 Discord
+            DiscordLogger.Log(errorMessage);
+            return; // 停留畫面不關閉
         }
 
         await UniTask.Delay(1000);

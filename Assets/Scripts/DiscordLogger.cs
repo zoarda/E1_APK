@@ -48,10 +48,11 @@ public class DiscordLogger : MonoBehaviour
         }
 
         string time = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+        string os = SystemInfo.operatingSystem;
         string device = SystemInfo.deviceModel;
         string version = Application.version;
 
-        string formatted = $"[{time}] 📝 **自訂訊息**\nAppVersion: `{version}`\nDevice: `{device}`\n```\n{message}\n```";
+        string formatted = $"[{time}] 📝 **自訂訊息**\nAppVersion: `{version}`\n`{os}`\n```\nDevice: `{device}`\n```\n{message}\n```";
         logBuffer.Add(formatted);
     }
 

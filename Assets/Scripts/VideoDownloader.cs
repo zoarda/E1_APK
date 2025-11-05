@@ -6,8 +6,8 @@ using Cysharp.Threading.Tasks;
 
 public class VideoDownloader
 {
-    private readonly string baseUrl = "https://mgwan.love6.tv/";
-
+    // private readonly string baseUrl = "https://mgwan.love6.tv/";
+    private readonly string baseUrl = "https://e1-data.06n1z.cn/"; //aliyn URL
     private static string CleanRelativePath(string relativePath)
     {
         if (string.IsNullOrEmpty(relativePath)) return string.Empty;
@@ -79,6 +79,9 @@ public class VideoDownloader
                 {
                     Debug.LogError($"[VideoDownloader] ❌ 下載失敗 {name} -> {request.error}");
                     if (File.Exists(localPath)) File.Delete(localPath);
+
+                    // 🔹 回傳 null 代表中斷整個流程
+                    throw new System.Exception($"下載失敗: {name}, 錯誤代號 001");
                 }
             }
         }
@@ -99,16 +102,7 @@ public class VideoDownloader
                 byte[] buffer = new byte[64];
                 int read = fs.Read(buffer, 0, buffer.Length);
                 string header = System.Text.Encoding.ASCII.GetString(buffer, 0, read);
-
-                if (header.Contains("ftyp"))
-                {
-                    return true;
-                }
-                else
-                {
-                    Debug.LogError($"[VideoDownloader] 無效 MP4 (缺少 ftyp): {path}");
-                    return false;
-                }
+                return header.Contains("ftyp");
             }
         }
         catch (System.Exception ex)
