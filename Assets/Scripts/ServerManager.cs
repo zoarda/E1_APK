@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Erolabs.Sdk.Unity;
+using System.IO;
 using Unity.VisualScripting;
 
 
@@ -35,7 +36,7 @@ public class ServerManager : MonoBehaviour
 
     // 設定目前的平台（預設先用 TapDB）
     [SerializeField]
-    private PlatformType currentPlatform = PlatformType.Erolabs;
+    private PlatformType currentPlatform = PlatformType.LocalDev;
     // public bool isTapMode = true; // ✅ 若你想寫死 Tap 模式（後續可改成 config 設定）
     [SerializeField]
     TextAsset config;
@@ -70,21 +71,25 @@ public class ServerManager : MonoBehaviour
                     StartNani.Instance.isLoggedIn = true;
                 break;
 
-            case PlatformType.Love6:
-                Debug.Log("Love6 平台登入流程開始");
-                await SetUrlQueryAsync();
-                break;
+            // case PlatformType.Love6:
+            //     Debug.Log("Love6 平台登入流程開始");
+            //     await SetUrlQueryAsync();
+            //     break;
 
-            case PlatformType.SixParty:
-                Debug.Log("SixParty 平台登入流程開始");
-                await SetUrlQueryAsync();
-                break;
+            // case PlatformType.SixParty:
+            //     Debug.Log("SixParty 平台登入流程開始");
+            //     await SetUrlQueryAsync();
+            //     break;
 
             case PlatformType.Erolabs:
                 Debug.Log("Erolabs 平台登入流程開始");
                 await HandleErolabsLoginAsync();
                 break;
 
+            case PlatformType.Nutaku:
+                Debug.Log("Nutaku 平台登入流程開始");
+                // await ();
+                break;
             case PlatformType.LocalDev:
                 Debug.Log("本地測試模式，使用 localhost");
                 curToken = "dev-token"; // 測試用
@@ -127,130 +132,130 @@ public class ServerManager : MonoBehaviour
 
     //     // return await Load();
     // }
-    private async UniTask SetUrlQueryAsync()
-    {
-        StartNani startNani = StartNani.Instance;
-        // 測試用 URL，實際使用 Application.absoluteURL
-        string absoluteURL = Application.absoluteURL;
-#if UNITY_EDITOR
-        // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZmYwOTIwNDYwNTA5QGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IiIsImlzcyI6IkxvdmU2RGV2TG9jYWwyIiwic3ViIjoiTDZNLTI1MDMxNy0wMDAwMDA2NCIsImVtYWlsIjoiZmYwOTIwNDYwNTA5QGdtYWlsLmNvbSIsImF1ZCI6ImZmMDkyMDQ2MDUwOUBnbWFpbC5jb20iLCJleHAiOjE3NDc2MjE2NDgsImp0aSI6IjUxZmQ2YzM4LTBjZDItNGNlYy04M2IzLTM2MTVkYTI3ZjBkOCIsImlhdCI6MTc0NTIyMTY0OCwibmJmIjoxNzQ1MjIxNjQ4fQ.VWMsw2sr-b0648obThW8mMx0KHy15L37tZGBtaVajRQ&lang=456";
-        // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYmZjMWE5NzItY2E1OC00ODYxLWI1MDEtZjBlMDdjZTg2M2I5IiwibmJmIjoxNzQ1MzA0MzkxLCJleHAiOjE3NDUzOTA3OTEsImlhdCI6MTc0NTMwNDM5MSwiaXNzIjoiQXZEaXJlY3RvckRldiJ9.zssvxrrCJypvvRIeFub-ZqWaGcxMZ8SJNSUNCXSmhVw&lang=456";
-        // absoluteURL = "http://localhost:13948/?";
-        absoluteURL = "http://localhost:13948/?uid=cc6f97b7-9660-4a37-aa9d-11b4f284869f";
+//     private async UniTask SetUrlQueryAsync()
+//     {
+//         StartNani startNani = StartNani.Instance;
+//         // 測試用 URL，實際使用 Application.absoluteURL
+//         string absoluteURL = Application.absoluteURL;
+// #if UNITY_EDITOR
+//         // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiZmYwOTIwNDYwNTA5QGdtYWlsLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IiIsImlzcyI6IkxvdmU2RGV2TG9jYWwyIiwic3ViIjoiTDZNLTI1MDMxNy0wMDAwMDA2NCIsImVtYWlsIjoiZmYwOTIwNDYwNTA5QGdtYWlsLmNvbSIsImF1ZCI6ImZmMDkyMDQ2MDUwOUBnbWFpbC5jb20iLCJleHAiOjE3NDc2MjE2NDgsImp0aSI6IjUxZmQ2YzM4LTBjZDItNGNlYy04M2IzLTM2MTVkYTI3ZjBkOCIsImlhdCI6MTc0NTIyMTY0OCwibmJmIjoxNzQ1MjIxNjQ4fQ.VWMsw2sr-b0648obThW8mMx0KHy15L37tZGBtaVajRQ&lang=456";
+//         // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwianRpIjoiYmZjMWE5NzItY2E1OC00ODYxLWI1MDEtZjBlMDdjZTg2M2I5IiwibmJmIjoxNzQ1MzA0MzkxLCJleHAiOjE3NDUzOTA3OTEsImlhdCI6MTc0NTMwNDM5MSwiaXNzIjoiQXZEaXJlY3RvckRldiJ9.zssvxrrCJypvvRIeFub-ZqWaGcxMZ8SJNSUNCXSmhVw&lang=456";
+//         // absoluteURL = "http://localhost:13948/?";
+//         absoluteURL = "http://localhost:13948/?uid=cc6f97b7-9660-4a37-aa9d-11b4f284869f";
 
-        // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRlBzZXJ2aWNlMDFAZnVucGxheXRlY2guY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiIiwiaXNzIjoiU2l4IFBhcnR5IFBsYXllciIsInN1YiI6IjZQTS0yNTA0MDgtMDAwMjU4MjUiLCJlbWFpbCI6IkZQc2VydmljZTAxQGZ1bnBsYXl0ZWNoLmNvbSIsImF1ZCI6IkZQc2VydmljZTAxQGZ1bnBsYXl0ZWNoLmNvbSIsImV4cCI6MTc0NzA4NTgyMCwianRpIjoiY2QyNjQyNmEtYzJiYy00ODE5LWIyYTYtNDA0ZTU3YzhiNDMzIiwiaWF0IjoxNzQ0Njg1ODIwLCJuYmYiOjE3NDQ2ODU4MjB9.eHTTs1wkGw2N09LC5qjRiUcUR09-6U_mcYqVxMqj4VY&lang=456";
+//         // absoluteURL = "http://localhost:13948/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiRlBzZXJ2aWNlMDFAZnVucGxheXRlY2guY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiIiwiaXNzIjoiU2l4IFBhcnR5IFBsYXllciIsInN1YiI6IjZQTS0yNTA0MDgtMDAwMjU4MjUiLCJlbWFpbCI6IkZQc2VydmljZTAxQGZ1bnBsYXl0ZWNoLmNvbSIsImF1ZCI6IkZQc2VydmljZTAxQGZ1bnBsYXl0ZWNoLmNvbSIsImV4cCI6MTc0NzA4NTgyMCwianRpIjoiY2QyNjQyNmEtYzJiYy00ODE5LWIyYTYtNDA0ZTU3YzhiNDMzIiwiaWF0IjoxNzQ0Njg1ODIwLCJuYmYiOjE3NDQ2ODU4MjB9.eHTTs1wkGw2N09LC5qjRiUcUR09-6U_mcYqVxMqj4VY&lang=456";
 
-#endif
-        Debug.Log($"absoluteURL: {absoluteURL}");
-        // string p = "https:d1seruguac4v04.cloudfront.net/?token=123&lang=";
-        string? token = null;
-        string? uid = null;
-        string? language = null;
+// #endif
+//         Debug.Log($"absoluteURL: {absoluteURL}");
+//         // string p = "https:d1seruguac4v04.cloudfront.net/?token=123&lang=";
+//         string? token = null;
+//         string? uid = null;
+//         string? language = null;
 
-        if (absoluteURL.Contains("?"))
-        {
-            string[] stringP = absoluteURL.Split('?');
-            string qs = stringP[1];
-            string[] data = qs.Split('&');
+//         if (absoluteURL.Contains("?"))
+//         {
+//             string[] stringP = absoluteURL.Split('?');
+//             string qs = stringP[1];
+//             string[] data = qs.Split('&');
 
-            foreach (var a in data)
-            {
-                if (a.Contains("="))
-                {
-                    string[] b = a.Split('=');
-                    if (b.Length == 2)
-                    {
-                        var key = b[0];
-                        var value = b[1];
+//             foreach (var a in data)
+//             {
+//                 if (a.Contains("="))
+//                 {
+//                     string[] b = a.Split('=');
+//                     if (b.Length == 2)
+//                     {
+//                         var key = b[0];
+//                         var value = b[1];
 
-                        switch (key)
-                        {
-                            case "token":
-                                token = value;
-                                break;
-                            case "uid":
-                                uid = value;
-                                break;
-                            case "lang":
-                                language = value;
-                                break;
-                            default:
-                                Debug.LogWarning($"Unrecognized key: {key}, value: {value}");
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogWarning($"Invalid data format: {a}");
-                    }
-                }
-            }
+//                         switch (key)
+//                         {
+//                             case "token":
+//                                 token = value;
+//                                 break;
+//                             case "uid":
+//                                 uid = value;
+//                                 break;
+//                             case "lang":
+//                                 language = value;
+//                                 break;
+//                             default:
+//                                 Debug.LogWarning($"Unrecognized key: {key}, value: {value}");
+//                                 break;
+//                         }
+//                     }
+//                     else
+//                     {
+//                         Debug.LogWarning($"Invalid data format: {a}");
+//                     }
+//                 }
+//             }
 
-            // 檢查登入憑證
-            if (string.IsNullOrEmpty(token) && string.IsNullOrEmpty(uid))
-            {
-                await ShowErrorPageAsync("Token and UID are both missing. Please log in again.");
-                if (startNani != null)
-                {
-                    startNani.isLoggedIn = false;
-                }
-                else
-                {
-                    Debug.LogWarning("startNani is null!");
-                }
-                return;
-            }
+//             // 檢查登入憑證
+//             if (string.IsNullOrEmpty(token) && string.IsNullOrEmpty(uid))
+//             {
+//                 await ShowErrorPageAsync("Token and UID are both missing. Please log in again.");
+//                 if (startNani != null)
+//                 {
+//                     startNani.isLoggedIn = false;
+//                 }
+//                 else
+//                 {
+//                     Debug.LogWarning("startNani is null!");
+//                 }
+//                 return;
+//             }
 
-            // 檢查語言
-            if (string.IsNullOrEmpty(language))
-            {
-                Debug.LogWarning("Language not specified. Defaulting to English.");
-                language = "en";
-            }
-        }
-        else
-        {
-            await ShowErrorPageAsync("No query string found in the URL. Please try again.");
-            return;
-        }
+//             // 檢查語言
+//             if (string.IsNullOrEmpty(language))
+//             {
+//                 Debug.LogWarning("Language not specified. Defaulting to English.");
+//                 language = "en";
+//             }
+//         }
+//         else
+//         {
+//             await ShowErrorPageAsync("No query string found in the URL. Please try again.");
+//             return;
+//         }
 
-        if (startNani != null)
-        {
-            startNani.isLoggedIn = true;
-        }
-        else
-        {
-            Debug.LogWarning("startNani is null!");
-        }
+//         if (startNani != null)
+//         {
+//             startNani.isLoggedIn = true;
+//         }
+//         else
+//         {
+//             Debug.LogWarning("startNani is null!");
+//         }
 
-        // 判斷登入方式，並儲存對應資料結構
-        if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
-        {
-            urlData = new UrlData
-            {
-                PlayerId = uid,
-                token = token,
-                language = language,
-                platform = 4, // TapDB
-                version = Application.version,
-                gameId = 1
-            };
-            Debug.Log($"[SetUrlQuery] Using TapDB login.");
-        }
-        else if (!string.IsNullOrEmpty(uid))
-        {
-            urlDataByUid = new UrlDataByUid
-            {
-                PlayerId = uid,
-                language = language,
-                platform = 3
-            };
-            Debug.Log($"[SetUrlQuery] Using UID login.");
-        }
-        await Login();
+//         // 判斷登入方式，並儲存對應資料結構
+//         if (!string.IsNullOrEmpty(uid) && !string.IsNullOrEmpty(token))
+//         {
+//             urlData = new UrlData
+//             {
+//                 PlayerId = uid,
+//                 token = token,
+//                 language = language,
+//                 platform = 4, // TapDB
+//                 version = Application.version,
+//                 gameId = 1
+//             };
+//             Debug.Log($"[SetUrlQuery] Using TapDB login.");
+//         }
+//         else if (!string.IsNullOrEmpty(uid))
+//         {
+//             urlDataByUid = new UrlDataByUid
+//             {
+//                 PlayerId = uid,
+//                 language = language,
+//                 platform = 3
+//             };
+//             Debug.Log($"[SetUrlQuery] Using UID login.");
+//         }
+//         await Login();
 
-        await UniTask.CompletedTask;
-    }
+//         await UniTask.CompletedTask;
+//     }
 
     /// <summary>
     /// 顯示錯誤頁面（模擬異步行為）
@@ -404,14 +409,15 @@ public class ServerManager : MonoBehaviour
                 {
                     if (string.IsNullOrEmpty(curToken))
                     {
-                        Debug.LogError("curToken is null or empty before Load!");
-                        return null;
+                        Debug.LogWarning("curToken is null or empty before Load! 嘗試讀本地檔案...");
+                        return await LoadLocalSave();
                     }
+
                     string url = $"{serverUrl}/api/a/Player/Load";
                     LoadRequest requestData = new LoadRequest
                     {
-                        PlatformName = "4",      // 替換為實際平台
-                        GameIdentifier = "1"     // 替換為實際遊戲ID
+                        PlatformName = "4",
+                        GameIdentifier = "1"
                     };
 
                     string json = JsonUtility.ToJson(requestData);
@@ -427,16 +433,13 @@ public class ServerManager : MonoBehaviour
 
                         await request.SendWebRequest().ToUniTask();
 
-                        if (request.result == UnityWebRequest.Result.ConnectionError ||
-                            request.result == UnityWebRequest.Result.ProtocolError)
+                        if (request.result != UnityWebRequest.Result.Success)
                         {
-                            Debug.LogError($"TapDB Load Request Failed: {request.error}");
-                            return null;
+                            Debug.LogWarning($"TapDB Load Request Failed: {request.error}, 嘗試讀本地檔案...");
+                            return await LoadLocalSave();
                         }
 
                         string responseText = request.downloadHandler.text;
-                        Debug.Log("TapDB Response Body: " + responseText);
-
                         var wrapper = JsonUtility.FromJson<SaveDataResponse>(responseText);
 
                         if (!string.IsNullOrEmpty(wrapper.data))
@@ -446,11 +449,10 @@ public class ServerManager : MonoBehaviour
                     }
                     break;
                 }
+
             case PlatformType.Erolabs:
                 {
                     string url = $"{serverUrl}/api/o/Player/ErolabsLoad";
-
-                    // 構建請求體
                     ErolabsLoadRequest erolabsRequest = new ErolabsLoadRequest()
                     {
                         Account = game_account,
@@ -466,21 +468,15 @@ public class ServerManager : MonoBehaviour
                         request.downloadHandler = new DownloadHandlerBuffer();
                         request.SetRequestHeader("Content-Type", "application/json");
 
-                        // 不設置 Authorization header
-                        // request.SetRequestHeader("Authorization", $"Bearer {curToken}");
-
                         await request.SendWebRequest().ToUniTask();
 
-                        if (request.result == UnityWebRequest.Result.ConnectionError ||
-                            request.result == UnityWebRequest.Result.ProtocolError)
+                        if (request.result != UnityWebRequest.Result.Success)
                         {
-                            Debug.LogError($"Erolabs Load Request Failed: {request.error}");
-                            return null;
+                            Debug.LogWarning($"Erolabs Load Request Failed: {request.error}, 嘗試讀本地檔案...");
+                            return await LoadLocalSave();
                         }
 
                         string responseText = request.downloadHandler.text;
-                        Debug.Log("Erolabs Response Body: " + responseText);
-
                         var apiResponse = JsonUtility.FromJson<ApiResponse>(responseText);
 
                         if (apiResponse.success == true && !string.IsNullOrEmpty(apiResponse.data))
@@ -490,37 +486,63 @@ public class ServerManager : MonoBehaviour
                     }
                     break;
                 }
+
             case PlatformType.Love6:
             case PlatformType.SixParty:
             case PlatformType.LocalDev:
-                Debug.LogWarning($"{currentPlatform} Load not implemented, returning default SaveData.");
-                break;
+                {
+                    Debug.LogWarning($"{currentPlatform} 本地模式，讀取本地 YAML...");
+                    return await LoadLocalSave();
+                }
         }
 
-        // 如果沒有讀到任何存檔，初始化預設 SaveData
+        // 如果 saveData 為 null（伺服器失敗）
         if (saveData == null)
         {
-            Debug.LogWarning("No SaveData found. Creating default save...");
-
-            saveData = new SaveData
-            {
-                friendship_CiciXie = 0, // 筱希
-                friendship_RosieLin = 0, // 林香
-                friendship_CherryZhao = 0, // 紫涵
-                scriptName = new List<string> { "C1_VB" },
-                // 根據實際需求初始化其他字段
-            };
-
-            await Save(saveData);
-
-            // 重新讀取
-            return await Load();
+            Debug.LogWarning("伺服器沒資料，讀取本地 YAML...");
+            saveData = await LoadLocalSave();
         }
 
         Debug.Log($"Parsed SaveData: friendship_CiciXie={saveData.friendship_CiciXie}, friendship_RosieLin={saveData.friendship_RosieLin}, friendship_CherryZhao={saveData.friendship_CherryZhao}, scripts={string.Join(",", saveData.scriptName)}");
+
         return saveData;
     }
 
+    /// <summary>
+    /// 讀取本地 YAML 檔案
+    /// </summary>
+    private async UniTask<SaveData> LoadLocalSave()
+    {
+        string localPath = Path.Combine(Application.persistentDataPath, "LocalSaveData.yaml");
+        if (File.Exists(localPath))
+        {
+            try
+            {
+                var localData = await YamlLoader.LoadStreamingAssetsYaml<SaveData>(localPath);
+                if (localData != null)
+                {
+                    Debug.Log($"本地存檔讀取成功: {localPath}");
+                    return localData;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"讀取本地 YAML 失敗: {ex}");
+            }
+        }
+
+        // 若本地檔案不存在或讀取失敗，回傳預設 SaveData
+        Debug.LogWarning("本地 YAML 不存在或讀取失敗，回傳空 SaveData");
+        return new SaveData
+        {
+            friendship_CiciXie = 0,
+            friendship_RosieLin = 0,
+            friendship_CherryZhao = 0,
+            scriptName = new List<string>(),
+            PlatformName = "Local",
+            GameIdentifier = "1"
+        };
+    }
     public async UniTask Save(SaveData saveData)
     {
         await SaveByToken(saveData);
@@ -541,15 +563,14 @@ public class ServerManager : MonoBehaviour
                 SaveRequest saveRequest = new SaveRequest()
                 {
                     Data = saveJson,
-                    PlatformName = "4",         // 替換為你的實際 platform
-                    GameIdentifier = "1"        // 替換為你的實際 gameId
+                    PlatformName = "4",
+                    GameIdentifier = "1"
                 };
 
                 // 將整個 SaveRequest 序列化為 JSON
                 string jsonPayload = JsonUtility.ToJson(saveRequest);
                 Debug.Log($"Final JSON Payload: {jsonPayload}");
 
-                // 建立 POST 請求
                 using (UnityWebRequest request = new UnityWebRequest(url, "POST"))
                 {
                     byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
@@ -589,22 +610,22 @@ public class ServerManager : MonoBehaviour
                     }
                 }
                 break;
+
             case PlatformType.Love6:
                 Debug.Log("Love6 平台 SaveByToken");
                 break;
+
             case PlatformType.SixParty:
                 Debug.Log("SixParty 平台 SaveByToken");
                 break;
+
             case PlatformType.Erolabs:
                 Debug.Log("Erolabs 平台 SaveByToken (無 Token)");
 
                 string erolabsUrl = $"{serverUrl}/api/o/Player/ErolabsSave";
-
-                // 將 SaveData 轉為 JSON 字串
                 string erolabsJson = JsonUtility.ToJson(saveData);
                 Debug.Log($"Serialized SaveData for Erolabs: {erolabsJson}");
 
-                // 包裝成 ErolabsSaveRequest 結構
                 ErolabsSaveRequest erolabsRequest = new ErolabsSaveRequest()
                 {
                     Account = game_account,
@@ -612,7 +633,6 @@ public class ServerManager : MonoBehaviour
                     Game = EnumGame.E1
                 };
 
-                // 將整個請求序列化為 JSON
                 string erolabsPayload = JsonUtility.ToJson(erolabsRequest);
                 Debug.Log($"Final JSON Payload for Erolabs: {erolabsPayload}");
 
@@ -622,8 +642,6 @@ public class ServerManager : MonoBehaviour
                     request.uploadHandler = new UploadHandlerRaw(bodyRaw);
                     request.downloadHandler = new DownloadHandlerBuffer();
 
-                    // 不設置 Authorization header
-                    // request.SetRequestHeader("Authorization", $"Bearer {curToken}");
                     request.SetRequestHeader("Content-Type", "application/json");
 
                     await request.SendWebRequest().ToUniTask();
@@ -656,24 +674,13 @@ public class ServerManager : MonoBehaviour
                     }
                 }
                 break;
+
             case PlatformType.LocalDev:
-                Debug.Log("本地測試模式 SaveByToken");
+                Debug.Log("本地測試模式 SaveByToken，模擬存檔完成 ✅");
+                Debug.Log($"Local SaveData Snapshot: {JsonUtility.ToJson(saveData)}");
                 break;
         }
     }
-    //     // 加一個方法提示 & 關閉
-    //     private void ShowNotPurchasedMessageAndQuit()
-    //     {
-    //         // 顯示提示（可自行替換為 UI）
-    //         Debug.LogError("未購買本遊戲，請先購買再遊玩");
-
-    //         // 幾秒後關閉遊戲
-    //         Application.Quit();
-
-    // #if UNITY_EDITOR
-    //         UnityEditor.EditorApplication.isPlaying = false;
-    // #endif
-    //     }
     private async UniTask HandleTapDBLoginAsync()
     {
         var tcs = new UniTaskCompletionSource<bool>();
@@ -741,6 +748,7 @@ public class ServerManager : MonoBehaviour
         await tcs.Task;
     }
 
+#region ErolabsLogin
     private async UniTask HandleErolabsLoginAsync()
     {
         await ErolabsSDK.Initialize();
@@ -954,6 +962,7 @@ public class ServerManager : MonoBehaviour
             return request.downloadHandler.text;
         }
     }
+    #endregion
     [Serializable]
     public class ApiResponse
     {
@@ -1065,7 +1074,9 @@ public class ServerManager : MonoBehaviour
         Love6,
         SixParty,
         Erolabs,
+        Nutaku,
         LocalDev
+
     }
     [Serializable]
     public class PurchaseResponse
@@ -1125,13 +1136,6 @@ public class ServerManager : MonoBehaviour
     }
     public class ErolabsEntity
     {
-        // var bindReq = new
-        // {
-        //     Token = erolabsToken,
-        //     Account = gameAccount,
-        //     Purchased = purchased,
-        //     Game = 1
-        // };
         public string Token;
         public string Account;
         public bool Purchased;

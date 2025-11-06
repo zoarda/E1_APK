@@ -1,7 +1,24 @@
-friendship: 0
+friendship_CiciXie: 0
+friendship_RosieLin: 0
+friendship_CherryZhao: 0
 scriptName:
-- C1_VB
-- C2_VB
-- C3_VB
-- C4_VB
-- C5_VB
+  - "1P"
+  - "C2_S0_Love"
+  - "C3_VB"
+  - "C3_S0"
+  - "C3_S2"
+  - "C4_VB"
+  - "C4_S0"
+  - "C4_S2"
+  - "C5_VB"
+  - "C5_S0"
+  - "C5_S3"
+  - "C5_S3_Love"
+  - "C5_S3_S1_noLoop"
+  - "C3_S1"
+  - "C4_S1"
+  - "C5_S2"
+  - "C5_S2_Love"
+  - "C5_S2_S1_noLoop"
+PlatformName: "4"
+GameIdentifier: "1"

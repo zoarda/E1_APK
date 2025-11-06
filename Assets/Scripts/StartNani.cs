@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System.Linq;
+using System.IO;
 using System.Runtime.InteropServices;
 public class StartNani : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class StartNani : MonoBehaviour
     public bool isLoggedIn = false; // 預設為未登入
 
     public bool ispay = true;
+
+    public bool nologinmode = false;
 
     [SerializeField] private List<Toggle> toggles;
 
@@ -88,33 +91,36 @@ public class StartNani : MonoBehaviour
     {
         // if (Application.platform == RuntimePlatform.Android || Application.platform == RuntimePlatform.WebGLPlayer)
         // {
-        LoginPage.SetActive(true);
 
-        // ✅ 登入並自動 Load
-        var saveData = await ServerManager.Instance.InitializeUrlQueryAndLoadAsync();
+        // LoginPage.SetActive(true);
 
-        LoginPage.SetActive(false);
+        // // ✅ 登入並自動 Load
+        // var saveData = await ServerManager.Instance.InitializeUrlQueryAndLoadAsync();
 
-        if (saveData != null)
-        {
-            var varManager = Engine.GetService<ICustomVariableManager>();
-            // varManager.TrySetVariableValue("friendship", saveData.friendship);
-            varManager.TrySetVariableValue("friendship_CiciXie", saveData.friendship_CiciXie); // 筱希
-            varManager.TrySetVariableValue("friendship_RosieLin", saveData.friendship_RosieLin); // 林香
-            varManager.TrySetVariableValue("friendship_CherryZhao", saveData.friendship_CherryZhao); // 紫涵
-                                                                                                     // friednshipList.Add(saveData.friendship);
-            friednshipList_CiciXie.Clear();
-            friednshipList_RosieLin.Clear();
-            friednshipList_CherryZhao.Clear();
-            friednshipList_CiciXie.Add(saveData.friendship_CiciXie); // 筱希
-            friednshipList_RosieLin.Add(saveData.friendship_RosieLin); // 林香
-            friednshipList_CherryZhao.Add(saveData.friendship_CherryZhao); // 紫涵
-            await SelectOptionSwtich(saveData);
-        }
-        else
-        {
-            Debug.LogWarning("Load SaveData 失敗或未登入！");
-        }
+        // LoginPage.SetActive(false);
+
+        // if (saveData != null)
+        // {
+        //     var varManager = Engine.GetService<ICustomVariableManager>();
+        //     // varManager.TrySetVariableValue("friendship", saveData.friendship);
+        //     varManager.TrySetVariableValue("friendship_CiciXie", saveData.friendship_CiciXie); // 筱希
+        //     varManager.TrySetVariableValue("friendship_RosieLin", saveData.friendship_RosieLin); // 林香
+        //     varManager.TrySetVariableValue("friendship_CherryZhao", saveData.friendship_CherryZhao); // 紫涵
+        //                                                                                              // friednshipList.Add(saveData.friendship);
+        //     friednshipList_CiciXie.Clear();
+        //     friednshipList_RosieLin.Clear();
+        //     friednshipList_CherryZhao.Clear();
+        //     friednshipList_CiciXie.Add(saveData.friendship_CiciXie); // 筱希
+        //     friednshipList_RosieLin.Add(saveData.friendship_RosieLin); // 林香
+        //     friednshipList_CherryZhao.Add(saveData.friendship_CherryZhao); // 紫涵
+        //     await SelectOptionSwtich(saveData);
+        // }
+        // else
+        // {
+        if (DownloadPage.Instance != null)
+            await DownloadPage.Instance.ShowAndDownloadAsync();
+        Debug.Log("nologinmode");
+        // }
         // }
         // else
         // {
@@ -179,7 +185,7 @@ public class StartNani : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Failed to retrieve URL data.");
+            Debug.Log("Failed to retrieve URL data.");
         }
         string absoluteURL = Application.absoluteURL;
         //初始化nani
@@ -830,38 +836,73 @@ public class StartNani : MonoBehaviour
         }
         else
         {
-            Debug.Log("noLoginMode");
-        }
-    }
+            Debug.Log("noLoginMode - 儲存到本地");
 
-    //設定語言選擇按鈕的按鍵設定
-    void ConfigureToggleNavigation()
-    {
-        for (int i = 0; i < toggles.Count; i++)
-        {
-            Navigation navigation = new Navigation
+            // 建立本地 SaveData
+            var localSave = new ServerManager.SaveData
             {
-                mode = Navigation.Mode.Explicit
+                scriptName = new List<string> { scriptName },
+                friendship_CiciXie = allFriendship_CiciXie(),
+                friendship_RosieLin = allFriendship_RosieLin(),
+                friendship_CherryZhao = allFriendship_CherryZhao(),
+                PlatformName = "Local",
+                GameIdentifier = "1"
             };
 
-            if (toggles[i].GetComponentInChildren<Text>().text.Contains("中文"))
+            // 如果已存在本地 YAML，先讀取再更新
+            string localPath = Path.Combine(Application.persistentDataPath, "LocalSaveData.yaml");
+            if (File.Exists(localPath))
             {
-                navigation.selectOnRight = Btn_LanguageReturn;
-                navigation.selectOnLeft = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("日文"));
-            }
-            else if (toggles[i].GetComponentInChildren<Text>().text.Contains("日文"))
-            {
-                navigation.selectOnRight = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("中文"));
-                navigation.selectOnLeft = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("英文"));
-            }
-            else if (toggles[i].GetComponentInChildren<Text>().text.Contains("英文"))
-            {
-                navigation.selectOnRight = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("日文"));
-                navigation.selectOnLeft = Btn_LanguageReturn;
+                var existing = await YamlLoader.LoadStreamingAssetsYaml<ServerManager.SaveData>(localPath);
+                if (existing != null)
+                {
+                    // 合併 scriptName
+                    foreach (var s in existing.scriptName)
+                    {
+                        if (!localSave.scriptName.Contains(s))
+                            localSave.scriptName.Add(s);
+                    }
+                    // 可以選擇合併好感度或覆蓋
+                    localSave.friendship_CiciXie = existing.friendship_CiciXie;
+                    localSave.friendship_RosieLin = existing.friendship_RosieLin;
+                    localSave.friendship_CherryZhao = existing.friendship_CherryZhao;
+                }
             }
 
-            toggles[i].navigation = navigation;
+            // 存 YAML
+            YamlLoader.SaveToYaml(localSave, localPath);
+            Debug.Log($"本地存檔完成: {localPath}");
         }
     }
+
+//設定語言選擇按鈕的按鍵設定
+void ConfigureToggleNavigation()
+{
+    for (int i = 0; i < toggles.Count; i++)
+    {
+        Navigation navigation = new Navigation
+        {
+            mode = Navigation.Mode.Explicit
+        };
+
+        if (toggles[i].GetComponentInChildren<Text>().text.Contains("中文"))
+        {
+            navigation.selectOnRight = Btn_LanguageReturn;
+            navigation.selectOnLeft = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("日文"));
+        }
+        else if (toggles[i].GetComponentInChildren<Text>().text.Contains("日文"))
+        {
+            navigation.selectOnRight = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("中文"));
+            navigation.selectOnLeft = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("英文"));
+        }
+        else if (toggles[i].GetComponentInChildren<Text>().text.Contains("英文"))
+        {
+            navigation.selectOnRight = toggles.Find(t => t.GetComponentInChildren<Text>().text.Contains("日文"));
+            navigation.selectOnLeft = Btn_LanguageReturn;
+        }
+
+        toggles[i].navigation = navigation;
+    }
+}
 
 }

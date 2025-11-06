@@ -16,14 +16,14 @@ public class NaniSaveData : Command
         StartNani startNani = StartNani.Instance;
         // ServerManager serverManager = ServerManager.Instance;
         //暫時修改條件startNani.isLoggedIn 改成tap登入就先不做
-        if (startNani.isLoggedIn)
-        {
+        // if (startNani.isLoggedIn)
+        // {
             await startNani.SaveYaml(name);
-        }
-        else
-        {
-            Debug.Log("nologinMode");
-        }
+        // }
+        // else
+        // {
+        //     Debug.Log("nologinMode");
+        // }
         // await startNani.SelectOptionSwtich();
         await UniTask.CompletedTask;
     }
