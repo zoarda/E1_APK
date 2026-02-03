@@ -60,7 +60,7 @@ public class VideoManager : MonoBehaviour
 
             if (videoPlayerTime >= targetTime)
             {
-                Debug.Log("快退操作无效：播放时间已接近目标时间点。");
+                Debug.Log("快進操作无效：播放时间已接近目标时间点。");
                 return;
             }
 
@@ -68,7 +68,7 @@ public class VideoManager : MonoBehaviour
             long targetTimeInMilliseconds = (long)(targetTime * 1000);
             await webGLStreamController.SeekTime(targetTimeInMilliseconds);
 
-            Debug.Log($"视频快退到时间点: {targetTime} 秒");
+            Debug.Log($"视频快進到时间点: {targetTime} 秒");
         });
         //快退
         // Btn_SpeedViewBack.onClick.AddListener(() =>
@@ -131,7 +131,7 @@ public class VideoManager : MonoBehaviour
 
         if (videoPlayerTime >= targetTime)
         {
-            Debug.Log("快退操作无效：播放时间已接近目标时间点。");
+            Debug.Log("快進操作无效：播放时间已接近目标时间点。");
             return;
         }
 
@@ -139,7 +139,7 @@ public class VideoManager : MonoBehaviour
         long targetTimeInMilliseconds = (long)(targetTime * 1000);
         await webGLStreamController.SeekTime(targetTimeInMilliseconds);
 
-        Debug.Log($"视频快退到时间点: {targetTime} 秒");
+        Debug.Log($"视频快進到时间点: {targetTime} 秒");
     }
     public void SetVideoPlayer(VideoPlayer video)
     {

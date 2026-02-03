@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Threading.Tasks;
 using Erolabs.Sdk.Unity;
 using System.IO;
+using Games.Coresdk.Unity;
 using Unity.VisualScripting;
 
 
@@ -749,9 +750,27 @@ public class ServerManager : MonoBehaviour
     }
 
 #region ErolabsLogin
+    private Language DetectSystemLanguage()
+    {
+        switch (Application.systemLanguage)
+        {
+            case SystemLanguage.ChineseSimplified:
+                return Language.cn;
+            case SystemLanguage.ChineseTraditional:
+                return Language.zh;
+            case SystemLanguage.Japanese:
+                return Language.jp;
+            case SystemLanguage.Korean:
+                return Language.ko;
+            case SystemLanguage.English:
+            default:
+                return Language.en;
+        }
+    }
     private async UniTask HandleErolabsLoginAsync()
     {
-        await ErolabsSDK.Initialize();
+        Language lang = DetectSystemLanguage();
+        await ErolabsSDK.Initialize(null, lang);
         Debug.Log("Erolabs SDK initialized");
 
         bool loginCompleted = false;
