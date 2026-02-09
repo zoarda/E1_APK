@@ -9,7 +9,7 @@ using System.IO;
 public class WebGLStreamController : HISPlayerManager
 {
     [SerializeField] int addTimeMillisecond = 5000;
-    private const string baseUrl = "https://data-av.ymytmx.com/";
+    // private const string baseUrl = "https://mgwan.love6.tv/";
     private bool useLoopSegment = false;
     private bool waitingForFirstFrame = false;
     private float loopStart = 0f;

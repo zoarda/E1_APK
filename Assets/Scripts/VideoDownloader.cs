@@ -6,8 +6,8 @@ using Cysharp.Threading.Tasks;
 
 public class VideoDownloader
 {
-    // private readonly string baseUrl = "https://mgwan.love6.tv/";
-    private readonly string baseUrl = "https://e1-data.06n1z.cn/"; //aliyn URL
+    private readonly string baseUrl = "https://mgwan.love6.tv/";
+    // private readonly string baseUrl = "https://e1-data.06n1z.cn/"; //aliyn URL
     private static string CleanRelativePath(string relativePath)
     {
         if (string.IsNullOrEmpty(relativePath)) return string.Empty;
