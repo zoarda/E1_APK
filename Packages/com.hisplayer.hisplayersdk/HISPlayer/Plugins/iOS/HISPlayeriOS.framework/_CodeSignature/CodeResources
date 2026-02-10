@@ -6,27 +6,27 @@
 	<dict>
 		<key>Headers/HISPlayeriOS-Swift.h</key>
 		<data>
-		u3z6e8XVtmhuP39MsNGyqXDhv9s=
+		TDZeIg+0YdnLG4JfqirUkkOVX0s=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		Rgri1L5qNkoMXyFoR6aExYfuZoY=
+		bOWfmJ3STQjF8lxoNOtBNWACNUc=
 		</data>
 		<key>Modules/HISPlayeriOS.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<data>
-		R+qnRXkrkzK/m/ruQ6Ns/3YmY5w=
+		tMYcPLQhkQ8xG+smddYsRCvDxCI=
 		</data>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<data>
-		FSPnLbho3G+LL9smI3XgVOqBIQ4=
+		gcwBsH4BgyFY4sVtNt+/xOKS3vY=
 		</data>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		F8rPdgfTY/Y76As0glzjmpkUOhw=
+		NMbYHQNBYGF+Uy5NgR1OqmCC1GA=
 		</data>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		wc5Az3je1y6B2Vp8oxlGXNZpNL8=
+		Q/NhNjRxI/t0w67Q1CnomIHvYn8=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -43,35 +43,35 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			gIfwygaTCoiyFKj/5vt6acv86VfOCOEUejkkaYInkfI=
+			HmHsr1zX60sf+Gph9kmq9WrfB2GjB0vmLLZfIoL+3Vw=
 			</data>
 		</dict>
 		<key>Modules/HISPlayeriOS.swiftmodule/Project/arm64-apple-ios.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			zaQodUqrooe7krZ6VgEyMbgKi9hwU7cgOXJquLEsXH4=
+			D/MXUQFIaHzbvTw9ZYbFaoACINrWTexosiDeCF1Yt0E=
 			</data>
 		</dict>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.abi.json</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			KnRdWE4y6t4QM5zi5JDptPdHFgJy1Tku+7GLkZS2aNM=
+			Qnesa0n4URGWAopawg9bGx36dUwkYV00BoCJ8LFzlyg=
 			</data>
 		</dict>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			G82Gb5ab/F1sAGmlXMokK/YiCUzv3wf7wBDjJUdL+js=
+			Vmjt7GjNdc8qhxmz3oYyimcDchI172wtA/lylXMsY2A=
 			</data>
 		</dict>
 		<key>Modules/HISPlayeriOS.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			A+QUaTRmZIKD3NICC0EJ1YYWR6hZXWqt5vzm3ZDqeEU=
+			IjQhhJMnkT1+ECn+mvPC1VKt4Opf9lFibOZqSCKDTLA=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

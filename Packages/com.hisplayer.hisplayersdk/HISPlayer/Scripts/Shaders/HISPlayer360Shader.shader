@@ -3,6 +3,7 @@ Properties {
     _Tint ("Tint Color", Color) = (.5, .5, .5, .5)
     [Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
     _Rotation ("Rotation", Range(0, 360)) = 0
+    [Toggle] _FlipVertically("Flip Vertically", Float) = 1
     [NoScaleOffset] _MainTex ("Spherical  (HDR)", 2D) = "grey" {}
     [KeywordEnum(6 Frames Layout, Latitude Longitude Layout)] _Mapping("Mapping", Float) = 1
     [Enum(360 Degrees, 0, 180 Degrees, 1)] _ImageType("Image Type", Float) = 0
@@ -30,6 +31,7 @@ SubShader {
         half4 _Tint;
         half _Exposure;
         float _Rotation;
+        bool _FlipVertically;
 #ifndef _MAPPING_6_FRAMES_LAYOUT
         bool _MirrorOnBack;
         int _ImageType;
@@ -178,6 +180,8 @@ SubShader {
             return o;
         }
 
+        uniform int _HISPlayerIsVulkan;
+
         fixed4 frag (v2f i) : SV_Target
         {
 #ifdef _MAPPING_6_FRAMES_LAYOUT
@@ -186,14 +190,24 @@ SubShader {
             float2 tc = ToRadialCoords(i.texcoord);
             if (tc.x > i.image180ScaleAndCutoff[1])
                 return half4(0,0,0,1);
+
+            // Flip texture vertically
+            if(_FlipVertically > 0.5)
+                tc.y = 1.0 - tc.y;
+
             tc.x = fmod(tc.x*i.image180ScaleAndCutoff[0], 1);
             tc = (tc + i.layout3DScaleAndOffset.xy) * i.layout3DScaleAndOffset.zw;
 #endif
 
             half4 tex = tex2D (_MainTex, tc);
-#if !UNITY_COLORSPACE_GAMMA
-            tex.rgb = GammaToLinearSpace(tex.rgb); // Remove gamma correction
-#endif
+
+  #if !UNITY_COLORSPACE_GAMMA
+            if (!_HISPlayerIsVulkan)
+            {
+                tex.rgb = GammaToLinearSpace(tex.rgb); // Remove gamma correction
+            }
+  #endif
+
             half3 c = DecodeHDR (tex, _MainTex_HDR);
             c = c * _Tint.rgb * unity_ColorSpaceDouble.rgb;
             c *= _Exposure;
@@ -204,7 +218,7 @@ SubShader {
 }
 
 
-CustomEditor "SkyboxPanoramicShaderGUI"
+CustomEditor "HISPlayerShader.HISPlayer360ShaderGUI"
 Fallback Off
 
 }

@@ -49,12 +49,17 @@ Shader "HISPlayer/HISPlayerDefaultShaderRawImage"
                   return o;
               }
 
+            uniform int _HISPlayerIsVulkan;
+
               fixed4 frag(v2f i) : SV_Target
               {
                   // sample the texture
                   fixed4 col = tex2D(_MainTex, i.uv);
   #if !UNITY_COLORSPACE_GAMMA
-                  col.rgb = GammaToLinearSpace(col.rgb); // Remove gamma correction
+                if (!_HISPlayerIsVulkan)
+                {
+                    col.rgb = GammaToLinearSpace(col.rgb); // Remove gamma correction
+                }
   #endif
                   // apply fog
                   UNITY_APPLY_FOG(i.fogCoord, col);
